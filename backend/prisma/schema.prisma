@@ -22,7 +22,7 @@ model User {
 model Skill {
   id          String   @id @default(uuid())
   nameEn      String
-  nameEs      String
+  nameFr      String
   level       Int      // 1-100
   category    String   // e.g., "Programming", "Design", "Languages"
   icon        String?  // URL or icon name
@@ -34,9 +34,9 @@ model Skill {
 model Project {
   id             String   @id @default(uuid())
   titleEn        String
-  titleEs        String
+  titleFr        String
   descriptionEn  String   @db.Text
-  descriptionEs  String   @db.Text
+  descriptionFr  String   @db.Text
   imageUrl       String?
   projectUrl     String?
   githubUrl      String?
@@ -52,11 +52,11 @@ model Project {
 model WorkExperience {
   id              String    @id @default(uuid())
   companyEn       String
-  companyEs       String
+  companyFr       String
   positionEn      String
-  positionEs      String
+  positionFr      String
   descriptionEn   String    @db.Text
-  descriptionEs   String    @db.Text
+  descriptionFr   String    @db.Text
   location        String?
   startDate       DateTime
   endDate         DateTime?
@@ -69,13 +69,13 @@ model WorkExperience {
 model Education {
   id              String    @id @default(uuid())
   institutionEn   String
-  institutionEs   String
+  institutionFr   String
   degreeEn        String
-  degreeEs        String
+  degreeFr        String
   fieldEn         String
-  fieldEs         String
+  fieldFr         String
   descriptionEn   String?   @db.Text
-  descriptionEs   String?   @db.Text
+  descriptionFr   String?   @db.Text
   location        String?
   startDate       DateTime
   endDate         DateTime?
@@ -101,9 +101,9 @@ model ContactInfo {
 model Hobby {
   id            String   @id @default(uuid())
   nameEn        String
-  nameEs        String
+  nameFr        String
   descriptionEn String?  @db.Text
-  descriptionEs String?  @db.Text
+  descriptionFr String?  @db.Text
   icon          String?
   order         Int      @default(0)
   createdAt     DateTime @default(now())
@@ -138,7 +138,7 @@ model Resume {
   id        String   @id @default(uuid())
   filename  String
   fileUrl   String
-  language  String   // "en" or "es"
+  language  String   // "en" or "fr"
   current   Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

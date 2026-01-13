@@ -84,7 +84,7 @@ const Home = () => {
     );
   }
 
-  const t = (en, es) => (language === 'en' ? en : es);
+  const t = (en, fr) => (language === 'en' ? en : fr);
 
   return (
     <div className="home">
@@ -92,17 +92,17 @@ const Home = () => {
       <header className="header">
         <div className="container">
           <nav className="nav">
-            <h1 className="logo">{t('Portfolio', 'Portafolio')}</h1>
+            <h1 className="logo">{t('Portfolio', 'Portfolio')}</h1>
             <div className="nav-links">
-              <a href="#skills">{t('Skills', 'Habilidades')}</a>
-              <a href="#projects">{t('Projects', 'Proyectos')}</a>
-              <a href="#experience">{t('Experience', 'Experiencia')}</a>
-              <a href="#education">{t('Education', 'Educación')}</a>
-              <a href="#hobbies">{t('Hobbies', 'Pasatiempos')}</a>
-              <a href="#testimonials">{t('Testimonials', 'Testimonios')}</a>
-              <Link to="/contact">{t('Contact', 'Contacto')}</Link>
+              <a href="#skills">{t('Skills', 'Compétences')}</a>
+              <a href="#projects">{t('Projects', 'Projets')}</a>
+              <a href="#experience">{t('Experience', 'Expérience')}</a>
+              <a href="#education">{t('Education', 'Éducation')}</a>
+              <a href="#hobbies">{t('Hobbies', 'Loisirs')}</a>
+              <a href="#testimonials">{t('Testimonials', 'Témoignages')}</a>
+              <Link to="/contact">{t('Contact', 'Contact')}</Link>
               <button onClick={toggleLanguage} className="lang-btn">
-                {language === 'en' ? 'ES' : 'EN'}
+                {language === 'en' ? 'FR' : 'EN'}
               </button>
             </div>
           </nav>
@@ -112,7 +112,7 @@ const Home = () => {
       {/* Hero Section */}
       <section className="hero">
         <div className="container">
-          <h1 className="hero-title">{t('Welcome to My Portfolio', 'Bienvenido a Mi Portafolio')}</h1>
+          <h1 className="hero-title">{t('Welcome to My Portfolio', 'Bienvenue sur Mon Portfolio')}</h1>
           <p className="hero-subtitle">
             {t(
               'Full Stack Developer & Digital Creator',
@@ -125,7 +125,7 @@ const Home = () => {
               download
               className="btn-download"
             >
-              {t('Download CV', 'Descargar CV')}
+              {t('Download CV', 'Télécharger CV')}
             </a>
           )}
         </div>
@@ -134,11 +134,11 @@ const Home = () => {
       {/* Skills Section */}
       <section id="skills" className="section">
         <div className="container">
-          <h2 className="section-title">{t('Skills', 'Habilidades')}</h2>
+          <h2 className="section-title">{t('Skills', 'Compétences')}</h2>
           <div className="skills-grid">
             {data.skills.map((skill) => (
               <div key={skill.id} className="skill-card">
-                <h3>{language === 'en' ? skill.nameEn : skill.nameEs}</h3>
+                <h3>{language === 'en' ? skill.nameEn : skill.nameFr}</h3>
                 <div className="skill-bar">
                   <div
                     className="skill-progress"
@@ -155,7 +155,7 @@ const Home = () => {
       {/* Projects Section */}
       <section id="projects" className="section bg-light">
         <div className="container">
-          <h2 className="section-title">{t('Projects', 'Proyectos')}</h2>
+          <h2 className="section-title">{t('Projects', 'Projets')}</h2>
           <div className="projects-grid">
             {data.projects.map((project) => (
               <div key={project.id} className="project-card">
@@ -172,7 +172,7 @@ const Home = () => {
                 <div className="project-links">
                   {project.projectUrl && (
                     <a href={project.projectUrl} target="_blank" rel="noopener noreferrer">
-                      {t('View Project', 'Ver Proyecto')}
+                      {t('View Project', 'Voir le Projet')}
                     </a>
                   )}
                   {project.githubUrl && (
@@ -190,18 +190,18 @@ const Home = () => {
       {/* Work Experience Section */}
       <section id="experience" className="section">
         <div className="container">
-          <h2 className="section-title">{t('Work Experience', 'Experiencia Laboral')}</h2>
+          <h2 className="section-title">{t('Work Experience', 'Expérience Professionnelle')}</h2>
           <div className="timeline">
             {data.workExperience.map((exp) => (
               <div key={exp.id} className="timeline-item">
                 <div className="timeline-date">
                   {new Date(exp.startDate).getFullYear()} -{' '}
-                  {exp.current ? t('Present', 'Presente') : new Date(exp.endDate).getFullYear()}
+                  {exp.current ? t('Present', 'Présent') : new Date(exp.endDate).getFullYear()}
                 </div>
                 <div className="timeline-content">
-                  <h3>{language === 'en' ? exp.positionEn : exp.positionEs}</h3>
-                  <h4>{language === 'en' ? exp.companyEn : exp.companyEs}</h4>
-                  <p>{language === 'en' ? exp.descriptionEn : exp.descriptionEs}</p>
+                  <h3>{language === 'en' ? exp.positionEn : exp.positionFr}</h3>
+                  <h4>{language === 'en' ? exp.companyEn : exp.companyFr}</h4>
+                  <p>{language === 'en' ? exp.descriptionEn : exp.descriptionFr}</p>
                   {exp.location && <span className="location">{exp.location}</span>}
                 </div>
               </div>
@@ -213,18 +213,18 @@ const Home = () => {
       {/* Education Section */}
       <section id="education" className="section bg-light">
         <div className="container">
-          <h2 className="section-title">{t('Education', 'Educación')}</h2>
+          <h2 className="section-title">{t('Education', 'Éducation')}</h2>
           <div className="timeline">
             {data.education.map((edu) => (
               <div key={edu.id} className="timeline-item">
                 <div className="timeline-date">
                   {new Date(edu.startDate).getFullYear()} -{' '}
-                  {edu.current ? t('Present', 'Presente') : new Date(edu.endDate).getFullYear()}
+                  {edu.current ? t('Present', 'Présent') : new Date(edu.endDate).getFullYear()}
                 </div>
                 <div className="timeline-content">
-                  <h3>{language === 'en' ? edu.degreeEn : edu.degreeEs}</h3>
-                  <h4>{language === 'en' ? edu.institutionEn : edu.institutionEs}</h4>
-                  <p>{language === 'en' ? edu.fieldEn : edu.fieldEs}</p>
+                  <h3>{language === 'en' ? edu.degreeEn : edu.degreeFr}</h3>
+                  <h4>{language === 'en' ? edu.institutionEn : edu.institutionFr}</h4>
+                  <p>{language === 'en' ? edu.fieldEn : edu.fieldFr}</p>
                   {edu.gpa && <span className="gpa">GPA: {edu.gpa}</span>}
                 </div>
               </div>
@@ -236,13 +236,13 @@ const Home = () => {
       {/* Hobbies Section */}
       <section id="hobbies" className="section">
         <div className="container">
-          <h2 className="section-title">{t('Hobbies & Interests', 'Pasatiempos e Intereses')}</h2>
+          <h2 className="section-title">{t('Hobbies & Interests', 'Loisirs et Intérêts')}</h2>
           <div className="hobbies-grid">
             {data.hobbies.map((hobby) => (
               <div key={hobby.id} className="hobby-card">
-                <h3>{language === 'en' ? hobby.nameEn : hobby.nameEs}</h3>
+                <h3>{language === 'en' ? hobby.nameEn : hobby.nameFr}</h3>
                 {hobby.descriptionEn && (
-                  <p>{language === 'en' ? hobby.descriptionEn : hobby.descriptionEs}</p>
+                  <p>{language === 'en' ? hobby.descriptionEn : hobby.descriptionFr}</p>
                 )}
               </div>
             ))}
@@ -253,7 +253,7 @@ const Home = () => {
       {/* Testimonials Section */}
       <section id="testimonials" className="section bg-light">
         <div className="container">
-          <h2 className="section-title">{t('Testimonials', 'Testimonios')}</h2>
+          <h2 className="section-title">{t('Testimonials', 'Témoignages')}</h2>
           <div className="testimonials-grid">
             {data.testimonials.map((testimonial) => (
               <div key={testimonial.id} className="testimonial-card">
@@ -272,7 +272,7 @@ const Home = () => {
       {/* Contact Info Section */}
       <section id="contact-section" className="section">
         <div className="container">
-          <h2 className="section-title">{t('Contact Information', 'Información de Contacto')}</h2>
+          <h2 className="section-title">{t('Contact Information', 'Informations de Contact')}</h2>
           <div className="contact-info-grid">
             {data.contactInfo.map((info) => (
               <div key={info.id} className="contact-info-item">
@@ -286,7 +286,7 @@ const Home = () => {
       {/* Footer */}
       <footer className="footer">
         <div className="container">
-          <p>&copy; {new Date().getFullYear()} {t('All rights reserved', 'Todos los derechos reservados')}</p>
+          <p>&copy; {new Date().getFullYear()} {t('All rights reserved', 'Tous droits réservés')}</p>
         </div>
       </footer>
     </div>

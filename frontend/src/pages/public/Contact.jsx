@@ -11,16 +11,16 @@ const Contact = () => {
   const [message, setMessage] = useState('');
   const [activeTab, setActiveTab] = useState('contact');
 
-  const t = (en, es) => (language === 'en' ? en : es);
+  const t = (en, fr) => (language === 'en' ? en : fr);
 
   const handleContactSubmit = async (e) => {
     e.preventDefault();
     try {
       await contactMessagesAPI.create(contactForm);
-      setMessage(t('Message sent successfully!', '¡Mensaje enviado exitosamente!'));
+      setMessage(t('Message sent successfully!', 'Message envoyé avec succès !'));
       setContactForm({ name: '', email: '', subject: '', message: '' });
     } catch (error) {
-      setMessage(t('Error sending message', 'Error al enviar mensaje'));
+      setMessage(t('Error sending message', 'Erreur lors de l\'envoi du message'));
     }
   };
 
@@ -30,11 +30,11 @@ const Contact = () => {
       await testimonialsAPI.create(testimonialForm);
       setMessage(t(
         'Testimonial submitted successfully! It will be visible after admin approval.',
-        '¡Testimonio enviado exitosamente! Será visible después de la aprobación del administrador.'
+        'Témoignage soumis avec succès ! Il sera visible après approbation de l\'administrateur.'
       ));
       setTestimonialForm({ name: '', position: '', company: '', content: '' });
     } catch (error) {
-      setMessage(t('Error submitting testimonial', 'Error al enviar testimonio'));
+      setMessage(t('Error submitting testimonial', 'Erreur lors de la soumission du témoignage'));
     }
   };
 
@@ -43,11 +43,11 @@ const Contact = () => {
       <header className="header">
         <div className="container">
           <nav className="nav">
-            <h1 className="logo">{t('Portfolio', 'Portafolio')}</h1>
+            <h1 className="logo">{t('Portfolio', 'Portfolio')}</h1>
             <div className="nav-links">
-              <Link to="/">{t('Home', 'Inicio')}</Link>
+              <Link to="/">{t('Home', 'Accueil')}</Link>
               <button onClick={toggleLanguage} className="lang-btn">
-                {language === 'en' ? 'ES' : 'EN'}
+                {language === 'en' ? 'FR' : 'EN'}
               </button>
             </div>
           </nav>
@@ -56,20 +56,20 @@ const Contact = () => {
 
       <section className="contact-section">
         <div className="container">
-          <h1>{t('Get in Touch', 'Contáctame')}</h1>
+          <h1>{t('Get in Touch', 'Contactez-moi')}</h1>
           
           <div className="tabs">
             <button
               className={activeTab === 'contact' ? 'active' : ''}
               onClick={() => setActiveTab('contact')}
             >
-              {t('Contact Message', 'Mensaje de Contacto')}
+              {t('Contact Message', 'Message de Contact')}
             </button>
             <button
               className={activeTab === 'testimonial' ? 'active' : ''}
               onClick={() => setActiveTab('testimonial')}
             >
-              {t('Leave a Testimonial', 'Dejar un Testimonio')}
+              {t('Leave a Testimonial', 'Laisser un Témoignage')}
             </button>
           </div>
 
@@ -78,7 +78,7 @@ const Contact = () => {
           {activeTab === 'contact' ? (
             <form onSubmit={handleContactSubmit} className="contact-form">
               <div className="form-group">
-                <label>{t('Name', 'Nombre')} *</label>
+                <label>{t('Name', 'Nom')} *</label>
                 <input
                   type="text"
                   value={contactForm.name}
@@ -88,7 +88,7 @@ const Contact = () => {
               </div>
 
               <div className="form-group">
-                <label>{t('Email', 'Correo Electrónico')} *</label>
+                <label>{t('Email', 'Email')} *</label>
                 <input
                   type="email"
                   value={contactForm.email}
@@ -98,7 +98,7 @@ const Contact = () => {
               </div>
 
               <div className="form-group">
-                <label>{t('Subject', 'Asunto')}</label>
+                <label>{t('Subject', 'Sujet')}</label>
                 <input
                   type="text"
                   value={contactForm.subject}
@@ -107,7 +107,7 @@ const Contact = () => {
               </div>
 
               <div className="form-group">
-                <label>{t('Message', 'Mensaje')} *</label>
+                <label>{t('Message', 'Message')} *</label>
                 <textarea
                   rows="5"
                   value={contactForm.message}
@@ -117,13 +117,13 @@ const Contact = () => {
               </div>
 
               <button type="submit" className="primary">
-                {t('Send Message', 'Enviar Mensaje')}
+                {t('Send Message', 'Envoyer le Message')}
               </button>
             </form>
           ) : (
             <form onSubmit={handleTestimonialSubmit} className="contact-form">
               <div className="form-group">
-                <label>{t('Name', 'Nombre')} *</label>
+                <label>{t('Name', 'Nom')} *</label>
                 <input
                   type="text"
                   value={testimonialForm.name}
@@ -133,7 +133,7 @@ const Contact = () => {
               </div>
 
               <div className="form-group">
-                <label>{t('Position', 'Cargo')} *</label>
+                <label>{t('Position', 'Poste')} *</label>
                 <input
                   type="text"
                   value={testimonialForm.position}
@@ -143,7 +143,7 @@ const Contact = () => {
               </div>
 
               <div className="form-group">
-                <label>{t('Company', 'Empresa')}</label>
+                <label>{t('Company', 'Entreprise')}</label>
                 <input
                   type="text"
                   value={testimonialForm.company}
@@ -152,7 +152,7 @@ const Contact = () => {
               </div>
 
               <div className="form-group">
-                <label>{t('Testimonial', 'Testimonio')} *</label>
+                <label>{t('Testimonial', 'Témoignage')} *</label>
                 <textarea
                   rows="5"
                   value={testimonialForm.content}
@@ -162,13 +162,13 @@ const Contact = () => {
               </div>
 
               <button type="submit" className="primary">
-                {t('Submit Testimonial', 'Enviar Testimonio')}
+                {t('Submit Testimonial', 'Soumettre le Témoignage')}
               </button>
             </form>
           )}
 
           <Link to="/" className="back-link">
-            ← {t('Back to Home', 'Volver al Inicio')}
+            ← {t('Back to Home', 'Retour à l\'Accueil')}
           </Link>
         </div>
       </section>

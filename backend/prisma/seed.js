@@ -31,21 +31,21 @@ async function seed() {
       data: [
         {
           nameEn: 'JavaScript',
-          nameEs: 'JavaScript',
+          nameFr: 'JavaScript',
           level: 90,
           category: 'Programming',
           order: 1,
         },
         {
           nameEn: 'React',
-          nameEs: 'React',
+          nameFr: 'React',
           level: 85,
           category: 'Framework',
           order: 2,
         },
         {
           nameEn: 'Node.js',
-          nameEs: 'Node.js',
+          nameFr: 'Node.js',
           level: 80,
           category: 'Backend',
           order: 3,

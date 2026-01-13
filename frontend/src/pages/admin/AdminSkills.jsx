@@ -9,7 +9,7 @@ const AdminSkills = () => {
   const [editing, setEditing] = useState(null);
   const [formData, setFormData] = useState({
     nameEn: '',
-    nameEs: '',
+    nameFr: '',
     level: 50,
     category: '',
     icon: '',
@@ -53,7 +53,7 @@ const AdminSkills = () => {
     setEditing(skill.id);
     setFormData({
       nameEn: skill.nameEn,
-      nameEs: skill.nameEs,
+      nameFr: skill.nameFr,
       level: skill.level,
       category: skill.category,
       icon: skill.icon || '',
@@ -77,7 +77,7 @@ const AdminSkills = () => {
     setEditing(null);
     setFormData({
       nameEn: '',
-      nameEs: '',
+      nameFr: '',
       level: 50,
       category: '',
       icon: '',
@@ -117,11 +117,11 @@ const AdminSkills = () => {
                 </div>
 
                 <div className="form-group">
-                  <label>Name (Spanish) *</label>
+                  <label>Name (French) *</label>
                   <input
                     type="text"
-                    value={formData.nameEs}
-                    onChange={(e) => setFormData({ ...formData, nameEs: e.target.value })}
+                    value={formData.nameFr}
+                    onChange={(e) => setFormData({ ...formData, nameFr: e.target.value })}
                     required
                   />
                 </div>
@@ -190,7 +190,7 @@ const AdminSkills = () => {
                   skills.map((skill) => (
                     <div key={skill.id} className="item-card">
                       <div className="item-info">
-                        <h3>{skill.nameEn} / {skill.nameEs}</h3>
+                        <h3>{skill.nameEn} / {skill.nameFr}</h3>
                         <p>Level: {skill.level}% | Category: {skill.category}</p>
                       </div>
                       <div className="item-actions">

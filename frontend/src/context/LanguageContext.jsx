@@ -12,7 +12,7 @@ export const LanguageProvider = ({ children }) => {
   }, [language]);
 
   const toggleLanguage = () => {
-    setLanguage((prev) => (prev === 'en' ? 'es' : 'en'));
+    setLanguage((prev) => (prev === 'en' ? 'fr' : 'en'));
   };
 
   return (
