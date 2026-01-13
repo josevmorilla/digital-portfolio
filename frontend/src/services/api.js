@@ -1,0 +1,89 @@
+import axios from 'axios';
+
+const API_URL = '/api';
+
+// Skills
+export const skillsAPI = {
+  getAll: () => axios.get(`${API_URL}/skills`),
+  getById: (id) => axios.get(`${API_URL}/skills/${id}`),
+  create: (data) => axios.post(`${API_URL}/skills`, data),
+  update: (id, data) => axios.put(`${API_URL}/skills/${id}`, data),
+  delete: (id) => axios.delete(`${API_URL}/skills/${id}`),
+};
+
+// Projects
+export const projectsAPI = {
+  getAll: (featured) => axios.get(`${API_URL}/projects${featured ? '?featured=true' : ''}`),
+  getById: (id) => axios.get(`${API_URL}/projects/${id}`),
+  create: (data) => axios.post(`${API_URL}/projects`, data),
+  update: (id, data) => axios.put(`${API_URL}/projects/${id}`, data),
+  delete: (id) => axios.delete(`${API_URL}/projects/${id}`),
+};
+
+// Work Experience
+export const workExperienceAPI = {
+  getAll: () => axios.get(`${API_URL}/work-experience`),
+  getById: (id) => axios.get(`${API_URL}/work-experience/${id}`),
+  create: (data) => axios.post(`${API_URL}/work-experience`, data),
+  update: (id, data) => axios.put(`${API_URL}/work-experience/${id}`, data),
+  delete: (id) => axios.delete(`${API_URL}/work-experience/${id}`),
+};
+
+// Education
+export const educationAPI = {
+  getAll: () => axios.get(`${API_URL}/education`),
+  getById: (id) => axios.get(`${API_URL}/education/${id}`),
+  create: (data) => axios.post(`${API_URL}/education`, data),
+  update: (id, data) => axios.put(`${API_URL}/education/${id}`, data),
+  delete: (id) => axios.delete(`${API_URL}/education/${id}`),
+};
+
+// Contact Info
+export const contactInfoAPI = {
+  getAll: () => axios.get(`${API_URL}/contact-info`),
+  getById: (id) => axios.get(`${API_URL}/contact-info/${id}`),
+  create: (data) => axios.post(`${API_URL}/contact-info`, data),
+  update: (id, data) => axios.put(`${API_URL}/contact-info/${id}`, data),
+  delete: (id) => axios.delete(`${API_URL}/contact-info/${id}`),
+};
+
+// Hobbies
+export const hobbiesAPI = {
+  getAll: () => axios.get(`${API_URL}/hobbies`),
+  getById: (id) => axios.get(`${API_URL}/hobbies/${id}`),
+  create: (data) => axios.post(`${API_URL}/hobbies`, data),
+  update: (id, data) => axios.put(`${API_URL}/hobbies/${id}`, data),
+  delete: (id) => axios.delete(`${API_URL}/hobbies/${id}`),
+};
+
+// Testimonials
+export const testimonialsAPI = {
+  getAll: () => axios.get(`${API_URL}/testimonials`),
+  getById: (id) => axios.get(`${API_URL}/testimonials/${id}`),
+  create: (data) => axios.post(`${API_URL}/testimonials`, data),
+  update: (id, data) => axios.put(`${API_URL}/testimonials/${id}`, data),
+  approve: (id) => axios.post(`${API_URL}/testimonials/${id}/approve`),
+  delete: (id) => axios.delete(`${API_URL}/testimonials/${id}`),
+};
+
+// Contact Messages
+export const contactMessagesAPI = {
+  getAll: () => axios.get(`${API_URL}/contact-messages`),
+  getById: (id) => axios.get(`${API_URL}/contact-messages/${id}`),
+  create: (data) => axios.post(`${API_URL}/contact-messages`, data),
+  markAsRead: (id) => axios.post(`${API_URL}/contact-messages/${id}/read`),
+  delete: (id) => axios.delete(`${API_URL}/contact-messages/${id}`),
+  getUnreadCount: () => axios.get(`${API_URL}/contact-messages/unread-count`),
+};
+
+// Resumes
+export const resumesAPI = {
+  getAll: () => axios.get(`${API_URL}/resumes`),
+  getCurrentByLanguage: (language) => axios.get(`${API_URL}/resumes/current/${language}`),
+  download: (id) => `${API_URL}/resumes/${id}/download`,
+  upload: (formData) => axios.post(`${API_URL}/resumes`, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  }),
+  update: (id, data) => axios.put(`${API_URL}/resumes/${id}`, data),
+  delete: (id) => axios.delete(`${API_URL}/resumes/${id}`),
+};

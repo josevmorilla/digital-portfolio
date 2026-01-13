@@ -1,0 +1,145 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Skill {
+  id          String   @id @default(uuid())
+  nameEn      String
+  nameEs      String
+  level       Int      // 1-100
+  category    String   // e.g., "Programming", "Design", "Languages"
+  icon        String?  // URL or icon name
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Project {
+  id             String   @id @default(uuid())
+  titleEn        String
+  titleEs        String
+  descriptionEn  String   @db.Text
+  descriptionEs  String   @db.Text
+  imageUrl       String?
+  projectUrl     String?
+  githubUrl      String?
+  technologies   String[] // Array of technology names
+  featured       Boolean  @default(false)
+  order          Int      @default(0)
+  startDate      DateTime?
+  endDate        DateTime?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model WorkExperience {
+  id              String    @id @default(uuid())
+  companyEn       String
+  companyEs       String
+  positionEn      String
+  positionEs      String
+  descriptionEn   String    @db.Text
+  descriptionEs   String    @db.Text
+  location        String?
+  startDate       DateTime
+  endDate         DateTime?
+  current         Boolean   @default(false)
+  order           Int       @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model Education {
+  id              String    @id @default(uuid())
+  institutionEn   String
+  institutionEs   String
+  degreeEn        String
+  degreeEs        String
+  fieldEn         String
+  fieldEs         String
+  descriptionEn   String?   @db.Text
+  descriptionEs   String?   @db.Text
+  location        String?
+  startDate       DateTime
+  endDate         DateTime?
+  current         Boolean   @default(false)
+  gpa             String?
+  order           Int       @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model ContactInfo {
+  id        String   @id @default(uuid())
+  type      String   // e.g., "email", "phone", "linkedin", "github"
+  label     String
+  value     String
+  icon      String?
+  order     Int      @default(0)
+  visible   Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Hobby {
+  id            String   @id @default(uuid())
+  nameEn        String
+  nameEs        String
+  descriptionEn String?  @db.Text
+  descriptionEs String?  @db.Text
+  icon          String?
+  order         Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Testimonial {
+  id         String   @id @default(uuid())
+  name       String
+  position   String
+  company    String?
+  content    String   @db.Text
+  imageUrl   String?
+  approved   Boolean  @default(false)
+  order      Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model ContactMessage {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  subject   String?
+  message   String   @db.Text
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Resume {
+  id        String   @id @default(uuid())
+  filename  String
+  fileUrl   String
+  language  String   // "en" or "es"
+  current   Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
