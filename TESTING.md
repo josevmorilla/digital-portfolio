@@ -15,12 +15,14 @@ This guide helps you test all features of the Digital Portfolio application.
 ### 1. Backend API Tests
 
 #### Health Check
+
 ```bash
 curl http://localhost:5000/api/health
 # Expected: {"status":"ok","message":"Server is running"}
 ```
 
 #### Authentication
+
 ```bash
 # Login
 curl -X POST http://localhost:5000/api/auth/login \
@@ -36,6 +38,7 @@ curl http://localhost:5000/api/auth/me \
 ```
 
 #### Public Endpoints
+
 ```bash
 # Get all skills
 curl http://localhost:5000/api/skills
@@ -60,6 +63,7 @@ curl http://localhost:5000/api/testimonials
 ```
 
 #### Protected Endpoints (use TOKEN from login)
+
 ```bash
 # Create skill
 curl -X POST http://localhost:5000/api/skills \
@@ -84,7 +88,8 @@ curl -X DELETE http://localhost:5000/api/skills/{skill-id} \
 
 #### Public Pages
 
-**Homepage (http://localhost:5173)**
+**Homepage (<http://localhost:5173>)**
+
 - [ ] Page loads without errors
 - [ ] Navigation menu is visible and functional
 - [ ] Language switcher works (EN ↔ ES)
@@ -102,7 +107,8 @@ curl -X DELETE http://localhost:5000/api/skills/{skill-id} \
 - [ ] All content switches language correctly
 - [ ] Responsive: Test on mobile viewport (< 768px)
 
-**Contact Page (http://localhost:5173/contact)**
+**Contact Page (<http://localhost:5173/contact>)**
+
 - [ ] Page loads without errors
 - [ ] Contact form is displayed
 - [ ] Can switch to testimonial form via tabs
@@ -119,7 +125,8 @@ curl -X DELETE http://localhost:5000/api/skills/{skill-id} \
 
 #### Admin Pages
 
-**Login Page (http://localhost:5173/admin/login)**
+**Login Page (<http://localhost:5173/admin/login>)**
+
 - [ ] Page loads without errors
 - [ ] Can enter email and password
 - [ ] Validation works:
@@ -130,7 +137,8 @@ curl -X DELETE http://localhost:5000/api/skills/{skill-id} \
 - [ ] Redirects to dashboard after successful login
 - [ ] Shows default credentials info
 
-**Admin Dashboard (http://localhost:5173/admin)**
+**Admin Dashboard (<http://localhost:5173/admin>)**
+
 - [ ] Protected: Redirects to login if not authenticated
 - [ ] Shows welcome message with admin name
 - [ ] All section cards are displayed
@@ -140,7 +148,8 @@ curl -X DELETE http://localhost:5000/api/skills/{skill-id} \
 - [ ] Logout button works
 - [ ] After logout, redirected to login
 
-**Skills CRUD (http://localhost:5173/admin/skills)**
+**Skills CRUD (<http://localhost:5173/admin/skills>)**
+
 - [ ] Page loads with existing skills list
 - [ ] Form on left, list on right
 - [ ] Can add new skill:
@@ -170,6 +179,7 @@ curl -X DELETE http://localhost:5000/api/skills/{skill-id} \
 ### 3. Integration Tests
 
 #### User Flow: Public Visitor
+
 1. [ ] Visit homepage
 2. [ ] Browse all sections
 3. [ ] Switch language to Spanish
@@ -183,6 +193,7 @@ curl -X DELETE http://localhost:5000/api/skills/{skill-id} \
 11. [ ] See "pending approval" message
 
 #### User Flow: Admin User
+
 1. [ ] Go to admin login
 2. [ ] Login with credentials
 3. [ ] See dashboard
@@ -201,6 +212,7 @@ curl -X DELETE http://localhost:5000/api/skills/{skill-id} \
 16. [ ] Verify logout worked
 
 #### User Flow: CV Download
+
 1. [ ] Admin: Upload resume file
 2. [ ] Set as current resume for language
 3. [ ] Logout
@@ -214,17 +226,19 @@ curl -X DELETE http://localhost:5000/api/skills/{skill-id} \
 ### 4. Database Tests
 
 #### Using Prisma Studio
+
 ```bash
 npm run prisma:studio
 ```
 
-- [ ] Opens at http://localhost:5555
+- [ ] Opens at <http://localhost:5555>
 - [ ] Can view all tables
 - [ ] Can view data in each table
 - [ ] Can manually add/edit/delete records
 - [ ] Changes reflect in application
 
 #### Check Data
+
 - [ ] User table has admin user
 - [ ] Sample skills exist
 - [ ] Sample contact info exists
@@ -234,7 +248,8 @@ npm run prisma:studio
 
 ### 5. Security Tests
 
-#### Authentication
+#### Authentication Security
+
 - [ ] Cannot access admin routes without login
 - [ ] Invalid token is rejected
 - [ ] Expired token is rejected
@@ -242,6 +257,7 @@ npm run prisma:studio
 - [ ] JWT secret is configured
 
 #### Authorization
+
 - [ ] Public endpoints work without auth
 - [ ] Admin endpoints require auth token
 - [ ] CORS is configured correctly
@@ -249,6 +265,7 @@ npm run prisma:studio
 - [ ] Cannot see hidden contact info publicly
 
 #### Input Validation
+
 - [ ] Server validates all inputs
 - [ ] SQL injection prevented (Prisma ORM)
 - [ ] XSS prevented (React escapes by default)
@@ -260,12 +277,14 @@ npm run prisma:studio
 ### 6. Responsive Design Tests
 
 Test on different viewports:
+
 - [ ] Desktop (1920x1080)
 - [ ] Laptop (1366x768)
 - [ ] Tablet (768x1024)
 - [ ] Mobile (375x667)
 
 Check:
+
 - [ ] Navigation adapts on mobile
 - [ ] Cards stack properly
 - [ ] Forms are usable
@@ -279,6 +298,7 @@ Check:
 ### 7. Browser Compatibility
 
 Test on:
+
 - [ ] Chrome/Edge (latest)
 - [ ] Firefox (latest)
 - [ ] Safari (latest)
@@ -290,11 +310,13 @@ Test on:
 ### 8. Performance Tests
 
 #### Load Times
+
 - [ ] Homepage loads in < 3 seconds
 - [ ] Admin dashboard loads in < 2 seconds
 - [ ] API responses < 500ms
 
 #### Optimization
+
 - [ ] Images are optimized
 - [ ] CSS is minified in production build
 - [ ] JavaScript is minified in production build
@@ -306,6 +328,7 @@ Test on:
 ### 9. Error Handling Tests
 
 #### Network Errors
+
 - [ ] Stop backend server
 - [ ] Try to load frontend
 - [ ] Should show loading state or error
@@ -313,11 +336,13 @@ Test on:
 - [ ] Frontend recovers
 
 #### Invalid Data
+
 - [ ] Submit form with invalid data
 - [ ] Error messages are clear
 - [ ] Can correct and resubmit
 
 #### 404 Pages
+
 - [ ] Visit non-existent route
 - [ ] Redirects to home or shows 404
 
@@ -405,6 +430,7 @@ After testing, document results:
 ## 🐛 Common Issues & Solutions
 
 ### Backend won't start
+
 ```bash
 # Check PostgreSQL is running
 sudo systemctl status postgresql
@@ -420,6 +446,7 @@ npm run prisma:generate
 ```
 
 ### Frontend won't start
+
 ```bash
 # Check port 5173 is free
 lsof -ti:5173 | xargs kill -9
@@ -431,6 +458,7 @@ npm install
 ```
 
 ### Database errors
+
 ```bash
 # Reset database
 npm run prisma:migrate reset
@@ -440,6 +468,7 @@ npm run prisma:seed
 ```
 
 ### CORS errors
+
 - Check FRONTEND_URL in backend .env
 - Check VITE_API_URL in frontend
 - Ensure both URLs match deployment URLs
@@ -449,6 +478,7 @@ npm run prisma:seed
 ## ✅ Pre-Deployment Checklist
 
 Before deploying to production:
+
 - [ ] All manual tests pass
 - [ ] No console errors
 - [ ] All forms validated

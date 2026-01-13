@@ -5,6 +5,7 @@ A fully dynamic, responsive, bilingual portfolio website with a secure admin das
 ## Features
 
 ### Public Portfolio
+
 - ✅ **Bilingual Support** - Switch between English and Spanish
 - ✅ **Responsive Design** - Works on all devices
 - ✅ **Dynamic Content** - All content loaded from database
@@ -18,6 +19,7 @@ A fully dynamic, responsive, bilingual portfolio website with a secure admin das
 - ✅ **CV Download** - Download resume in multiple languages
 
 ### Admin Dashboard
+
 - ✅ **Secure Authentication** - JWT-based login system
 - ✅ **Full CRUD Operations** for:
   - Skills
@@ -35,6 +37,7 @@ A fully dynamic, responsive, bilingual portfolio website with a secure admin das
 ## Technology Stack
 
 ### Backend
+
 - **Express.js** - Web application framework
 - **PostgreSQL** - Relational database
 - **Prisma** - Modern ORM
@@ -44,6 +47,7 @@ A fully dynamic, responsive, bilingual portfolio website with a secure admin das
 - **express-validator** - Input validation
 
 ### Frontend
+
 - **React** - UI library
 - **Vite** - Build tool
 - **React Router** - Client-side routing
@@ -53,6 +57,7 @@ A fully dynamic, responsive, bilingual portfolio website with a secure admin das
 ## Getting Started
 
 ### Prerequisites
+
 - Node.js (v16 or higher)
 - PostgreSQL (v12 or higher)
 - npm or yarn
@@ -60,23 +65,27 @@ A fully dynamic, responsive, bilingual portfolio website with a secure admin das
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/josevmorilla/digital-portfolio.git
    cd digital-portfolio
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    cd frontend && npm install && cd ..
    ```
 
 3. **Set up environment variables**
+
    ```bash
    cp .env.example .env
    ```
-   
+
    Edit `.env` and configure:
+
    ```env
    DATABASE_URL="postgresql://user:password@localhost:5432/portfolio?schema=public"
    PORT=5000
@@ -87,6 +96,7 @@ A fully dynamic, responsive, bilingual portfolio website with a secure admin das
    ```
 
 4. **Set up the database**
+
    ```bash
    # Generate Prisma client
    npm run prisma:generate
@@ -99,21 +109,23 @@ A fully dynamic, responsive, bilingual portfolio website with a secure admin das
    ```
 
 5. **Start the development servers**
-   
+
    Terminal 1 - Backend:
+
    ```bash
    npm run dev
    ```
-   
+
    Terminal 2 - Frontend:
+
    ```bash
    cd frontend
    npm run dev
    ```
 
 6. **Access the application**
-   - Public Portfolio: http://localhost:5173
-   - Admin Dashboard: http://localhost:5173/admin/login
+   - Public Portfolio: <http://localhost:5173>
+   - Admin Dashboard: <http://localhost:5173/admin/login>
    - Default Admin Credentials:
      - Email: `admin@portfolio.com`
      - Password: `admin123`
@@ -156,6 +168,7 @@ digital-portfolio/
 ## API Endpoints
 
 ### Public Endpoints
+
 - `GET /api/skills` - Get all skills
 - `GET /api/projects` - Get all projects
 - `GET /api/work-experience` - Get work experience
@@ -169,7 +182,9 @@ digital-portfolio/
 - `GET /api/resumes/:id/download` - Download resume
 
 ### Admin Endpoints (Require Authentication)
+
 All CRUD operations for:
+
 - `/api/skills` - Skills management
 - `/api/projects` - Projects management
 - `/api/work-experience` - Work experience management
@@ -181,6 +196,7 @@ All CRUD operations for:
 - `/api/resumes` - Resume management
 
 ### Authentication
+
 - `POST /api/auth/login` - Admin login
 - `GET /api/auth/me` - Get current user
 - `POST /api/auth/change-password` - Change password
@@ -188,6 +204,7 @@ All CRUD operations for:
 ## Database Schema
 
 The application uses the following models:
+
 - **User** - Admin users
 - **Skill** - Technical and soft skills
 - **Project** - Portfolio projects
@@ -233,18 +250,21 @@ npm run preview          # Preview production build
 ## Deployment
 
 ### Option 1: Railway (Recommended)
-1. Create a Railway account at https://railway.app
+
+1. Create a Railway account at <https://railway.app>
 2. Create a new PostgreSQL database
 3. Create a new project from GitHub
 4. Set environment variables in Railway dashboard
 5. Deploy!
 
 ### Option 2: Vercel + Render/Heroku
+
 - Frontend: Deploy to Vercel
 - Backend: Deploy to Render or Heroku
 - Database: Use Railway or Heroku PostgreSQL
 
 ### Option 3: Docker
+
 ```bash
 # Coming soon - Docker configuration
 ```
