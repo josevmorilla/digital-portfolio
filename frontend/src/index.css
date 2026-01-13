@@ -2,28 +2,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&family=Caveat:wght@600;700&display=swap');
 
 :root {
-  /* Modern color palette - warm & distinctive */
-  --primary: #6366f1;
-  --primary-dark: #4f46e5;
-  --secondary: #ec4899;
-  --accent: #f59e0b;
-  --dark: #0f172a;
-  --dark-light: #1e293b;
-  --gray: #64748b;
-  --light: #f8fafc;
+  /* Minimal monochrome with muted red accent */
+  --primary: #c24040;
+  --primary-dark: #a33232;
+  --accent: #8c8f96;
+  --dark: #0f0f10;
+  --dark-light: #1a1b1d;
+  --gray: #5a5d63;
+  --light: #f7f7f8;
   --white: #ffffff;
-  
-  /* Gradients */
-  --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-  --gradient-hero: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-  
-  /* Shadows */
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-  --shadow-md: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.06);
-  --shadow-lg: 0 10px 25px rgba(0,0,0,0.1), 0 6px 10px rgba(0,0,0,0.05);
-  --shadow-xl: 0 20px 40px rgba(0,0,0,0.15), 0 10px 20px rgba(0,0,0,0.1);
+  --border: #e4e5e7;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.07);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.12);
 }
 
 * {

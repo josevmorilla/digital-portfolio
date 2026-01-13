@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
+import { FiMail, FiMapPin, FiGithub, FiLinkedin, FiPhone } from 'react-icons/fi';
 import {
   skillsAPI,
   projectsAPI,
@@ -86,13 +87,68 @@ const Home = () => {
 
   const t = (en, fr) => (language === 'en' ? en : fr);
 
+  const categoryLabels = {
+    Languages: t('Languages', 'Langages'),
+    Frontend: t('Frontend', 'Frontend'),
+    Frameworks: t('Frameworks', 'Frameworks'),
+    Backend: t('Backend', 'Backend'),
+    Databases: t('Databases', 'Bases de données'),
+    Tools: t('Tools', 'Outils'),
+    Testing: t('Testing', 'Tests'),
+    Cloud: t('Cloud', 'Cloud'),
+    Other: t('Other', 'Autres'),
+  };
+
+  const categoryOrder = [
+    'Languages',
+    'Frontend',
+    'Frameworks',
+    'Backend',
+    'Databases',
+    'Tools',
+    'Testing',
+    'Cloud',
+    'Other',
+  ];
+
+  const groupedSkills = data.skills.reduce((acc, skill) => {
+    const category = skill.category || 'Other';
+    if (!acc[category]) acc[category] = [];
+    acc[category].push(skill);
+    return acc;
+  }, {});
+
+  const orderedCategories = Object.keys(groupedSkills).sort((a, b) => {
+    const aIndex = categoryOrder.indexOf(a);
+    const bIndex = categoryOrder.indexOf(b);
+    if (aIndex === -1 && bIndex === -1) return a.localeCompare(b);
+    if (aIndex === -1) return 1;
+    if (bIndex === -1) return -1;
+    return aIndex - bIndex;
+  });
+
+  const contactIcon = {
+    email: <FiMail />,
+    phone: <FiPhone />,
+    location: <FiMapPin />,
+    github: <FiGithub />,
+    linkedin: <FiLinkedin />,
+  };
+
+  const contactHref = (info) => {
+    if (info.type === 'email') return `mailto:${info.value}`;
+    if (info.type === 'phone') return `tel:${info.value}`;
+    if (info.type === 'github' || info.type === 'linkedin') return info.value;
+    return null;
+  };
+
   return (
     <div className="home">
       {/* Header */}
       <header className="header">
         <div className="container">
           <nav className="nav">
-            <h1 className="logo">{t('Portfolio', 'Portfolio')}</h1>
+            <h1 className="logo">Jose Villegas</h1>
             <div className="nav-links">
               <a href="#skills">{t('Skills', 'Compétences')}</a>
               <a href="#projects">{t('Projects', 'Projets')}</a>
@@ -112,11 +168,11 @@ const Home = () => {
       {/* Hero Section */}
       <section className="hero">
         <div className="container">
-          <h1 className="hero-title">{t('Welcome to My Portfolio', 'Bienvenue sur Mon Portfolio')}</h1>
+          <h1 className="hero-title">Jose Villegas</h1>
           <p className="hero-subtitle">
             {t(
               'Full Stack Developer & Digital Creator',
-              'Desarrollador Full Stack y Creador Digital'
+              'Développeur full stack et créateur digital'
             )}
           </p>
           {currentResume && (
@@ -135,17 +191,31 @@ const Home = () => {
       <section id="skills" className="section">
         <div className="container">
           <h2 className="section-title">{t('Skills', 'Compétences')}</h2>
-          <div className="skills-grid">
-            {data.skills.map((skill) => (
-              <div key={skill.id} className="skill-card">
-                <h3>{language === 'en' ? skill.nameEn : skill.nameFr}</h3>
-                <div className="skill-bar">
-                  <div
-                    className="skill-progress"
-                    style={{ width: `${skill.level}%` }}
-                  ></div>
+          <div className="skills-section">
+            {orderedCategories.map((category) => (
+              <div key={category} className="skill-category">
+                <div className="skill-category-header">
+                  <h3>{categoryLabels[category] || category}</h3>
+                  <span className="skill-count">{groupedSkills[category].length}</span>
                 </div>
-                <span className="skill-level">{skill.level}%</span>
+                <div className="skills-grid grouped">
+                  {groupedSkills[category]
+                    .sort((a, b) => a.order - b.order)
+                    .map((skill) => (
+                      <div key={skill.id} className="skill-card">
+                        <div className="skill-card-top">
+                          <h4>{language === 'en' ? skill.nameEn : skill.nameFr}</h4>
+                          <span className="skill-level">{skill.level}%</span>
+                        </div>
+                        <div className="skill-bar">
+                          <div
+                            className="skill-progress"
+                            style={{ width: `${skill.level}%` }}
+                          ></div>
+                        </div>
+                      </div>
+                    ))}
+                </div>
               </div>
             ))}
           </div>
@@ -160,10 +230,10 @@ const Home = () => {
             {data.projects.map((project) => (
               <div key={project.id} className="project-card">
                 {project.imageUrl && (
-                  <img src={project.imageUrl} alt={language === 'en' ? project.titleEn : project.titleEs} />
+                  <img src={project.imageUrl} alt={language === 'en' ? project.titleEn : project.titleFr} />
                 )}
-                <h3>{language === 'en' ? project.titleEn : project.titleEs}</h3>
-                <p>{language === 'en' ? project.descriptionEn : project.descriptionEs}</p>
+                <h3>{language === 'en' ? project.titleEn : project.titleFr}</h3>
+                <p>{language === 'en' ? project.descriptionEn : project.descriptionFr}</p>
                 <div className="project-tech">
                   {project.technologies.map((tech, idx) => (
                     <span key={idx} className="tech-tag">{tech}</span>
@@ -276,7 +346,17 @@ const Home = () => {
           <div className="contact-info-grid">
             {data.contactInfo.map((info) => (
               <div key={info.id} className="contact-info-item">
-                <strong>{info.label}:</strong> <span>{info.value}</span>
+                <div className="contact-icon">{contactIcon[info.type] || <FiMapPin />}</div>
+                <div className="contact-body">
+                  <span className="contact-label">{info.label}</span>
+                  {contactHref(info) ? (
+                    <a href={contactHref(info)} target={info.type === 'location' ? '_self' : '_blank'} rel="noopener noreferrer">
+                      {info.value}
+                    </a>
+                  ) : (
+                    <span>{info.value}</span>
+                  )}
+                </div>
               </div>
             ))}
           </div>
@@ -286,7 +366,24 @@ const Home = () => {
       {/* Footer */}
       <footer className="footer">
         <div className="container">
-          <p>&copy; {new Date().getFullYear()} {t('All rights reserved', 'Tous droits réservés')}</p>
+          <div className="footer-meta">
+            <p>&copy; {new Date().getFullYear()} Jose Villegas</p>
+            <div className="footer-links">
+              {data.contactInfo
+                .filter((info) => ['email', 'phone', 'github', 'linkedin', 'location'].includes(info.type))
+                .map((info) => (
+                  <a
+                    key={info.id}
+                    href={contactHref(info) || '#'}
+                    target={contactHref(info) && info.type !== 'location' ? '_blank' : '_self'}
+                    rel="noopener noreferrer"
+                    aria-label={info.label}
+                  >
+                    {contactIcon[info.type] || <FiMapPin />}
+                  </a>
+                ))}
+            </div>
+          </div>
         </div>
       </footer>
     </div>
