@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_URL = '/api';
+// Prefer explicit API base URL (e.g., VITE_API_URL in Docker), fall back to proxied /api in dev
+const API_URL = import.meta.env.VITE_API_URL || '/api';
 
 // Skills
 export const skillsAPI = {
