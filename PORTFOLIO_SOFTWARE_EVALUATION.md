@@ -132,10 +132,12 @@ This document provides a comprehensive evaluation of the Digital Portfolio softw
 
 ### 9. Cost
 
+*Note: All cost estimates are approximate and based on 2025-2026 market rates. Actual costs may vary by location, service provider, and individual circumstances.*
+
 | Sub-Criterion | Evaluation | Notes |
 |---------------|------------|-------|
 | **Initial Software Cost** | **$0** | Software is free and open-source (ISC License). No purchase price, no licensing fees. |
-| **Development Cost** | **Medium-High** | If developing from scratch or customizing: Requires skilled full-stack developer(s). Estimated development time for similar system: 80-160 hours at $50-150/hour = $4,000-$24,000. The provided solution saves significant development cost. |
+| **Development Cost** | **Medium-High** | If developing from scratch or customizing: Requires skilled full-stack developer(s). Estimated development time for similar system: 80-160 hours at typical market rates (2025-2026 estimates: $50-150/hour) = $4,000-$24,000. The provided solution saves significant development cost. *Note: These are approximate values based on current market rates and may vary by location and developer experience.* |
 | **Licensing/Subscription Costs** | **$0** | No recurring licensing fees for the software itself. All dependencies use free, open-source licenses (MIT, Apache 2.0, ISC, PostgreSQL License). |
 | **Hosting/Infrastructure Costs** | **$0-50/month** | **Free Tier Options:** Railway ($5 free credit/month), Vercel (100GB bandwidth free), Render (free tier with limitations). **Paid Options:** Railway (~$5-20/month for low-medium traffic), DigitalOcean VPS ($12-24/month), AWS/GCP (variable). For personal portfolio with moderate traffic, free tiers are often sufficient. |
 | **Database Costs** | **$0-15/month** | Included in hosting platform free tiers (Railway, Render). Separate PostgreSQL hosting: Heroku Postgres ($9/month basic), DigitalOcean Managed Database ($15/month). |
