@@ -40,9 +40,9 @@ exports.create = async (req, res) => {
   try {
     const {
       titleEn,
-      titleEs,
+      titleFr,
       descriptionEn,
-      descriptionEs,
+      descriptionFr,
       imageUrl,
       projectUrl,
       githubUrl,
@@ -56,9 +56,9 @@ exports.create = async (req, res) => {
     const project = await prisma.project.create({
       data: {
         titleEn,
-        titleEs,
+        titleFr,
         descriptionEn,
-        descriptionEs,
+        descriptionFr,
         imageUrl,
         projectUrl,
         githubUrl,
@@ -82,9 +82,9 @@ exports.update = async (req, res) => {
   try {
     const {
       titleEn,
-      titleEs,
+      titleFr,
       descriptionEn,
-      descriptionEs,
+      descriptionFr,
       imageUrl,
       projectUrl,
       githubUrl,
@@ -99,9 +99,9 @@ exports.update = async (req, res) => {
       where: { id: req.params.id },
       data: {
         titleEn,
-        titleEs,
+        titleFr,
         descriptionEn,
-        descriptionEs,
+        descriptionFr,
         imageUrl,
         projectUrl,
         githubUrl,

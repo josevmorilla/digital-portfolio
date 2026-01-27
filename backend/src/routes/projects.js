@@ -16,9 +16,9 @@ router.post(
   authMiddleware,
   [
     body('titleEn').notEmpty().withMessage('English title is required'),
-    body('titleEs').notEmpty().withMessage('Spanish title is required'),
+    body('titleFr').notEmpty().withMessage('French title is required'),
     body('descriptionEn').notEmpty().withMessage('English description is required'),
-    body('descriptionEs').notEmpty().withMessage('Spanish description is required'),
+    body('descriptionFr').notEmpty().withMessage('French description is required'),
     validate,
   ],
   projectController.create

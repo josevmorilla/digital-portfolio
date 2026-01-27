@@ -16,7 +16,7 @@ router.post(
   authMiddleware,
   [
     body('nameEn').notEmpty().withMessage('English name is required'),
-    body('nameEs').notEmpty().withMessage('Spanish name is required'),
+    body('nameFr').notEmpty().withMessage('French name is required'),
     body('level').isInt({ min: 1, max: 100 }).withMessage('Level must be between 1 and 100'),
     body('category').notEmpty().withMessage('Category is required'),
     validate,

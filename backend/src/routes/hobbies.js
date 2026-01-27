@@ -16,7 +16,7 @@ router.post(
   authMiddleware,
   [
     body('nameEn').notEmpty().withMessage('English name is required'),
-    body('nameEs').notEmpty().withMessage('Spanish name is required'),
+    body('nameFr').notEmpty().withMessage('French name is required'),
     validate,
   ],
   hobbyController.create

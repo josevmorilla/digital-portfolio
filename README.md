@@ -6,7 +6,7 @@ A fully dynamic, responsive, bilingual portfolio website with a secure admin das
 
 ### Public Portfolio
 
-- ✅ **Bilingual Support** - Switch between English and Spanish
+- ✅ **Bilingual Support** - Switch between English and French
 - ✅ **Responsive Design** - Works on all devices
 - ✅ **Dynamic Content** - All content loaded from database
 - ✅ **Skills Showcase** - Display skills with proficiency levels
@@ -216,7 +216,7 @@ The application uses the following models:
 - **ContactMessage** - Contact form submissions
 - **Resume** - CV/Resume files
 
-All content models include bilingual fields (`nameEn`/`nameEs`, etc.) for English and Spanish support.
+All content models include bilingual fields (`nameEn`/`nameFr`, etc.) for English and French support.
 
 ## Security Features
 

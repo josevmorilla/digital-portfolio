@@ -71,7 +71,7 @@ GET /api/skills
   {
     "id": "uuid",
     "nameEn": "JavaScript",
-    "nameEs": "JavaScript",
+    "nameFr": "JavaScript",
     "level": 90,
     "category": "Programming",
     "icon": null,
@@ -106,9 +106,9 @@ GET /api/projects?featured=true
   {
     "id": "uuid",
     "titleEn": "E-commerce Platform",
-    "titleEs": "Plataforma de Comercio Electrónico",
+    "titleFr": "Plateforme de Commerce Électronique",
     "descriptionEn": "Full-stack e-commerce solution",
-    "descriptionEs": "Solución completa de comercio electrónico",
+    "descriptionFr": "Solution complète de commerce électronique",
     "imageUrl": "https://example.com/image.jpg",
     "projectUrl": "https://project.com",
     "githubUrl": "https://github.com/user/repo",
@@ -138,11 +138,11 @@ GET /api/work-experience
   {
     "id": "uuid",
     "companyEn": "Tech Corp",
-    "companyEs": "Tech Corp",
+    "companyFr": "Tech Corp",
     "positionEn": "Senior Developer",
-    "positionEs": "Desarrollador Senior",
+    "positionFr": "Développeur Senior",
     "descriptionEn": "Led development team...",
-    "descriptionEs": "Lideré equipo de desarrollo...",
+    "descriptionFr": "Direction d'équipe de développement...",
     "location": "San Francisco, CA",
     "startDate": "2020-01-01T00:00:00.000Z",
     "endDate": null,
@@ -169,13 +169,13 @@ GET /api/education
   {
     "id": "uuid",
     "institutionEn": "University of Technology",
-    "institutionEs": "Universidad de Tecnología",
+    "institutionFr": "Université de Technologie",
     "degreeEn": "Bachelor of Science",
-    "degreeEs": "Licenciatura en Ciencias",
+    "degreeFr": "Licence en Sciences",
     "fieldEn": "Computer Science",
-    "fieldEs": "Ciencias de la Computación",
+    "fieldFr": "Informatique",
     "descriptionEn": "Focus on software engineering",
-    "descriptionEs": "Enfoque en ingeniería de software",
+    "descriptionFr": "Spécialisation en génie logiciel",
     "location": "Boston, MA",
     "startDate": "2016-09-01T00:00:00.000Z",
     "endDate": "2020-05-01T00:00:00.000Z",
@@ -230,9 +230,9 @@ GET /api/hobbies
   {
     "id": "uuid",
     "nameEn": "Photography",
-    "nameEs": "Fotografía",
+    "nameFr": "Photographie",
     "descriptionEn": "Nature and landscape photography",
-    "descriptionEs": "Fotografía de naturaleza y paisajes",
+    "descriptionFr": "Photographie de nature et de paysages",
     "icon": "camera",
     "order": 1,
     "createdAt": "2024-01-01T00:00:00.000Z",
@@ -400,7 +400,7 @@ POST /api/skills
 ```json
 {
   "nameEn": "TypeScript",
-  "nameEs": "TypeScript",
+  "nameFr": "TypeScript",
   "level": 85,
   "category": "Programming",
   "icon": "typescript",
@@ -433,9 +433,9 @@ POST /api/projects
 ```json
 {
   "titleEn": "Portfolio Website",
-  "titleEs": "Sitio Web de Portafolio",
+  "titleFr": "Site Web de Portfolio",
   "descriptionEn": "Personal portfolio with admin dashboard",
-  "descriptionEs": "Portafolio personal con panel de administración",
+  "descriptionFr": "Portfolio personnel avec tableau de bord admin",
   "imageUrl": "https://example.com/image.jpg",
   "projectUrl": "https://portfolio.com",
   "githubUrl": "https://github.com/user/portfolio",
@@ -470,11 +470,11 @@ POST /api/work-experience
 ```json
 {
   "companyEn": "Tech Corp",
-  "companyEs": "Tech Corp",
+  "companyFr": "Tech Corp",
   "positionEn": "Senior Developer",
-  "positionEs": "Desarrollador Senior",
+  "positionFr": "Développeur Senior",
   "descriptionEn": "Led development team...",
-  "descriptionEs": "Lideré equipo de desarrollo...",
+  "descriptionFr": "Direction d'équipe de développement...",
   "location": "San Francisco, CA",
   "startDate": "2020-01-01",
   "endDate": null,
@@ -506,13 +506,13 @@ POST /api/education
 ```json
 {
   "institutionEn": "University of Technology",
-  "institutionEs": "Universidad de Tecnología",
+  "institutionFr": "Université de Technologie",
   "degreeEn": "Bachelor of Science",
-  "degreeEs": "Licenciatura en Ciencias",
+  "degreeFr": "Licence en Sciences",
   "fieldEn": "Computer Science",
-  "fieldEs": "Ciencias de la Computación",
+  "fieldFr": "Informatique",
   "descriptionEn": "Focus on software engineering",
-  "descriptionEs": "Enfoque en ingeniería de software",
+  "descriptionFr": "Spécialisation en génie logiciel",
   "location": "Boston, MA",
   "startDate": "2016-09-01",
   "endDate": "2020-05-01",
@@ -581,9 +581,9 @@ POST /api/hobbies
 ```json
 {
   "nameEn": "Photography",
-  "nameEs": "Fotografía",
+  "nameFr": "Photographie",
   "descriptionEn": "Nature photography",
-  "descriptionEs": "Fotografía de naturaleza",
+  "descriptionFr": "Photographie de nature",
   "icon": "camera",
   "order": 1
 }

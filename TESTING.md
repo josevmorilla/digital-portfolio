@@ -69,7 +69,7 @@ curl http://localhost:5000/api/testimonials
 curl -X POST http://localhost:5000/api/skills \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
-  -d '{"nameEn":"Python","nameEs":"Python","level":85,"category":"Programming"}'
+  -d '{"nameEn":"Python","nameFr":"Python","level":85,"category":"Programming"}'
 
 # Update skill (use actual ID)
 curl -X PUT http://localhost:5000/api/skills/{skill-id} \
@@ -92,7 +92,7 @@ curl -X DELETE http://localhost:5000/api/skills/{skill-id} \
 
 - [ ] Page loads without errors
 - [ ] Navigation menu is visible and functional
-- [ ] Language switcher works (EN ↔ ES)
+- [ ] Language switcher works (EN ↔ FR)
 - [ ] All sections are displayed:
   - [ ] Hero section with title
   - [ ] Skills section with progress bars
@@ -242,7 +242,7 @@ npm run prisma:studio
 - [ ] User table has admin user
 - [ ] Sample skills exist
 - [ ] Sample contact info exists
-- [ ] All bilingual fields have both EN and ES content
+- [ ] All bilingual fields have both EN and FR content
 
 ---
 

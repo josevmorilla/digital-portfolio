@@ -75,7 +75,7 @@ frontend/
 model Certification {
   id            String   @id @default(uuid())
   nameEn        String
-  nameEs        String
+  nameFr        String
   issuer        String
   issueDate     DateTime
   expiryDate    DateTime?
@@ -109,9 +109,9 @@ exports.getAll = async (req, res) => {
 
 exports.create = async (req, res) => {
   try {
-    const { nameEn, nameEs, issuer, issueDate, expiryDate, credentialUrl, order } = req.body;
+    const { nameEn, nameFr, issuer, issueDate, expiryDate, credentialUrl, order } = req.body;
     const certification = await prisma.certification.create({
-      data: { nameEn, nameEs, issuer, issueDate: new Date(issueDate), 
+      data: { nameEn, nameFr, issuer, issueDate: new Date(issueDate), 
               expiryDate: expiryDate ? new Date(expiryDate) : null, 
               credentialUrl, order: order || 0 }
     });
@@ -203,16 +203,18 @@ button.primary {
 
 ---
 
-### 3. Add Third Language
+### 3. Add Third Language (Spanish)
+
+**Note:** The project currently supports English and French. This example shows how to add Spanish as a third language.
 
 **Step 1: Update Database Schema**
 ```prisma
-// Add "Fr" suffix for French fields
+// Add "Es" suffix for Spanish fields
 model Skill {
   id      String @id @default(uuid())
   nameEn  String
-  nameEs  String
-  nameFr  String  // Add French
+  nameFr  String  // Current: French
+  nameEs  String  // Add Spanish
   // ...
 }
 ```
@@ -230,7 +232,7 @@ const [language, setLanguage] = useState(() => {
 });
 
 const cycleLanguage = () => {
-  const languages = ['en', 'es', 'fr'];
+  const languages = ['en', 'fr', 'es'];  // English, French, Spanish
   const currentIndex = languages.indexOf(language);
   const nextIndex = (currentIndex + 1) % languages.length;
   setLanguage(languages[nextIndex]);
@@ -240,10 +242,10 @@ const cycleLanguage = () => {
 **Step 4: Update Components**
 ```jsx
 // In Home.jsx and other components
-const t = (en, es, fr) => {
+const t = (en, fr, es) => {
   switch(language) {
-    case 'fr': return fr;
     case 'es': return es;
+    case 'fr': return fr;
     default: return en;
   }
 };

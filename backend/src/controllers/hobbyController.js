@@ -34,14 +34,14 @@ exports.getById = async (req, res) => {
 // Create hobby
 exports.create = async (req, res) => {
   try {
-    const { nameEn, nameEs, descriptionEn, descriptionEs, icon, order } = req.body;
+    const { nameEn, nameFr, descriptionEn, descriptionFr, icon, order } = req.body;
 
     const hobby = await prisma.hobby.create({
       data: {
         nameEn,
-        nameEs,
+        nameFr,
         descriptionEn,
-        descriptionEs,
+        descriptionFr,
         icon,
         order: order ? parseInt(order) : 0,
       },
@@ -57,15 +57,15 @@ exports.create = async (req, res) => {
 // Update hobby
 exports.update = async (req, res) => {
   try {
-    const { nameEn, nameEs, descriptionEn, descriptionEs, icon, order } = req.body;
+    const { nameEn, nameFr, descriptionEn, descriptionFr, icon, order } = req.body;
 
     const hobby = await prisma.hobby.update({
       where: { id: req.params.id },
       data: {
         nameEn,
-        nameEs,
+        nameFr,
         descriptionEn,
-        descriptionEs,
+        descriptionFr,
         icon,
         order: order !== undefined ? parseInt(order) : undefined,
       },

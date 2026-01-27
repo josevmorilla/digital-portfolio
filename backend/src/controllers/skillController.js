@@ -34,12 +34,12 @@ exports.getById = async (req, res) => {
 // Create skill
 exports.create = async (req, res) => {
   try {
-    const { nameEn, nameEs, level, category, icon, order } = req.body;
+    const { nameEn, nameFr, level, category, icon, order } = req.body;
 
     const skill = await prisma.skill.create({
       data: {
         nameEn,
-        nameEs,
+        nameFr,
         level: parseInt(level),
         category,
         icon,
@@ -57,13 +57,13 @@ exports.create = async (req, res) => {
 // Update skill
 exports.update = async (req, res) => {
   try {
-    const { nameEn, nameEs, level, category, icon, order } = req.body;
+    const { nameEn, nameFr, level, category, icon, order } = req.body;
 
     const skill = await prisma.skill.update({
       where: { id: req.params.id },
       data: {
         nameEn,
-        nameEs,
+        nameFr,
         level: level ? parseInt(level) : undefined,
         category,
         icon,
