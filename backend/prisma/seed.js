@@ -274,10 +274,9 @@ async function seed() {
     // Contact info
     const contactInfoData = [
       { type: 'email', label: 'Email', value: 'josevillegasmori@gmail.com', visible: true, order: 1 },
-      { type: 'phone', label: 'Téléphone', value: '438-630-3435', visible: true, order: 2 },
-      { type: 'location', label: 'Delson, QC', value: 'Delson, QC', visible: true, order: 3 },
-      { type: 'linkedin', label: 'LinkedIn', value: 'https://www.linkedin.com/in/jose-villegas-morilla/', visible: true, order: 4 },
-      { type: 'github', label: 'GitHub', value: 'https://github.com/josevmorilla', visible: true, order: 5 },
+      { type: 'location', label: 'Location', value: 'Montreal, QC, Canada', visible: true, order: 2 },
+      { type: 'linkedin', label: 'LinkedIn', value: 'https://www.linkedin.com/in/jose-villegas-morilla/', visible: true, order: 3 },
+      { type: 'github', label: 'GitHub', value: 'https://github.com/josevmorilla', visible: true, order: 4 },
     ];
 
     await prisma.contactInfo.createMany({ data: contactInfoData, skipDuplicates: true });

@@ -96,6 +96,37 @@
   margin-bottom: 1.75rem;
 }
 
+.hero-contact-icons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.hero-contact-icons a {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: var(--white);
+  background: rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.hero-contact-icons a svg {
+  font-size: 1.3rem;
+}
+
+.hero-contact-icons a:hover {
+  color: var(--white);
+  background: var(--primary);
+  border-color: var(--primary);
+  transform: translateY(-3px);
+}
+
 .cv-download-buttons {
   display: flex;
   gap: 1rem;
@@ -513,40 +544,14 @@
 }
 
 .footer {
-  padding: 32px 0;
+  padding: 2rem 0;
   text-align: center;
-  color: var(--gray);
-  border-top: 1px solid var(--border);
+  color: var(--text-light);
   background: var(--white);
 }
 
-.footer-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  align-items: center;
-}
-
-.footer-links {
-  display: flex;
-  gap: 0.8rem;
-}
-
-.footer-links a {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  border: 1px solid var(--border);
-  color: var(--primary);
-  background: var(--light);
-}
-
-.footer-links a:hover {
-  color: var(--white);
-  background: var(--primary);
-  border-color: var(--primary);
+.footer p {
+  margin: 0;
 }
 
 /* Simple entrance animations */

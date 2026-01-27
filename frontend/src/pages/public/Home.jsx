@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
-import { FiMail, FiMapPin, FiGithub, FiLinkedin, FiPhone } from 'react-icons/fi';
+import { FiMail, FiMapPin, FiGithub, FiLinkedin } from 'react-icons/fi';
 import 'devicon/devicon.min.css';
 import {
   skillsAPI,
@@ -235,7 +235,6 @@ const Home = () => {
 
   const contactIcon = {
     email: <FiMail />,
-    phone: <FiPhone />,
     location: <FiMapPin />,
     github: <FiGithub />,
     linkedin: <FiLinkedin />,
@@ -243,7 +242,6 @@ const Home = () => {
 
   const contactHref = (info) => {
     if (info.type === 'email') return `mailto:${info.value}`;
-    if (info.type === 'phone') return `tel:${info.value}`;
     if (info.type === 'github' || info.type === 'linkedin') return info.value;
     return null;
   };
@@ -281,6 +279,21 @@ const Home = () => {
               'Développeur full stack et créateur digital'
             )}
           </p>
+          <div className="hero-contact-icons">
+            {data.contactInfo
+              .filter((info) => ['email', 'github', 'linkedin', 'location'].includes(info.type))
+              .map((info) => (
+                <a
+                  key={info.id}
+                  href={contactHref(info) || '#'}
+                  target={contactHref(info) && info.type !== 'location' ? '_blank' : '_self'}
+                  rel="noopener noreferrer"
+                  aria-label={info.label}
+                >
+                  {contactIcon[info.type] || <FiMapPin />}
+                </a>
+              ))}
+          </div>
           <div className="cv-download-buttons">
             <a
               href={resumeEn ? resumesAPI.download(resumeEn.id) : '#'}
@@ -629,24 +642,7 @@ const Home = () => {
       {/* Footer */}
       <footer className="footer">
         <div className="container">
-          <div className="footer-meta">
-            <p>&copy; {new Date().getFullYear()} Jose Villegas</p>
-            <div className="footer-links">
-              {data.contactInfo
-                .filter((info) => ['email', 'phone', 'github', 'linkedin', 'location'].includes(info.type))
-                .map((info) => (
-                  <a
-                    key={info.id}
-                    href={contactHref(info) || '#'}
-                    target={contactHref(info) && info.type !== 'location' ? '_blank' : '_self'}
-                    rel="noopener noreferrer"
-                    aria-label={info.label}
-                  >
-                    {contactIcon[info.type] || <FiMapPin />}
-                  </a>
-                ))}
-            </div>
-          </div>
+          <p>&copy; {new Date().getFullYear()} Jose Villegas</p>
         </div>
       </footer>
     </div>
