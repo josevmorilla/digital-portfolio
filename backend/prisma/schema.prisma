@@ -135,11 +135,15 @@ model ContactMessage {
 }
 
 model Resume {
-  id        String   @id @default(uuid())
-  filename  String
-  fileUrl   String
-  language  String   // "en" or "fr"
-  current   Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id             String   @id @default(uuid())
+  titleEn        String
+  titleFr        String
+  descriptionEn  String?
+  descriptionFr  String?
+  filename       String
+  fileUrl        String
+  language       String   // "en" or "fr"
+  order          Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }

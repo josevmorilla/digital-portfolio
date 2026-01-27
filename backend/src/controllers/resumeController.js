@@ -5,12 +5,8 @@ const fs = require('fs');
 // Get all resumes (admin sees all, public sees only current ones)
 exports.getAll = async (req, res) => {
   try {
-    const isAdmin = req.user !== undefined;
-    const where = isAdmin ? {} : { current: true };
-    
     const resumes = await prisma.resume.findMany({
-      where,
-      orderBy: { createdAt: 'desc' },
+      orderBy: { order: 'asc' },
     });
     res.json(resumes);
   } catch (error) {
@@ -25,10 +21,8 @@ exports.getCurrentByLanguage = async (req, res) => {
     const { language } = req.params;
 
     const resume = await prisma.resume.findFirst({
-      where: {
-        language,
-        current: true,
-      },
+      where: { language },
+      orderBy: { order: 'asc' },
     });
 
     if (!resume) {
@@ -75,22 +69,22 @@ exports.upload = async (req, res) => {
       return res.status(400).json({ error: 'No file uploaded' });
     }
 
-    const { language, setCurrent } = req.body;
+    const { titleEn, titleFr, descriptionEn, descriptionFr, language, order } = req.body;
 
-    // If setting as current, unset other current resumes for this language
-    if (setCurrent === 'true' || setCurrent === true) {
-      await prisma.resume.updateMany({
-        where: { language, current: true },
-        data: { current: false },
-      });
+    if (!titleEn || !titleFr) {
+      return res.status(400).json({ error: 'Title in both languages is required' });
     }
 
     const resume = await prisma.resume.create({
       data: {
+        titleEn,
+        titleFr,
+        descriptionEn: descriptionEn || null,
+        descriptionFr: descriptionFr || null,
         filename: req.file.originalname,
-        fileUrl: `uploads/${req.file.filename}`,
+        fileUrl: `/uploads/${req.file.filename}`,
         language: language || 'en',
-        current: setCurrent === 'true' || setCurrent === true,
+        order: parseInt(order) || 0,
       },
     });
 
@@ -104,31 +98,17 @@ exports.upload = async (req, res) => {
 // Update resume (admin only)
 exports.update = async (req, res) => {
   try {
-    const { language, current } = req.body;
-
-    // If setting as current, unset other current resumes for this language
-    if (current === 'true' || current === true) {
-      const resume = await prisma.resume.findUnique({
-        where: { id: req.params.id },
-      });
-      
-      if (resume) {
-        await prisma.resume.updateMany({
-          where: {
-            language: resume.language,
-            current: true,
-            id: { not: req.params.id },
-          },
-          data: { current: false },
-        });
-      }
-    }
+    const { titleEn, titleFr, descriptionEn, descriptionFr, language, order } = req.body;
 
     const updatedResume = await prisma.resume.update({
       where: { id: req.params.id },
       data: {
-        language,
-        current: current !== undefined ? current === 'true' || current === true : undefined,
+        titleEn: titleEn || undefined,
+        titleFr: titleFr || undefined,
+        descriptionEn: descriptionEn !== undefined ? descriptionEn || null : undefined,
+        descriptionFr: descriptionFr !== undefined ? descriptionFr || null : undefined,
+        language: language || undefined,
+        order: order !== undefined ? parseInt(order) : undefined,
       },
     });
 

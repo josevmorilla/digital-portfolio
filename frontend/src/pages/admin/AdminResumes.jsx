@@ -16,6 +16,8 @@ const AdminResumes = () => {
     language: 'en',
     order: 0,
   });
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState('');
 
   useEffect(() => {
@@ -33,27 +35,62 @@ const AdminResumes = () => {
     }
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.type === 'application/pdf' || file.name.endsWith('.pdf')) {
+        setSelectedFile(file);
+      } else {
+        setMessage('Please select a PDF file');
+        setTimeout(() => setMessage(''), 3000);
+      }
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setUploading(true);
+    
     try {
-      const data = {
-        ...formData,
-        descriptionEn: formData.descriptionEn || null,
-        descriptionFr: formData.descriptionFr || null,
-      };
+      if (selectedFile) {
+        // Upload new file
+        const fileFormData = new FormData();
+        fileFormData.append('resume', selectedFile);
+        fileFormData.append('titleEn', formData.titleEn);
+        fileFormData.append('titleFr', formData.titleFr);
+        fileFormData.append('descriptionEn', formData.descriptionEn || '');
+        fileFormData.append('descriptionFr', formData.descriptionFr || '');
+        fileFormData.append('language', formData.language);
+        fileFormData.append('order', formData.order);
 
-      if (editing) {
+        if (editing) {
+          setMessage('Cannot change file for existing resume. Delete and create new one.');
+        } else {
+          await resumesAPI.upload(fileFormData);
+          setMessage('Resume uploaded successfully!');
+        }
+      } else if (editing) {
+        // Update existing resume metadata only
+        const data = {
+          ...formData,
+          descriptionEn: formData.descriptionEn || null,
+          descriptionFr: formData.descriptionFr || null,
+        };
         await resumesAPI.update(editing, data);
         setMessage('Resume updated successfully!');
       } else {
-        await resumesAPI.create(data);
-        setMessage('Resume created successfully!');
+        setMessage('Please select a PDF file to upload');
+        setUploading(false);
+        return;
       }
+      
       resetForm();
       fetchResumes();
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
       setMessage('Error saving resume: ' + (error.response?.data?.error || error.message));
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -85,6 +122,7 @@ const AdminResumes = () => {
 
   const resetForm = () => {
     setEditing(null);
+    setSelectedFile(null);
     setFormData({
       titleEn: '',
       titleFr: '',
@@ -94,6 +132,9 @@ const AdminResumes = () => {
       language: 'en',
       order: 0,
     });
+    // Reset file input
+    const fileInput = document.getElementById('resume-file-input');
+    if (fileInput) fileInput.value = '';
   };
 
   if (loading) {
@@ -159,19 +200,39 @@ const AdminResumes = () => {
                   />
                 </div>
 
-                <div className="form-row">
+                {!editing && (
                   <div className="form-group">
-                    <label>File URL *</label>
+                    <label>Upload Resume PDF *</label>
+                    <input
+                      id="resume-file-input"
+                      type="file"
+                      accept=".pdf,application/pdf"
+                      onChange={handleFileChange}
+                      required={!editing}
+                    />
+                    {selectedFile && (
+                      <small style={{color: 'green', display: 'block', marginTop: '0.5rem'}}>
+                        ✓ Selected: {selectedFile.name}
+                      </small>
+                    )}
+                    <small>Only PDF files are allowed (max 5MB)</small>
+                  </div>
+                )}
+
+                {editing && (
+                  <div className="form-group">
+                    <label>Current File</label>
                     <input
                       type="text"
                       value={formData.fileUrl}
-                      onChange={(e) => setFormData({ ...formData, fileUrl: e.target.value })}
-                      placeholder="/uploads/resumes/resume.pdf"
-                      required
+                      disabled
+                      style={{background: '#f0f0f0', cursor: 'not-allowed'}}
                     />
-                    <small>Upload file to /uploads/resumes/ directory and enter path</small>
+                    <small>To change the file, delete this resume and create a new one</small>
                   </div>
+                )}
 
+                <div className="form-row">
                   <div className="form-group">
                     <label>Language *</label>
                     <select
@@ -183,21 +244,21 @@ const AdminResumes = () => {
                       <option value="fr">French</option>
                     </select>
                   </div>
-                </div>
 
-                <div className="form-group">
-                  <label>Order</label>
-                  <input
-                    type="number"
-                    value={formData.order}
-                    onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) })}
-                  />
-                  <small>Lower numbers appear first</small>
+                  <div className="form-group">
+                    <label>Order</label>
+                    <input
+                      type="number"
+                      value={formData.order}
+                      onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) })}
+                    />
+                    <small>Lower numbers appear first</small>
+                  </div>
                 </div>
 
                 <div className="form-actions">
-                  <button type="submit" className="primary">
-                    {editing ? 'Update Resume' : 'Create Resume'}
+                  <button type="submit" className="primary" disabled={uploading}>
+                    {uploading ? 'Uploading...' : (editing ? 'Update Resume' : 'Upload Resume')}
                   </button>
                   {editing && (
                     <button type="button" onClick={resetForm} className="secondary">
