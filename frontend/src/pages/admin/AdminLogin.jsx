@@ -63,12 +63,6 @@ const AdminLogin = () => {
           </button>
         </form>
 
-        <div className="login-info">
-          <p><strong>Default Credentials:</strong></p>
-          <p>Email: admin@portfolio.com</p>
-          <p>Password: admin123</p>
-          <p className="warning">(Change these after first login!)</p>
-        </div>
       </div>
     </div>
   );
