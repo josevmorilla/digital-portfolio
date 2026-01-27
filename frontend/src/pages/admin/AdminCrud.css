@@ -70,6 +70,151 @@
   font-size: 14px;
 }
 
+/* Messages-specific styles */
+.messages-container {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 2rem;
+}
+
+.messages-list, .message-detail {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.messages-list h2 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.message-item {
+  padding: 1rem;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-bottom: 1rem;
+}
+
+.message-item:hover {
+  background: #f8f9fa;
+  border-color: var(--primary, #c24040);
+}
+
+.message-item.active {
+  border-color: var(--primary, #c24040);
+  background: #fff5f5;
+}
+
+.message-item.unread {
+  border-left: 4px solid var(--primary, #c24040);
+  font-weight: 600;
+}
+
+.message-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.message-header h4 {
+  margin: 0;
+  color: #333;
+}
+
+.message-meta {
+  margin: 0 0 0.5rem 0;
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.message-preview {
+  margin: 0 0 0.5rem 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.message-date {
+  margin: 0;
+  color: #999;
+  font-size: 0.8rem;
+}
+
+.message-detail {
+  position: sticky;
+  top: 2rem;
+}
+
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.detail-header h2 {
+  margin: 0;
+  color: var(--primary, #c24040);
+}
+
+.btn-close {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #999;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+}
+
+.btn-close:hover {
+  color: var(--primary, #c24040);
+}
+
+.detail-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.detail-field label {
+  display: block;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.detail-field p {
+  margin: 0;
+  color: #666;
+  line-height: 1.6;
+}
+
+.detail-field a {
+  color: var(--primary, #c24040);
+  text-decoration: none;
+}
+
+.detail-field a:hover {
+  text-decoration: underline;
+}
+
+.detail-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #dee2e6;
+}
+
 @media (max-width: 992px) {
   .crud-container {
     grid-template-columns: 1fr;
@@ -81,6 +226,15 @@
   
   .list-section {
     order: 2;
+  }
+  
+  .messages-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .message-detail {
+    position: relative;
+    top: 0;
   }
 }
 
@@ -97,5 +251,13 @@
   
   .item-actions button {
     flex: 1;
+  }
+  
+  .detail-actions {
+    flex-direction: column;
+  }
+  
+  .detail-actions button {
+    width: 100%;
   }
 }

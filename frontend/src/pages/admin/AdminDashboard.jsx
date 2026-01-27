@@ -1,21 +1,35 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { 
+  FiCode, 
+  FiBriefcase, 
+  FiBook, 
+  FiUser, 
+  FiMail, 
+  FiHeart, 
+  FiMessageSquare, 
+  FiFileText,
+  FiInbox,
+  FiEye,
+  FiCheckCircle,
+  FiLogOut
+} from 'react-icons/fi';
 import './AdminDashboard.css';
 
 const AdminDashboard = () => {
   const { user, logout } = useAuth();
 
   const sections = [
-    { name: 'Skills', path: '/admin/skills', icon: '🛠️' },
-    { name: 'Projects', path: '/admin/projects', icon: '💼' },
-    { name: 'Work Experience', path: '/admin/work-experience', icon: '👔' },
-    { name: 'Education', path: '/admin/education', icon: '🎓' },
-    { name: 'Contact Info', path: '/admin/contact-info', icon: '📞' },
-    { name: 'Hobbies', path: '/admin/hobbies', icon: '🎯' },
-    { name: 'Testimonials', path: '/admin/testimonials', icon: '💬' },
-    { name: 'Messages', path: '/admin/messages', icon: '📧' },
-    { name: 'Resumes', path: '/admin/resumes', icon: '📄' },
+    { name: 'Skills', path: '/admin/skills', icon: <FiCode /> },
+    { name: 'Projects', path: '/admin/projects', icon: <FiBriefcase /> },
+    { name: 'Work Experience', path: '/admin/work-experience', icon: <FiUser /> },
+    { name: 'Education', path: '/admin/education', icon: <FiBook /> },
+    { name: 'Contact Info', path: '/admin/contact-info', icon: <FiMail /> },
+    { name: 'Hobbies', path: '/admin/hobbies', icon: <FiHeart /> },
+    { name: 'Testimonials', path: '/admin/testimonials', icon: <FiMessageSquare /> },
+    { name: 'Messages', path: '/admin/messages', icon: <FiInbox /> },
+    { name: 'Resumes', path: '/admin/resumes', icon: <FiFileText /> },
   ];
 
   return (
@@ -25,7 +39,9 @@ const AdminDashboard = () => {
           <h1>Admin Dashboard</h1>
           <div className="admin-user">
             <span>Welcome, {user?.name}</span>
-            <button onClick={logout} className="secondary">Logout</button>
+            <button onClick={logout} className="btn-logout">
+              <FiLogOut /> Logout
+            </button>
           </div>
         </div>
       </header>
@@ -45,13 +61,13 @@ const AdminDashboard = () => {
             <h2>Quick Actions</h2>
             <div className="actions-grid">
               <a href="/" target="_blank" rel="noopener noreferrer" className="action-btn">
-                View Public Site
+                <FiEye /> View Public Site
               </a>
               <Link to="/admin/messages" className="action-btn">
-                View Messages
+                <FiInbox /> View Messages
               </Link>
               <Link to="/admin/testimonials" className="action-btn">
-                Approve Testimonials
+                <FiCheckCircle /> Approve Testimonials
               </Link>
             </div>
           </div>

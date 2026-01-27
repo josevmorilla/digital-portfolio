@@ -72,6 +72,7 @@ export const contactMessagesAPI = {
   getAll: () => axios.get(`${API_URL}/contact-messages`),
   getById: (id) => axios.get(`${API_URL}/contact-messages/${id}`),
   create: (data) => axios.post(`${API_URL}/contact-messages`, data),
+  update: (id, data) => axios.put(`${API_URL}/contact-messages/${id}`, data),
   markAsRead: (id) => axios.post(`${API_URL}/contact-messages/${id}/read`),
   delete: (id) => axios.delete(`${API_URL}/contact-messages/${id}`),
   getUnreadCount: () => axios.get(`${API_URL}/contact-messages/unread-count`),
@@ -82,6 +83,7 @@ export const resumesAPI = {
   getAll: () => axios.get(`${API_URL}/resumes`),
   getCurrentByLanguage: (language) => axios.get(`${API_URL}/resumes/current/${language}`),
   download: (id) => `${API_URL}/resumes/${id}/download`,
+  create: (data) => axios.post(`${API_URL}/resumes`, data),
   upload: (formData) => axios.post(`${API_URL}/resumes`, formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
   }),
