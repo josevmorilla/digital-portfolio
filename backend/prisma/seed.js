@@ -76,7 +76,8 @@ async function seed() {
           'Bilingual client portal centralizing inquiries, document sharing, and communication with end-to-end flow (DTO validation to persistence) and UX polish.',
         descriptionFr:
           'Portail client bilingue pour centraliser inquiries, partage de documents et communication, avec flux complet (validation DTO à la persistance) et UX soignée.',
-        projectUrl: '',
+        imageUrl: null, // Add your image URL here, e.g., '/uploads/projects/dominic-cyr.png'
+        projectUrl: null, // Add deployed URL if available
         githubUrl: 'https://github.com/LCDCI/Les-Constructions-Dominic-Cyr',
         technologies: ['Java', 'Spring Boot', 'React', 'PostgreSQL', 'Docker', 'Playwright', 'JUnit'],
         featured: true,
@@ -85,17 +86,34 @@ async function seed() {
         endDate: new Date('2025-12-15'),
       },
       {
+        titleEn: 'Champlain Pet Clinic - Contributions',
+        titleFr: 'Champlain Pet Clinic - Contributions',
+        descriptionEn:
+          'Contributed to a microservices-based veterinary clinic management system with Spring Boot, Angular, and MySQL. Implemented features for appointments, customer management, and API integrations.',
+        descriptionFr:
+          'Contributions à un système de gestion de clinique vétérinaire basé sur microservices avec Spring Boot, Angular et MySQL. Implémentation de fonctionnalités pour rendez-vous, gestion clients et intégrations API.',
+        imageUrl: null, // Add your image URL here
+        projectUrl: null, // Add deployed URL if available
+        githubUrl: 'https://github.com/cgerard321/champlain_petclinic',
+        technologies: ['Java', 'Spring Boot', 'Angular', 'MySQL', 'Docker', 'Microservices'],
+        featured: true,
+        order: 2,
+        startDate: new Date('2025-01-01'),
+        endDate: new Date('2025-05-31'),
+      },
+      {
         titleEn: 'Great Music LLM - Showcase',
         titleFr: 'Great Music LLM - Site vitrine',
         descriptionEn:
           'Mobile-first bilingual landing site with structured navigation, accessibility hardening, and language toggle for music LLM experiments.',
         descriptionFr:
           'Site vitrine bilingue mobile-first avec navigation structurée, accessibilité renforcée et bascule de langue pour les expérimentations LLM musique.',
-        projectUrl: '',
+        imageUrl: null, // Add your image URL here
+        projectUrl: null, // Add deployed URL if available
         githubUrl: 'https://github.com/josevmorilla/Great-Music-LLM',
         technologies: ['React', 'CSS', 'HTML'],
         featured: true,
-        order: 2,
+        order: 3,
         startDate: new Date('2025-11-01'),
         endDate: new Date('2025-11-30'),
       },
@@ -110,7 +128,7 @@ async function seed() {
         githubUrl: 'https://github.com/josevmorilla/LikeAHolicApp-FE',
         technologies: ['JavaScript', 'CSS', 'HTML'],
         featured: false,
-        order: 3,
+        order: 4,
         startDate: new Date('2025-10-01'),
         endDate: new Date('2025-10-31'),
       },
@@ -125,7 +143,7 @@ async function seed() {
         githubUrl: 'https://github.com/josevmorilla/smart-parking-system',
         technologies: ['Kotlin', 'Android'],
         featured: false,
-        order: 4,
+        order: 5,
         startDate: new Date('2025-09-01'),
         endDate: new Date('2025-09-30'),
       },

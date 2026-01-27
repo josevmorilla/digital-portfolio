@@ -354,34 +354,107 @@ const Home = () => {
       <section id="projects" className="section bg-light">
         <div className="container">
           <h2 className="section-title">{t('Projects', 'Projets')}</h2>
-          <div className="projects-grid">
-            {data.projects.map((project) => (
-              <div key={project.id} className="project-card">
-                {project.imageUrl && (
-                  <img src={project.imageUrl} alt={language === 'en' ? project.titleEn : project.titleFr} />
-                )}
-                <h3>{language === 'en' ? project.titleEn : project.titleFr}</h3>
-                <p>{language === 'en' ? project.descriptionEn : project.descriptionFr}</p>
-                <div className="project-tech">
-                  {project.technologies.map((tech, idx) => (
-                    <span key={idx} className="tech-tag">{tech}</span>
-                  ))}
+          
+          {/* Featured Projects - Large Alternating Layout */}
+          <div className="projects-showcase">
+            {data.projects
+              .filter(project => project.featured)
+              .map((project, index) => (
+                <div key={project.id} className={`project-showcase-item ${index % 2 === 0 ? 'left' : 'right'}`}>
+                  {/* Image */}
+                  <div className="project-showcase-image">
+                    {project.imageUrl ? (
+                      <img src={project.imageUrl} alt={language === 'en' ? project.titleEn : project.titleFr} />
+                    ) : (
+                      <div className="project-placeholder">
+                        <FiGithub size={64} />
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Content */}
+                  <div className="project-showcase-content">
+                    <h3>{language === 'en' ? project.titleEn : project.titleFr}</h3>
+                    <p className="project-date">
+                      {project.startDate ? (
+                        project.endDate ? (
+                          `${new Date(project.startDate).toLocaleDateString(language === 'en' ? 'en-US' : 'fr-FR', { year: 'numeric', month: 'short' })} - ${new Date(project.endDate).toLocaleDateString(language === 'en' ? 'en-US' : 'fr-FR', { year: 'numeric', month: 'short' })}`
+                        ) : (
+                          `${new Date(project.startDate).toLocaleDateString(language === 'en' ? 'en-US' : 'fr-FR', { year: 'numeric', month: 'short' })} - ${t('Present', 'Présent')}`
+                        )
+                      ) : (
+                        ''
+                      )}
+                    </p>
+                    <p className="project-description">
+                      {language === 'en' ? project.descriptionEn : project.descriptionFr}
+                    </p>
+                    <div className="project-tech">
+                      {project.technologies.map((tech, idx) => (
+                        <span key={idx} className="tech-tag">{tech}</span>
+                      ))}
+                    </div>
+                    <div className="project-links">
+                      {project.githubUrl && (
+                        <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="btn-project">
+                          <FiGithub /> {t('GitHub', 'GitHub')}
+                        </a>
+                      )}
+                      {project.projectUrl && (
+                        <a href={project.projectUrl} target="_blank" rel="noopener noreferrer" className="btn-project">
+                          {t('View Live', 'Voir en ligne')}
+                        </a>
+                      )}
+                    </div>
+                  </div>
                 </div>
-                <div className="project-links">
-                  {project.projectUrl && (
-                    <a href={project.projectUrl} target="_blank" rel="noopener noreferrer">
-                      {t('View Project', 'Voir le Projet')}
-                    </a>
-                  )}
-                  {project.githubUrl && (
-                    <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
-                      GitHub
-                    </a>
-                  )}
-                </div>
-              </div>
-            ))}
+              ))}
           </div>
+
+          {/* Other Projects - Smaller Grid */}
+          {data.projects.filter(project => !project.featured).length > 0 && (
+            <div className="other-projects-section">
+              <h3 className="other-projects-title">{t('Other Projects', 'Autres Projets')}</h3>
+              <div className="projects-grid">
+                {data.projects
+                  .filter(project => !project.featured)
+                  .map((project) => (
+                    <div key={project.id} className="project-card">
+                      <h3>{language === 'en' ? project.titleEn : project.titleFr}</h3>
+                      <p className="project-card-date">
+                        {project.startDate ? (
+                          project.endDate ? (
+                            `${new Date(project.startDate).toLocaleDateString(language === 'en' ? 'en-US' : 'fr-FR', { year: 'numeric', month: 'short' })} - ${new Date(project.endDate).toLocaleDateString(language === 'en' ? 'en-US' : 'fr-FR', { year: 'numeric', month: 'short' })}`
+                          ) : (
+                            `${new Date(project.startDate).toLocaleDateString(language === 'en' ? 'en-US' : 'fr-FR', { year: 'numeric', month: 'short' })} - ${t('Present', 'Présent')}`
+                          )
+                        ) : (
+                          ''
+                        )}
+                      </p>
+                      <p>{language === 'en' ? project.descriptionEn : project.descriptionFr}</p>
+                      <div className="project-tech">
+                        {project.technologies.map((tech, idx) => (
+                          <span key={idx} className="tech-tag">{tech}</span>
+                        ))}
+                      </div>
+                      <div className="project-links">
+                        {project.githubUrl && (
+                          <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
+                            <FiGithub /> GitHub
+                          </a>
+                        )}
+                        {project.projectUrl && (
+                          <a href={project.projectUrl} target="_blank" rel="noopener noreferrer">
+                            {t('View Live', 'Voir en ligne')}
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
