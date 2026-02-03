@@ -1,282 +1,203 @@
 # Digital Portfolio
 
-A fully dynamic, responsive, bilingual portfolio website with a secure admin dashboard. Built with Express.js, PostgreSQL, Prisma ORM, React, and Vite.
+A full-stack, bilingual portfolio website with a secure admin dashboard. This project demonstrates modern web development practices using React, Express.js, PostgreSQL, and Prisma ORM.
 
-## Features
+**Live Demo:** [Coming Soon]
 
-### Public Portfolio
+## About This Project
 
-- ✅ **Bilingual Support** - Switch between English and French
-- ✅ **Responsive Design** - Works on all devices
-- ✅ **Dynamic Content** - All content loaded from database
-- ✅ **Skills Showcase** - Display skills with proficiency levels
-- ✅ **Projects Portfolio** - Showcase projects with images, descriptions, and links
-- ✅ **Work Experience** - Timeline of professional experience
-- ✅ **Education** - Academic background
-- ✅ **Hobbies & Interests** - Personal interests section
-- ✅ **Testimonials** - Client/colleague testimonials (approval required)
-- ✅ **Contact Form** - Visitors can send messages
-- ✅ **CV Download** - Download resume in multiple languages
+This is a complete portfolio management system that I built to showcase my full-stack development skills. All content is managed through an authenticated admin panel without needing to touch code. The application supports bilingual content (English/French) and includes a REST API backend with a responsive React frontend.
 
-### Admin Dashboard
+## Key Features
 
-- ✅ **Secure Authentication** - JWT-based login system
-- ✅ **Full CRUD Operations** for:
-  - Skills
-  - Projects
-  - Work Experience
-  - Education
-  - Contact Information
-  - Hobbies
-  - Testimonials (with approval system)
-- ✅ **Message Inbox** - View contact form submissions
-- ✅ **Resume Management** - Upload and manage CV files
-- ✅ **Input Validation** - Server-side validation on all endpoints
-- ✅ **Clean Separation** - Admin and public routes separated
+**Content Management**
+- Full CRUD admin dashboard for managing portfolio content
+- Bilingual support (English/French) with database-backed translations
+- Dynamic content updates without code changes
+- File upload system for resumes and project images
 
-## Technology Stack
+**Public Portfolio**
+- Responsive design that works on all devices
+- Skills showcase with proficiency levels and categories
+- Project gallery with images, descriptions, and live links
+- Work experience timeline
+- Education history
+- Hobbies and interests section
+- Client testimonials with admin approval system
+- Contact form with message storage
 
-### Backend
+**Technical Implementation**
+- RESTful API with Express.js
+- JWT-based authentication for admin access
+- PostgreSQL database with Prisma ORM
+- Input validation and error handling
+- CORS configuration
+- Secure password hashing
+- Protected routes and middleware
 
-- **Express.js** - Web application framework
-- **PostgreSQL** - Relational database
-- **Prisma** - Modern ORM
-- **JWT** - Authentication
-- **bcryptjs** - Password hashing
-- **Multer** - File uploads
-- **express-validator** - Input validation
+## Tech Stack
 
-### Frontend
+**Backend**
+- Express.js - Web framework
+- PostgreSQL - Database
+- Prisma - ORM and migrations
+- JWT - Authentication
+- bcryptjs - Password security
+- Multer - File uploads
+- express-validator - Input validation
 
-- **React** - UI library
-- **Vite** - Build tool
-- **React Router** - Client-side routing
-- **Axios** - HTTP client
-- **Context API** - State management
+**Frontend**
+- React 18 - UI framework
+- Vite - Build tool and dev server
+- React Router - Client-side routing
+- Context API - State management
+- Axios - HTTP client
 
 ## Getting Started
 
+This project can be forked and used as a template for your own portfolio. Here's how to run it locally:
+
 ### Prerequisites
 
-- Node.js (v16 or higher)
-- PostgreSQL (v12 or higher)
-- npm or yarn
+- Node.js 16 or higher
+- PostgreSQL 12 or higher
+- Git
 
 ### Installation
 
-1. **Clone the repository**
-
-   ```bash
-   git clone https://github.com/josevmorilla/digital-portfolio.git
-   cd digital-portfolio
-   ```
-
-2. **Install dependencies**
-
-   ```bash
-   npm install
-   cd frontend && npm install && cd ..
-   ```
-
-3. **Set up environment variables**
-
-   ```bash
-   cp .env.example .env
-   ```
-
-   Edit `.env` and configure:
-
-   ```env
-   DATABASE_URL="postgresql://user:password@localhost:5432/portfolio?schema=public"
-   PORT=5000
-   JWT_SECRET=your-secret-key-change-this
-   ADMIN_EMAIL=admin@portfolio.com
-   ADMIN_PASSWORD=admin123
-   FRONTEND_URL=http://localhost:5173
-   ```
-
-4. **Set up the database**
-
-   ```bash
-   # Generate Prisma client
-   npm run prisma:generate
-   
-   # Run migrations
-   npm run prisma:migrate
-   
-   # Seed initial data (creates admin user)
-   npm run prisma:seed
-   ```
-
-5. **Start the development servers**
-
-   Terminal 1 - Backend:
-
-   ```bash
-   npm run dev
-   ```
-
-   Terminal 2 - Frontend:
-
-   ```bash
-   cd frontend
-   npm run dev
-   ```
-
-6. **Access the application**
-   - Public Portfolio: <http://localhost:5173>
-   - Admin Dashboard: <http://localhost:5173/admin/login>
-   - Default Admin Credentials:
-     - Email: `admin@portfolio.com`
-     - Password: `admin123`
-     - **⚠️ Change these immediately after first login!**
-
-## Project Structure
-
-```
-digital-portfolio/
-├── backend/
-│   ├── prisma/
-│   │   ├── schema.prisma      # Database schema
-│   │   └── seed.js            # Database seeding
-│   └── src/
-│       ├── config/
-│       │   └── database.js    # Prisma client
-│       ├── controllers/       # Route handlers
-│       ├── middleware/        # Auth & validation
-│       ├── routes/            # API routes
-│       ├── utils/             # Utilities (JWT, upload)
-│       └── server.js          # Express server
-├── frontend/
-│   ├── src/
-│   │   ├── components/        # Reusable components
-│   │   ├── context/           # React Context (Auth, Language)
-│   │   ├── pages/
-│   │   │   ├── public/        # Public portfolio pages
-│   │   │   └── admin/         # Admin dashboard pages
-│   │   ├── services/          # API service layer
-│   │   ├── App.jsx            # Main app component
-│   │   └── main.jsx           # Entry point
-│   ├── index.html
-│   └── vite.config.js
-├── .env.example
-├── .gitignore
-├── package.json
-└── README.md
-```
-
-## API Endpoints
-
-### Public Endpoints
-
-- `GET /api/skills` - Get all skills
-- `GET /api/projects` - Get all projects
-- `GET /api/work-experience` - Get work experience
-- `GET /api/education` - Get education
-- `GET /api/contact-info` - Get contact information
-- `GET /api/hobbies` - Get hobbies
-- `GET /api/testimonials` - Get approved testimonials
-- `POST /api/contact-messages` - Submit contact form
-- `POST /api/testimonials` - Submit testimonial
-- `GET /api/resumes/current/:language` - Get current resume
-- `GET /api/resumes/:id/download` - Download resume
-
-### Admin Endpoints (Require Authentication)
-
-All CRUD operations for:
-
-- `/api/skills` - Skills management
-- `/api/projects` - Projects management
-- `/api/work-experience` - Work experience management
-- `/api/education` - Education management
-- `/api/contact-info` - Contact info management
-- `/api/hobbies` - Hobbies management
-- `/api/testimonials` - Testimonials management + approval
-- `/api/contact-messages` - View messages
-- `/api/resumes` - Resume management
-
-### Authentication
-
-- `POST /api/auth/login` - Admin login
-- `GET /api/auth/me` - Get current user
-- `POST /api/auth/change-password` - Change password
-
-## Database Schema
-
-The application uses the following models:
-
-- **User** - Admin users
-- **Skill** - Technical and soft skills
-- **Project** - Portfolio projects
-- **WorkExperience** - Professional experience
-- **Education** - Academic background
-- **ContactInfo** - Contact information
-- **Hobby** - Hobbies and interests
-- **Testimonial** - Client testimonials (with approval)
-- **ContactMessage** - Contact form submissions
-- **Resume** - CV/Resume files
-
-All content models include bilingual fields (`nameEn`/`nameFr`, etc.) for English and French support.
-
-## Security Features
-
-- JWT-based authentication
-- Password hashing with bcrypt
-- Input validation on all endpoints
-- Protected admin routes
-- CORS configuration
-- Testimonial moderation (admin approval required)
-- Secure file upload handling
-
-## Development Scripts
-
 ```bash
-# Backend
-npm run dev              # Start backend with nodemon
-npm run start            # Start backend (production)
-npm run prisma:generate  # Generate Prisma client
-npm run prisma:migrate   # Run database migrations
-npm run prisma:seed      # Seed database
-npm run prisma:studio    # Open Prisma Studio
-npm run setup            # Full setup (generate + migrate + seed)
+# Clone the repository
+git clone https://github.com/josevmorilla/digital-portfolio.git
+cd digital-portfolio
 
-# Frontend
-cd frontend
-npm run dev              # Start Vite dev server
-npm run build            # Build for production
-npm run preview          # Preview production build
+# Install dependencies
+npm install
+cd frontend && npm install && cd ..
+
+# Setup environment variables
+cp .env.example .env
+# Edit .env with your database credentials and JWT secret
+
+# Initialize database
+npm run setup
+
+# Start development servers (use 2 terminals)
+npm run dev              # Terminal 1: Backend (port 5000)
+cd frontend && npm run dev   # Terminal 2: Frontend (port 5173)
+```
+
+Visit http://localhost:5173 to see the portfolio
+
+Admin login: http://localhost:5173/admin/login (default: admin@portfolio.com / admin123)
+
+### Environment Variables
+
+Required variables in `.env`:
+
+```env
+DATABASE_URL="postgresql://user:password@localhost:5432/portfolio"
+PORT=5000
+JWT_SECRET=your-random-secret-key
+ADMIN_EMAIL=your-admin-email
+ADMIN_PASSWORD=your-admin-password
+FRONTEND_URL=http://localhost:5173
 ```
 
 ## Deployment
 
-### Option 1: Railway (Recommended)
+This project is deployed on Vercel. To deploy your own:
 
-1. Create a Railway account at <https://railway.app>
-2. Create a new PostgreSQL database
-3. Create a new project from GitHub
-4. Set environment variables in Railway dashboard
-5. Deploy!
+**Frontend (Vercel)**
+1. Push your code to GitHub
+2. Import the project in Vercel
+3. Set root directory to `frontend`
+4. Set build command: `npm run build`
+5. Set output directory: `dist`
+6. Add environment variable: `VITE_API_URL=your-backend-url`
 
-### Option 2: Vercel + Render/Heroku
+**Backend (Vercel/Railway/Render)**
+1. Deploy backend separately to Railway or Render
+2. Add environment variables from `.env.example`
+3. Backend will auto-run migrations on deploy
 
-- Frontend: Deploy to Vercel
-- Backend: Deploy to Render or Heroku
-- Database: Use Railway or Heroku PostgreSQL
+**Database**
+- Use Railway, Render, or Vercel Postgres
+- Copy connection string to `DATABASE_URL`
 
-### Option 3: Docker
+## Project Structure
+
+```
+backend/
+  prisma/
+    schema.prisma    # Database schema
+    seed.js          # Initial data seeding
+  src/
+    controllers/     # Business logic
+    middleware/      # Auth & validation
+    routes/          # API endpoints
+    server.js        # Express app
+
+frontend/
+  src/
+    components/      # Reusable components
+    context/         # Auth & language state
+    pages/
+      public/        # Portfolio pages
+      admin/         # Dashboard pages
+    services/        # API integration
+```
+
+## API Documentation
+
+**Public Endpoints**
+- `GET /api/skills` - List all skills
+- `GET /api/projects` - List all projects
+- `GET /api/work-experience` - List work history
+- `GET /api/education` - List education
+- `GET /api/hobbies` - List hobbies
+- `GET /api/testimonials` - List approved testimonials
+- `GET /api/contact-info` - Get contact information
+- `POST /api/contact-messages` - Submit contact form
+- `GET /api/resumes/current/:language` - Get current resume
+
+**Admin Endpoints** (Require JWT token)
+- `POST /api/auth/login` - Admin login
+- `GET /api/auth/me` - Get current user
+- Full CRUD operations on all content types
+- Testimonial approval
+- Resume management
+
+## Available Scripts
 
 ```bash
-# Coming soon - Docker configuration
+# Backend
+npm run dev              # Start with nodemon
+npm run setup            # Generate + migrate + seed database
+npm run prisma:studio    # Open database GUI
+
+# Frontend
+cd frontend
+npm run dev              # Start dev server
+npm run build            # Build for production
 ```
+
+## What I Learned
+
+Building this project helped me practice:
+- Full-stack application architecture
+- RESTful API design and implementation
+- Database modeling with Prisma ORM
+- JWT authentication and authorization
+- File upload handling
+- Form validation on client and server
+- React Context API for state management
+- Bilingual content management
+- Responsive CSS design
 
 ## Contributing
 
-This is a personal portfolio project. Feel free to fork and adapt for your own use!
+This is a personal portfolio project, but feel free to fork it and adapt it for your own use. If you find bugs or have suggestions, please open an issue.
 
 ## License
 
 ISC
-
-## Support
-
-For issues or questions, please create an issue in the GitHub repository.
