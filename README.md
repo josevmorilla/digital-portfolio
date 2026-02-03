@@ -103,27 +103,6 @@ ADMIN_PASSWORD=your-admin-password
 FRONTEND_URL=http://localhost:5173
 ```
 
-## Deployment
-
-This project is deployed on Vercel. To deploy your own:
-
-**Frontend (Vercel)**
-1. Push your code to GitHub
-2. Import the project in Vercel
-3. Set root directory to `frontend`
-4. Set build command: `npm run build`
-5. Set output directory: `dist`
-6. Add environment variable: `VITE_API_URL=your-backend-url`
-
-**Backend (Vercel/Railway/Render)**
-1. Deploy backend separately to Railway or Render
-2. Add environment variables from `.env.example`
-3. Backend will auto-run migrations on deploy
-
-**Database**
-- Use Railway, Render, or Vercel Postgres
-- Copy connection string to `DATABASE_URL`
-
 ## Project Structure
 
 ```
