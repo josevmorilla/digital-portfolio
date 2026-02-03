@@ -77,7 +77,7 @@ async function seed() {
           'Bilingual client portal centralizing inquiries, document sharing, and communication with end-to-end flow (DTO validation to persistence) and UX polish.',
         descriptionFr:
           'Portail client bilingue pour centraliser inquiries, partage de documents et communication, avec flux complet (validation DTO à la persistance) et UX soignée.',
-        imageUrl: null, // Add your image URL here, e.g., '/uploads/projects/dominic-cyr.png'
+        imageUrl: '/uploads/projects/dominic-cyr.png',
         projectUrl: null, // Add deployed URL if available
         githubUrl: 'https://github.com/LCDCI/Les-Constructions-Dominic-Cyr',
         technologies: ['Java', 'Spring Boot', 'React', 'PostgreSQL', 'Docker', 'Playwright', 'JUnit'],
@@ -109,7 +109,7 @@ async function seed() {
           'Mobile-first bilingual landing site with structured navigation, accessibility hardening, and language toggle for music LLM experiments.',
         descriptionFr:
           'Site vitrine bilingue mobile-first avec navigation structurée, accessibilité renforcée et bascule de langue pour les expérimentations LLM musique.',
-        imageUrl: null, // Add your image URL here
+        imageUrl: '/uploads/projects/great-music-llm.png',
         projectUrl: null, // Add deployed URL if available
         githubUrl: 'https://github.com/josevmorilla/Great-Music-LLM',
         technologies: ['React', 'CSS', 'HTML'],
@@ -185,6 +185,7 @@ async function seed() {
           'Personal HUD redesign for Quake Fortress focused on visibility and theming; not a school/CS project.',
         descriptionFr:
           'Refonte HUD personnelle pour Quake Fortress axée sur la visibilité et le thème; projet non académique.',
+        imageUrl: '/uploads/projects/quake-fortress.jpg',
         projectUrl: '',
         githubUrl: 'https://github.com/josevmorilla/qf-hud',
         technologies: ['Lua', 'HUD scripting'],
@@ -323,6 +324,29 @@ async function seed() {
 
     await prisma.hobby.createMany({ data: hobbiesData, skipDuplicates: true });
     console.log('Hobbies seeded');
+
+    // Resumes
+    const resumesData = [
+      {
+        filename: 'cv-english.pdf',
+        fileUrl: '/uploads/resumes/cv-english.pdf',
+        language: 'en',
+        titleEn: 'Resume',
+        titleFr: 'CV',
+        current: true,
+      },
+      {
+        filename: 'cv-french.pdf',
+        fileUrl: '/uploads/resumes/cv-french.pdf',
+        language: 'fr',
+        titleEn: 'Resume',
+        titleFr: 'CV',
+        current: true,
+      },
+    ];
+
+    await prisma.resume.createMany({ data: resumesData, skipDuplicates: true });
+    console.log('Resumes seeded');
 
     console.log('Seeding completed successfully!');
   } catch (error) {

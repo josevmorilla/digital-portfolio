@@ -31,11 +31,20 @@ yarn-error.log*
 .DS_Store
 Thumbs.db
 
-# Uploads
-uploads/
-*.pdf
-*.doc
-*.docx
+# Uploads (but keep seed files)
+uploads/*
+!uploads/projects/
+!uploads/projects/.gitkeep
+!uploads/resumes/
+!uploads/resumes/.gitkeep
+uploads/projects/*
+uploads/resumes/*
+!uploads/projects/dominic-cyr.png
+!uploads/projects/great-music-llm.png
+!uploads/projects/quake-fortress.jpg
+!uploads/projects/open-fortress-hud.jpg
+!uploads/resumes/cv-english.pdf
+!uploads/resumes/cv-french.pdf
 
 # Database
 *.db
