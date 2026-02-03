@@ -6,8 +6,7 @@ import './AdminCrud.css';
 const AdminEducation = () => {
   const [educations, setEducations] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [editing, setEditing] = useState(null);
-  const [formData, setFormData] = useState({
+  const [editing, setEditing] = useState(null);  const [showForm, setShowForm] = useState(false);  const [formData, setFormData] = useState({
     institutionEn: '',
     institutionFr: '',
     degreeEn: '',
@@ -58,8 +57,7 @@ const AdminEducation = () => {
         setMessage('Education created successfully!');
       }
       resetForm();
-      fetchEducations();
-      setTimeout(() => setMessage(''), 3000);
+      fetchEducations();      setShowForm(false);      setTimeout(() => setMessage(''), 3000);
     } catch (error) {
       setMessage('Error saving education: ' + (error.response?.data?.error || error.message));
     }
@@ -83,6 +81,8 @@ const AdminEducation = () => {
       gpa: edu.gpa || '',
       order: edu.order,
     });
+    setShowForm(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleDelete = async (id) => {
@@ -100,6 +100,7 @@ const AdminEducation = () => {
 
   const resetForm = () => {
     setEditing(null);
+    setShowForm(false);
     setFormData({
       institutionEn: '',
       institutionFr: '',
@@ -132,10 +133,10 @@ const AdminEducation = () => {
       </header>
 
       <main className="admin-main">
-        <div className="container">
+        <div className="container crud-container">
           {message && <div className="message success">{message}</div>}
 
-          <div className="crud-container">
+          {showForm && (
             <div className="form-section">
               <h2>{editing ? 'Edit Education' : 'Add New Education'}</h2>
               <form onSubmit={handleSubmit}>
@@ -293,18 +294,24 @@ const AdminEducation = () => {
                   <button type="submit" className="primary">
                     {editing ? 'Update Education' : 'Create Education'}
                   </button>
-                  {editing && (
-                    <button type="button" onClick={resetForm} className="secondary">
-                      Cancel
-                    </button>
-                  )}
+                  <button type="button" onClick={resetForm} className="secondary">
+                    Cancel
+                  </button>
                 </div>
               </form>
             </div>
+          )}
 
-            <div className="list-section">
-              <h2>Existing Education</h2>
-              <div className="items-list">
+          <div className="list-section">
+            <div className="crud-header">
+              <h2>All Education ({educations.length})</h2>
+              {!showForm && (
+                <button onClick={() => setShowForm(true)} className="btn-add-new">
+                  + Add New Education
+                </button>
+              )}
+            </div>
+            <div className="items-list">
                 {educations.map((edu) => (
                   <div key={edu.id} className="item-card">
                     <div className="item-header">
@@ -328,10 +335,9 @@ const AdminEducation = () => {
               </div>
             </div>
           </div>
-        </div>
-      </main>
-    </div>
-  );
-};
-
-export default AdminEducation;
+        </main>
+      </div>
+    );
+  };
+  
+  export default AdminEducation;

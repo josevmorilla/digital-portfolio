@@ -7,6 +7,7 @@ const AdminResumes = () => {
   const [resumes, setResumes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(null);
+  const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
     titleEn: '',
     titleFr: '',
@@ -86,6 +87,7 @@ const AdminResumes = () => {
       
       resetForm();
       fetchResumes();
+      setShowForm(false);
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
       setMessage('Error saving resume: ' + (error.response?.data?.error || error.message));
@@ -105,6 +107,8 @@ const AdminResumes = () => {
       language: resume.language,
       order: resume.order,
     });
+    setShowForm(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleDelete = async (id) => {
@@ -122,6 +126,7 @@ const AdminResumes = () => {
 
   const resetForm = () => {
     setEditing(null);
+    setShowForm(false);
     setSelectedFile(null);
     setFormData({
       titleEn: '',
@@ -151,10 +156,10 @@ const AdminResumes = () => {
       </header>
 
       <main className="admin-main">
-        <div className="container">
+        <div className="container crud-container">
           {message && <div className="message success">{message}</div>}
 
-          <div className="crud-container">
+          {showForm && (
             <div className="form-section">
               <h2>{editing ? 'Edit Resume' : 'Add New Resume'}</h2>
               <form onSubmit={handleSubmit}>
@@ -260,18 +265,24 @@ const AdminResumes = () => {
                   <button type="submit" className="primary" disabled={uploading}>
                     {uploading ? 'Uploading...' : (editing ? 'Update Resume' : 'Upload Resume')}
                   </button>
-                  {editing && (
-                    <button type="button" onClick={resetForm} className="secondary">
-                      Cancel
-                    </button>
-                  )}
+                  <button type="button" onClick={resetForm} className="secondary">
+                    Cancel
+                  </button>
                 </div>
               </form>
             </div>
+          )}
 
-            <div className="list-section">
-              <h2>Existing Resumes</h2>
-              <div className="items-list">
+          <div className="list-section">
+            <div className="crud-header">
+              <h2>All Resumes ({resumes.length})</h2>
+              {!showForm && (
+                <button onClick={() => setShowForm(true)} className="btn-add-new">
+                  + Upload New Resume
+                </button>
+              )}
+            </div>
+            <div className="items-list">
                 {resumes.map((resume) => (
                   <div key={resume.id} className="item-card">
                     <div className="item-header">
@@ -291,10 +302,9 @@ const AdminResumes = () => {
               </div>
             </div>
           </div>
-        </div>
-      </main>
-    </div>
-  );
-};
+        </main>
+      </div>
+    );
+  };
 
 export default AdminResumes;

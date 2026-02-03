@@ -7,6 +7,7 @@ const AdminWorkExperience = () => {
   const [experiences, setExperiences] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(null);
+  const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
     companyEn: '',
     companyFr: '',
@@ -55,6 +56,7 @@ const AdminWorkExperience = () => {
       }
       resetForm();
       fetchExperiences();
+      setShowForm(false);
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
       setMessage('Error saving experience: ' + (error.response?.data?.error || error.message));
@@ -76,6 +78,8 @@ const AdminWorkExperience = () => {
       current: exp.current,
       order: exp.order,
     });
+    setShowForm(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleDelete = async (id) => {
@@ -93,6 +97,7 @@ const AdminWorkExperience = () => {
 
   const resetForm = () => {
     setEditing(null);
+    setShowForm(false);
     setFormData({
       companyEn: '',
       companyFr: '',
@@ -122,10 +127,10 @@ const AdminWorkExperience = () => {
       </header>
 
       <main className="admin-main">
-        <div className="container">
+        <div className="container crud-container">
           {message && <div className="message success">{message}</div>}
 
-          <div className="crud-container">
+          {showForm && (
             <div className="form-section">
               <h2>{editing ? 'Edit Experience' : 'Add New Experience'}</h2>
               <form onSubmit={handleSubmit}>
@@ -251,18 +256,24 @@ const AdminWorkExperience = () => {
                   <button type="submit" className="primary">
                     {editing ? 'Update Experience' : 'Create Experience'}
                   </button>
-                  {editing && (
-                    <button type="button" onClick={resetForm} className="secondary">
-                      Cancel
-                    </button>
-                  )}
+                  <button type="button" onClick={resetForm} className="secondary">
+                    Cancel
+                  </button>
                 </div>
               </form>
             </div>
+          )}
 
-            <div className="list-section">
-              <h2>Existing Work Experience</h2>
-              <div className="items-list">
+          <div className="list-section">
+            <div className="crud-header">
+              <h2>All Work Experience ({experiences.length})</h2>
+              {!showForm && (
+                <button onClick={() => setShowForm(true)} className="btn-add-new">
+                  + Add New Experience
+                </button>
+              )}
+            </div>
+            <div className="items-list">
                 {experiences.map((exp) => (
                   <div key={exp.id} className="item-card">
                     <div className="item-header">
@@ -285,10 +296,9 @@ const AdminWorkExperience = () => {
               </div>
             </div>
           </div>
-        </div>
-      </main>
-    </div>
-  );
-};
-
-export default AdminWorkExperience;
+        </main>
+      </div>
+    );
+  };
+  
+  export default AdminWorkExperience;

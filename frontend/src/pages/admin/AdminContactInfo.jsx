@@ -7,6 +7,7 @@ const AdminContactInfo = () => {
   const [contacts, setContacts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(null);
+  const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
     type: 'email',
     label: '',
@@ -44,6 +45,7 @@ const AdminContactInfo = () => {
       }
       resetForm();
       fetchContacts();
+      setShowForm(false);
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
       setMessage('Error saving contact info: ' + (error.response?.data?.error || error.message));
@@ -60,6 +62,8 @@ const AdminContactInfo = () => {
       visible: contact.visible,
       order: contact.order,
     });
+    setShowForm(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleDelete = async (id) => {
@@ -77,6 +81,7 @@ const AdminContactInfo = () => {
 
   const resetForm = () => {
     setEditing(null);
+    setShowForm(false);
     setFormData({
       type: 'email',
       label: '',
@@ -101,10 +106,10 @@ const AdminContactInfo = () => {
       </header>
 
       <main className="admin-main">
-        <div className="container">
+        <div className="container crud-container">
           {message && <div className="message success">{message}</div>}
 
-          <div className="crud-container">
+          {showForm && (
             <div className="form-section">
               <h2>{editing ? 'Edit Contact Info' : 'Add New Contact Info'}</h2>
               <form onSubmit={handleSubmit}>
@@ -181,18 +186,24 @@ const AdminContactInfo = () => {
                   <button type="submit" className="primary">
                     {editing ? 'Update Contact Info' : 'Create Contact Info'}
                   </button>
-                  {editing && (
-                    <button type="button" onClick={resetForm} className="secondary">
-                      Cancel
-                    </button>
-                  )}
+                  <button type="button" onClick={resetForm} className="secondary">
+                    Cancel
+                  </button>
                 </div>
               </form>
             </div>
+          )}
 
-            <div className="list-section">
-              <h2>Existing Contact Info</h2>
-              <div className="items-list">
+          <div className="list-section">
+            <div className="crud-header">
+              <h2>All Contact Info ({contacts.length})</h2>
+              {!showForm && (
+                <button onClick={() => setShowForm(true)} className="btn-add-new">
+                  + Add New Contact Info
+                </button>
+              )}
+            </div>
+            <div className="items-list">
                 {contacts.map((contact) => (
                   <div key={contact.id} className="item-card">
                     <div className="item-header">
@@ -210,10 +221,9 @@ const AdminContactInfo = () => {
               </div>
             </div>
           </div>
-        </div>
-      </main>
-    </div>
-  );
-};
-
-export default AdminContactInfo;
+        </main>
+      </div>
+    );
+  };
+  
+  export default AdminContactInfo;

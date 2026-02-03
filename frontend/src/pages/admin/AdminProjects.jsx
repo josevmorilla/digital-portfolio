@@ -7,6 +7,7 @@ const AdminProjects = () => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(null);
+  const [showForm, setShowForm] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [formData, setFormData] = useState({
     titleEn: '',
@@ -104,6 +105,7 @@ const AdminProjects = () => {
       }
       resetForm();
       fetchProjects();
+      setShowForm(false);
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
       setMessage('Error saving project: ' + (error.response?.data?.error || error.message));
@@ -126,6 +128,8 @@ const AdminProjects = () => {
       startDate: project.startDate ? new Date(project.startDate).toISOString().split('T')[0] : '',
       endDate: project.endDate ? new Date(project.endDate).toISOString().split('T')[0] : '',
     });
+    setShowForm(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleDelete = async (id) => {
@@ -143,6 +147,7 @@ const AdminProjects = () => {
 
   const resetForm = () => {
     setEditing(null);
+    setShowForm(false);
     setFormData({
       titleEn: '',
       titleFr: '',
@@ -173,10 +178,10 @@ const AdminProjects = () => {
       </header>
 
       <main className="admin-main">
-        <div className="container">
+        <div className="container crud-container">
           {message && <div className="message success">{message}</div>}
 
-          <div className="crud-container">
+          {showForm && (
             <div className="form-section">
               <h2>{editing ? 'Edit Project' : 'Add New Project'}</h2>
               <form onSubmit={handleSubmit}>
@@ -341,18 +346,24 @@ const AdminProjects = () => {
                   <button type="submit" className="primary">
                     {editing ? 'Update Project' : 'Create Project'}
                   </button>
-                  {editing && (
-                    <button type="button" onClick={resetForm} className="secondary">
-                      Cancel
-                    </button>
-                  )}
+                  <button type="button" onClick={resetForm} className="secondary">
+                    Cancel
+                  </button>
                 </div>
               </form>
             </div>
+          )}
 
-            <div className="list-section">
-              <h2>Existing Projects</h2>
-              <div className="items-list">
+          <div className="list-section">
+            <div className="crud-header">
+              <h2>All Projects ({projects.length})</h2>
+              {!showForm && (
+                <button onClick={() => setShowForm(true)} className="btn-add-new">
+                  + Add New Project
+                </button>
+              )}
+            </div>
+            <div className="items-list">
                 {projects.map((project) => (
                   <div key={project.id} className="item-card">
                     <div className="item-header">
@@ -375,7 +386,6 @@ const AdminProjects = () => {
               </div>
             </div>
           </div>
-        </div>
       </main>
     </div>
   );

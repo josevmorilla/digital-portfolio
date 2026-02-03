@@ -7,6 +7,7 @@ const AdminTestimonials = () => {
   const [testimonials, setTestimonials] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(null);
+  const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     position: '',
@@ -51,6 +52,7 @@ const AdminTestimonials = () => {
       }
       resetForm();
       fetchTestimonials();
+      setShowForm(false);
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
       setMessage('Error saving testimonial: ' + (error.response?.data?.error || error.message));
@@ -68,6 +70,8 @@ const AdminTestimonials = () => {
       approved: testimonial.approved,
       order: testimonial.order,
     });
+    setShowForm(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleDelete = async (id) => {
@@ -99,6 +103,7 @@ const AdminTestimonials = () => {
 
   const resetForm = () => {
     setEditing(null);
+    setShowForm(false);
     setFormData({
       name: '',
       position: '',
@@ -124,10 +129,10 @@ const AdminTestimonials = () => {
       </header>
 
       <main className="admin-main">
-        <div className="container">
+        <div className="container crud-container">
           {message && <div className="message success">{message}</div>}
 
-          <div className="crud-container">
+          {showForm && (
             <div className="form-section">
               <h2>{editing ? 'Edit Testimonial' : 'Add New Testimonial'}</h2>
               <form onSubmit={handleSubmit}>
@@ -210,18 +215,24 @@ const AdminTestimonials = () => {
                   <button type="submit" className="primary">
                     {editing ? 'Update Testimonial' : 'Create Testimonial'}
                   </button>
-                  {editing && (
-                    <button type="button" onClick={resetForm} className="secondary">
-                      Cancel
-                    </button>
-                  )}
+                  <button type="button" onClick={resetForm} className="secondary">
+                    Cancel
+                  </button>
                 </div>
               </form>
             </div>
+          )}
 
-            <div className="list-section">
-              <h2>Existing Testimonials</h2>
-              <div className="items-list">
+          <div className="list-section">
+            <div className="crud-header">
+              <h2>All Testimonials ({testimonials.length})</h2>
+              {!showForm && (
+                <button onClick={() => setShowForm(true)} className="btn-add-new">
+                  + Add New Testimonial
+                </button>
+              )}
+            </div>
+            <div className="items-list">
                 {testimonials.map((testimonial) => (
                   <div key={testimonial.id} className="item-card">
                     <div className="item-header">
@@ -250,14 +261,13 @@ const AdminTestimonials = () => {
                       <button onClick={() => handleDelete(testimonial.id)} className="btn-delete">Delete</button>
                     </div>
                   </div>
-                ))}
+))}
               </div>
             </div>
           </div>
-        </div>
-      </main>
-    </div>
-  );
-};
-
-export default AdminTestimonials;
+        </main>
+      </div>
+    );
+  };
+  
+  export default AdminTestimonials;

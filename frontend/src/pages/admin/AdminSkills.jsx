@@ -7,6 +7,7 @@ const AdminSkills = () => {
   const [skills, setSkills] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(null);
+  const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
     nameEn: '',
     nameFr: '',
@@ -44,6 +45,7 @@ const AdminSkills = () => {
       }
       resetForm();
       fetchSkills();
+      setShowForm(false);
     } catch (error) {
       setMessage('Error saving skill: ' + (error.response?.data?.error || error.message));
     }
@@ -59,6 +61,8 @@ const AdminSkills = () => {
       icon: skill.icon || '',
       order: skill.order,
     });
+    setShowForm(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleDelete = async (id) => {
@@ -75,6 +79,7 @@ const AdminSkills = () => {
 
   const resetForm = () => {
     setEditing(null);
+    setShowForm(false);
     setFormData({
       nameEn: '',
       nameFr: '',
@@ -99,10 +104,10 @@ const AdminSkills = () => {
       </header>
 
       <main className="admin-main">
-        <div className="container">
+        <div className="container crud-container">
           {message && <div className="message success">{message}</div>}
 
-          <div className="crud-container">
+          {showForm && (
             <div className="form-section">
               <h2>{editing ? 'Edit Skill' : 'Add New Skill'}</h2>
               <form onSubmit={handleSubmit}>
@@ -172,39 +177,45 @@ const AdminSkills = () => {
                   <button type="submit" className="primary">
                     {editing ? 'Update Skill' : 'Create Skill'}
                   </button>
-                  {editing && (
-                    <button type="button" onClick={resetForm} className="secondary">
-                      Cancel
-                    </button>
-                  )}
+                  <button type="button" onClick={resetForm} className="secondary">
+                    Cancel
+                  </button>
                 </div>
               </form>
             </div>
+          )}
 
-            <div className="list-section">
-              <h2>Existing Skills</h2>
-              <div className="items-list">
-                {skills.length === 0 ? (
-                  <p>No skills yet. Add your first skill!</p>
-                ) : (
-                  skills.map((skill) => (
-                    <div key={skill.id} className="item-card">
-                      <div className="item-info">
-                        <h3>{skill.nameEn} / {skill.nameFr}</h3>
-                        <p>Level: {skill.level}% | Category: {skill.category}</p>
-                      </div>
-                      <div className="item-actions">
-                        <button onClick={() => handleEdit(skill)} className="primary">
-                          Edit
-                        </button>
-                        <button onClick={() => handleDelete(skill.id)} className="danger">
-                          Delete
-                        </button>
-                      </div>
+          <div className="list-section">
+            <div className="crud-header">
+              <h2>All Skills ({skills.length})</h2>
+              {!showForm && (
+                <button onClick={() => setShowForm(true)} className="btn-add-new">
+                  + Add New Skill
+                </button>
+              )}
+            </div>
+            <div className="items-list">
+              {skills.length === 0 ? (
+                <p>No skills yet. Add your first skill!</p>
+              ) : (
+                skills.map((skill) => (
+                  <div key={skill.id} className="item-card">
+                    <div className="item-info">
+                      <h3>{skill.nameEn} / {skill.nameFr}</h3>
+                      <p><strong>Level:</strong> {skill.level}% | <strong>Category:</strong> {skill.category}</p>
+                      {skill.icon && <p><strong>Icon:</strong> {skill.icon}</p>}
                     </div>
-                  ))
-                )}
-              </div>
+                    <div className="item-actions">
+                      <button onClick={() => handleEdit(skill)} className="primary">
+                        Edit
+                      </button>
+                      <button onClick={() => handleDelete(skill.id)} className="danger">
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </div>
