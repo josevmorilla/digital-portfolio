@@ -3,6 +3,7 @@ const { body } = require('express-validator');
 const projectController = require('../controllers/projectController');
 const authMiddleware = require('../middleware/auth');
 const validate = require('../middleware/validation');
+const { uploadProjectImage } = require('../utils/upload');
 
 const router = express.Router();
 
@@ -22,6 +23,26 @@ router.post(
     validate,
   ],
   projectController.create
+);
+
+// Image upload route
+router.post(
+  '/upload-image',
+  authMiddleware,
+  uploadProjectImage.single('image'),
+  (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: 'No image file provided' });
+      }
+      // Return the path relative to uploads directory
+      const imageUrl = `/uploads/projects/${req.file.filename}`;
+      res.json({ imageUrl });
+    } catch (error) {
+      console.error('Image upload error:', error);
+      res.status(500).json({ error: 'Failed to upload image' });
+    }
+  }
 );
 
 router.put('/:id', authMiddleware, projectController.update);

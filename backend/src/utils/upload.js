@@ -8,10 +8,20 @@ if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-// Configure storage
-const storage = multer.diskStorage({
+// Create subdirectories for different file types
+const resumesDir = path.join(uploadDir, 'resumes');
+const projectsDir = path.join(uploadDir, 'projects');
+
+[resumesDir, projectsDir].forEach(dir => {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+});
+
+// Configure storage for resumes
+const resumeStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, uploadDir);
+    cb(null, resumesDir);
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
@@ -19,8 +29,19 @@ const storage = multer.diskStorage({
   },
 });
 
-// File filter
-const fileFilter = (req, file, cb) => {
+// Configure storage for project images
+const projectImageStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, projectsDir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    cb(null, 'project-' + uniqueSuffix + path.extname(file.originalname));
+  },
+});
+
+// File filter for resumes
+const resumeFileFilter = (req, file, cb) => {
   const allowedTypes = ['.pdf', '.doc', '.docx'];
   const ext = path.extname(file.originalname).toLowerCase();
   
@@ -31,12 +52,37 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-const upload = multer({
-  storage,
-  fileFilter,
+// File filter for images
+const imageFileFilter = (req, file, cb) => {
+  const allowedTypes = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+  const ext = path.extname(file.originalname).toLowerCase();
+  
+  if (allowedTypes.includes(ext)) {
+    cb(null, true);
+  } else {
+    cb(new Error('Invalid file type. Only JPG, JPEG, PNG, GIF, and WEBP images are allowed.'));
+  }
+};
+
+const uploadResume = multer({
+  storage: resumeStorage,
+  fileFilter: resumeFileFilter,
   limits: {
     fileSize: parseInt(process.env.MAX_FILE_SIZE) || 5 * 1024 * 1024, // 5MB default
   },
 });
 
-module.exports = upload;
+const uploadProjectImage = multer({
+  storage: projectImageStorage,
+  fileFilter: imageFileFilter,
+  limits: {
+    fileSize: parseInt(process.env.MAX_IMAGE_SIZE) || 10 * 1024 * 1024, // 10MB default
+  },
+});
+
+module.exports = {
+  uploadResume,
+  uploadProjectImage,
+  // For backward compatibility
+  upload: uploadResume,
+};
