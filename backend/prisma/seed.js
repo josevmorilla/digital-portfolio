@@ -25,15 +25,16 @@ async function seed() {
     });
 
     console.log('Admin user created:', admin.email);
-    // Clear existing seeded content to ensure idempotent refresh
-    await prisma.$transaction([
-      prisma.skill.deleteMany(),
-      prisma.project.deleteMany(),
-      prisma.workExperience.deleteMany(),
-      prisma.education.deleteMany(),
-      prisma.contactInfo.deleteMany(),
-      prisma.hobby.deleteMany(),
-    ]);
+    
+    // Check if data already exists
+    const existingData = await prisma.hobby.count();
+    if (existingData > 0) {
+      console.log('Database already contains data. Skipping seed to preserve your changes.');
+      console.log('To force reseed, run: npm run prisma:reset');
+      return;
+    }
+    
+    console.log('Database is empty, seeding initial data...');
 
     // Skills
     const skillsData = [
@@ -284,6 +285,19 @@ async function seed() {
 
     // Hobbies
     const hobbiesData = [
+      {
+        nameEn: 'Open Fortress HUD',
+        nameFr: 'HUD pour Open Fortress',
+        descriptionEn: 'A custom heads-up display (HUD) designed for Open Fortress, a fast-paced Source Engine mod. Inspired by the minimalist and efficient design of Quake, this HUD provides clear visibility of health, ammo, and game information while maintaining the aesthetic of classic arena shooters. Built using VGUI scripting, VTFEdit for texture creation, and GIMP for graphic design, the HUD emphasizes readability and performance in competitive gameplay.',
+        descriptionFr: 'Une interface utilisateur (HUD) personnalisée conçue pour Open Fortress, un mod rapide du moteur Source. Inspiré par le design minimaliste et efficace de Quake, ce HUD offre une visibilité claire de la santé, des munitions et des informations de jeu tout en maintenant l\'esthétique des shooters d\'arène classiques. Construit avec le scripting VGUI, VTFEdit pour la création de textures et GIMP pour la conception graphique, le HUD met l\'accent sur la lisibilité et la performance en jeu compétitif.',
+        technologies: ['VGUI', 'VTFEdit', 'GIMP', 'Source Engine'],
+        imageUrl: '/uploads/projects/open-fortress-hud.jpg',
+        links: [
+          { label: 'GameBanana', url: 'https://gamebanana.com/mods/616975' }
+        ],
+        featured: true,
+        order: 0,
+      },
       {
         nameEn: 'Video games',
         nameFr: 'Jeux vidéo',

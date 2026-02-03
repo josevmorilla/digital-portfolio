@@ -6,13 +6,26 @@
   "scripts": {
     "start": "node backend/src/server.js",
     "dev": "nodemon backend/src/server.js",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "nodemon backend/src/server.js",
+    "dev:db": "docker-compose up -d postgres",
+    "dev:all": "npm run dev:db && concurrently \"npm:dev:backend\" \"npm:dev:frontend\" --names \"BACKEND,FRONTEND\" --prefix-colors \"blue,magenta\"",
+    "stop:db": "docker-compose down",
     "prisma:generate": "cd backend && npx prisma generate",
     "prisma:migrate": "cd backend && npx prisma migrate dev",
     "prisma:seed": "node backend/prisma/seed.js",
     "prisma:studio": "cd backend && npx prisma studio",
+    "prisma:reset": "cd backend && npx prisma migrate reset",
     "setup": "npm run prisma:generate && npm run prisma:migrate && npm run prisma:seed"
   },
-  "keywords": ["portfolio", "bilingual", "admin-dashboard", "express", "prisma", "react"],
+  "keywords": [
+    "portfolio",
+    "bilingual",
+    "admin-dashboard",
+    "express",
+    "prisma",
+    "react"
+  ],
   "prisma": {
     "seed": "node backend/prisma/seed.js"
   },
@@ -30,6 +43,7 @@
     "prisma": "^5.8.0"
   },
   "devDependencies": {
+    "concurrently": "^9.2.1",
     "nodemon": "^3.1.11"
   }
 }
