@@ -521,16 +521,84 @@ const Home = () => {
       <section id="hobbies" className="section">
         <div className="container">
           <h2 className="section-title">{t('Hobbies & Interests', 'Loisirs et Intérêts')}</h2>
-          <div className="hobbies-grid">
-            {data.hobbies.map((hobby) => (
-              <div key={hobby.id} className="hobby-card">
-                <h3>{language === 'en' ? hobby.nameEn : hobby.nameFr}</h3>
-                {hobby.descriptionEn && (
-                  <p>{language === 'en' ? hobby.descriptionEn : hobby.descriptionFr}</p>
-                )}
-              </div>
-            ))}
-          </div>
+          
+          {/* Featured Hobbies - Project-style Layout */}
+          {data.hobbies.some(hobby => hobby.featured) && (
+            <div className="projects-showcase">
+              {data.hobbies
+                .filter(hobby => hobby.featured)
+                .map((hobby, index) => (
+                  <div key={hobby.id} className={`project-showcase-item ${index % 2 === 0 ? 'left' : 'right'}`}>
+                    {/* Image */}
+                    <div className="project-showcase-image">
+                      {hobby.imageUrl ? (
+                        <img src={hobby.imageUrl} alt={language === 'en' ? hobby.nameEn : hobby.nameFr} />
+                      ) : (
+                        <div className="project-placeholder">
+                          <FiGithub size={64} />
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Content */}
+                    <div className="project-showcase-content">
+                      <h3>{language === 'en' ? hobby.nameEn : hobby.nameFr}</h3>
+                      <p className="project-date">
+                        {hobby.startDate && (
+                          hobby.endDate ? (
+                            `${new Date(hobby.startDate).toLocaleDateString(language === 'en' ? 'en-US' : 'fr-FR', { year: 'numeric', month: 'short' })} - ${new Date(hobby.endDate).toLocaleDateString(language === 'en' ? 'en-US' : 'fr-FR', { year: 'numeric', month: 'short' })}`
+                          ) : (
+                            `${new Date(hobby.startDate).toLocaleDateString(language === 'en' ? 'en-US' : 'fr-FR', { year: 'numeric', month: 'short' })} - ${t('Present', 'Présent')}`
+                          )
+                        )}
+                      </p>
+                      <p className="project-description">
+                        {language === 'en' ? hobby.descriptionEn : hobby.descriptionFr}
+                      </p>
+                      {hobby.technologies && hobby.technologies.length > 0 && (
+                        <div className="project-tech">
+                          {hobby.technologies.map((tech, idx) => (
+                            <span key={idx} className="tech-tag">{tech}</span>
+                          ))}
+                        </div>
+                      )}
+                      {hobby.links && hobby.links.length > 0 && (
+                        <div className="project-links">
+                          {hobby.links.map((link, idx) => (
+                            <a 
+                              key={idx} 
+                              href={link.url.startsWith('http') ? link.url : `https://${link.url}`} 
+                              target="_blank" 
+                              rel="noopener noreferrer" 
+                              className="btn-project"
+                            >
+                              {link.label.toLowerCase().includes('github') ? <FiGithub /> : null}
+                              {link.label}
+                            </a>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+            </div>
+          )}
+          
+          {/* Regular Hobbies Grid */}
+          {data.hobbies.some(hobby => !hobby.featured) && (
+            <div className="hobbies-grid">
+              {data.hobbies
+                .filter(hobby => !hobby.featured)
+                .map((hobby) => (
+                  <div key={hobby.id} className="hobby-card">
+                    <h3>{language === 'en' ? hobby.nameEn : hobby.nameFr}</h3>
+                    {hobby.descriptionEn && (
+                      <p>{language === 'en' ? hobby.descriptionEn : hobby.descriptionFr}</p>
+                    )}
+                  </div>
+                ))}
+            </div>
+          )}
         </div>
       </section>
 

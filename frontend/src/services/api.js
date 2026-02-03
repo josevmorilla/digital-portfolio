@@ -19,6 +19,9 @@ export const projectsAPI = {
   create: (data) => axios.post(`${API_URL}/projects`, data),
   update: (id, data) => axios.put(`${API_URL}/projects/${id}`, data),
   delete: (id) => axios.delete(`${API_URL}/projects/${id}`),
+  uploadImage: (formData) => axios.post(`${API_URL}/projects/upload-image`, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  }),
 };
 
 // Work Experience

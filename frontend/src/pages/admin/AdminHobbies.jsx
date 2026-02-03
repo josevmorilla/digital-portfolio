@@ -13,6 +13,12 @@ const AdminHobbies = () => {
     descriptionEn: '',
     descriptionFr: '',
     icon: '',
+    imageUrl: '',
+    technologies: '',
+    links: [{ label: '', url: '' }],
+    startDate: '',
+    endDate: '',
+    featured: false,
     order: 0,
   });
   const [message, setMessage] = useState('');
@@ -35,11 +41,20 @@ const AdminHobbies = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const hobbyData = {
+        ...formData,
+        technologies: formData.technologies.split(',').map(t => t.trim()).filter(t => t),
+        links: formData.links.filter(link => link.label && link.url),
+        imageUrl: formData.imageUrl || null,
+        startDate: formData.startDate ? new Date(formData.startDate) : null,
+        endDate: formData.endDate ? new Date(formData.endDate) : null,
+      };
+
       if (editing) {
-        await hobbiesAPI.update(editing, formData);
+        await hobbiesAPI.update(editing, hobbyData);
         setMessage('Hobby updated successfully!');
       } else {
-        await hobbiesAPI.create(formData);
+        await hobbiesAPI.create(hobbyData);
         setMessage('Hobby created successfully!');
       }
       resetForm();
@@ -58,6 +73,12 @@ const AdminHobbies = () => {
       descriptionEn: hobby.descriptionEn || '',
       descriptionFr: hobby.descriptionFr || '',
       icon: hobby.icon || '',
+      imageUrl: hobby.imageUrl || '',
+      technologies: hobby.technologies?.join(', ') || '',
+      links: hobby.links?.length > 0 ? hobby.links : [{ label: '', url: '' }],
+      startDate: hobby.startDate ? new Date(hobby.startDate).toISOString().split('T')[0] : '',
+      endDate: hobby.endDate ? new Date(hobby.endDate).toISOString().split('T')[0] : '',
+      featured: hobby.featured || false,
       order: hobby.order,
     });
   };
@@ -83,6 +104,12 @@ const AdminHobbies = () => {
       descriptionEn: '',
       descriptionFr: '',
       icon: '',
+      imageUrl: '',
+      technologies: '',
+      links: [{ label: '', url: '' }],
+      startDate: '',
+      endDate: '',
+      featured: false,
       order: 0,
     });
   };
@@ -150,6 +177,97 @@ const AdminHobbies = () => {
 
                 <div className="form-row">
                   <div className="form-group">
+                    <label>Start Date</label>
+                    <input
+                      type="date"
+                      value={formData.startDate}
+                      onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>End Date (leave empty if ongoing)</label>
+                    <input
+                      type="date"
+                      value={formData.endDate}
+                      onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
+                    />
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label>Technologies (comma-separated)</label>
+                  <input
+                    type="text"
+                    value={formData.technologies}
+                    onChange={(e) => setFormData({ ...formData, technologies: e.target.value })}
+                    placeholder="Lua, HUD scripting, Source Engine"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Image URL</label>
+                  <input
+                    type="text"
+                    value={formData.imageUrl}
+                    onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
+                    placeholder="https://example.com/image.png or /uploads/projects/image.png"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Links (GitHub, GameBanana, etc.)</label>
+                  {formData.links.map((link, index) => (
+                    <div key={index} className="form-row" style={{ marginBottom: '10px' }}>
+                      <input
+                        type="text"
+                        value={link.label}
+                        onChange={(e) => {
+                          const newLinks = [...formData.links];
+                          newLinks[index].label = e.target.value;
+                          setFormData({ ...formData, links: newLinks });
+                        }}
+                        placeholder="Link label (e.g., GitHub, GameBanana)"
+                        style={{ flex: 1, marginRight: '10px' }}
+                      />
+                      <input
+                        type="text"
+                        value={link.url}
+                        onChange={(e) => {
+                          const newLinks = [...formData.links];
+                          newLinks[index].url = e.target.value;
+                          setFormData({ ...formData, links: newLinks });
+                        }}
+                        placeholder="URL (e.g., github.com/user/repo)"
+                        style={{ flex: 2, marginRight: '10px' }}
+                      />
+                      {formData.links.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const newLinks = formData.links.filter((_, i) => i !== index);
+                            setFormData({ ...formData, links: newLinks });
+                          }}
+                          className="btn-delete"
+                          style={{ padding: '5px 10px' }}
+                        >
+                          Remove
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, links: [...formData.links, { label: '', url: '' }] })}
+                    className="secondary"
+                    style={{ marginTop: '10px' }}
+                  >
+                    + Add Link
+                  </button>
+                </div>
+
+                <div className="form-row">
+                  <div className="form-group">
                     <label>Icon (optional)</label>
                     <input
                       type="text"
@@ -167,6 +285,17 @@ const AdminHobbies = () => {
                       onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) })}
                     />
                   </div>
+                </div>
+
+                <div className="form-group">
+                  <label className="checkbox-label">
+                    <input
+                      type="checkbox"
+                      checked={formData.featured}
+                      onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
+                    />
+                    <span>Featured (shows in large project-style layout)</span>
+                  </label>
                 </div>
 
                 <div className="form-actions">

@@ -7,6 +7,7 @@ const AdminProjects = () => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(null);
+  const [uploading, setUploading] = useState(false);
   const [formData, setFormData] = useState({
     titleEn: '',
     titleFr: '',
@@ -38,15 +39,58 @@ const AdminProjects = () => {
     }
   };
 
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      setMessage('Invalid file type. Please upload JPG, PNG, GIF, or WEBP images.');
+      return;
+    }
+
+    // Validate file size (10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      setMessage('File size too large. Maximum size is 10MB.');
+      return;
+    }
+
+    setUploading(true);
+    const uploadFormData = new FormData();
+    uploadFormData.append('image', file);
+
+    try {
+      const response = await projectsAPI.uploadImage(uploadFormData);
+      setFormData({ ...formData, imageUrl: response.data.imageUrl });
+      setMessage('Image uploaded successfully!');
+      setTimeout(() => setMessage(''), 3000);
+    } catch (error) {
+      setMessage('Error uploading image: ' + (error.response?.data?.error || error.message));
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Auto-add https:// to URLs if missing
+      const normalizeUrl = (url) => {
+        if (!url) return null;
+        const trimmed = url.trim();
+        if (trimmed && !trimmed.match(/^https?:\/\//i)) {
+          return `https://${trimmed}`;
+        }
+        return trimmed || null;
+      };
+
       const projectData = {
         ...formData,
         technologies: formData.technologies.split(',').map(t => t.trim()).filter(t => t),
         imageUrl: formData.imageUrl || null,
-        projectUrl: formData.projectUrl || null,
-        githubUrl: formData.githubUrl || null,
+        projectUrl: normalizeUrl(formData.projectUrl),
+        githubUrl: normalizeUrl(formData.githubUrl),
         startDate: formData.startDate ? new Date(formData.startDate) : null,
         endDate: formData.endDate ? new Date(formData.endDate) : null,
       };
@@ -211,15 +255,43 @@ const AdminProjects = () => {
 
                 <div className="form-row">
                   <div className="form-group">
-                    <label>Image URL</label>
+                    <label>Project Screenshot/Image</label>
+                    <input
+                      type="file"
+                      accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+                      onChange={handleImageUpload}
+                      disabled={uploading}
+                    />
+                    {uploading && <small className="text-muted">Uploading...</small>}
+                    {formData.imageUrl && (
+                      <div className="image-preview">
+                        <img src={formData.imageUrl} alt="Preview" style={{ maxWidth: '200px', marginTop: '10px' }} />
+                        <button 
+                          type="button" 
+                          onClick={() => setFormData({ ...formData, imageUrl: '' })}
+                          className="btn-small"
+                          style={{ marginTop: '5px' }}
+                        >
+                          Remove Image
+                        </button>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="form-group">
+                    <label>Image URL (Alternative)</label>
                     <input
                       type="text"
                       value={formData.imageUrl}
                       onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
-                      placeholder="https://example.com/image.png or /uploads/projects/image.png"
+                      placeholder="Or paste URL: https://example.com/image.png"
+                      disabled={uploading}
                     />
+                    <small className="text-muted">Upload a file above OR paste a URL here</small>
                   </div>
+                </div>
 
+                <div className="form-row">
                   <div className="form-group">
                     <label>Order</label>
                     <input
@@ -234,21 +306,23 @@ const AdminProjects = () => {
                   <div className="form-group">
                     <label>GitHub URL</label>
                     <input
-                      type="url"
+                      type="text"
                       value={formData.githubUrl}
                       onChange={(e) => setFormData({ ...formData, githubUrl: e.target.value })}
-                      placeholder="https://github.com/username/repo"
+                      placeholder="https://github.com/username/repo or github.com/username/repo"
                     />
+                    <small className="text-muted">https:// will be added automatically if missing</small>
                   </div>
 
                   <div className="form-group">
                     <label>Deployed Project URL</label>
                     <input
-                      type="url"
+                      type="text"
                       value={formData.projectUrl}
                       onChange={(e) => setFormData({ ...formData, projectUrl: e.target.value })}
-                      placeholder="https://myproject.com"
+                      placeholder="https://myproject.com or myproject.vercel.app"
                     />
+                    <small className="text-muted">https:// will be added automatically if missing</small>
                   </div>
                 </div>
 
