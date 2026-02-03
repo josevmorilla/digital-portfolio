@@ -27,7 +27,7 @@
     "react"
   ],
   "prisma": {
-    "seed": "node backend/prisma/seed.js"
+    "seed": "node prisma/seed.js"
   },
   "author": "",
   "license": "ISC",

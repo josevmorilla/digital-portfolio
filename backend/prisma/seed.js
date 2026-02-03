@@ -328,20 +328,20 @@ async function seed() {
     // Resumes
     const resumesData = [
       {
+        titleEn: 'Resume',
+        titleFr: 'CV',
         filename: 'cv-english.pdf',
         fileUrl: '/uploads/resumes/cv-english.pdf',
         language: 'en',
-        titleEn: 'Resume',
-        titleFr: 'CV',
-        current: true,
+        order: 0,
       },
       {
+        titleEn: 'Resume',
+        titleFr: 'CV',
         filename: 'cv-french.pdf',
         fileUrl: '/uploads/resumes/cv-french.pdf',
         language: 'fr',
-        titleEn: 'Resume',
-        titleFr: 'CV',
-        current: true,
+        order: 1,
       },
     ];
 
