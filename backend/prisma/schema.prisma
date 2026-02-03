@@ -105,6 +105,12 @@ model Hobby {
   descriptionEn String?  @db.Text
   descriptionFr String?  @db.Text
   icon          String?
+  imageUrl      String?
+  links         Json?    // Array of {label, url} objects for GitHub, GameBanana, etc.
+  technologies  String[] // Array of technology names
+  startDate     DateTime?
+  endDate       DateTime?
+  featured      Boolean  @default(false)
   order         Int      @default(0)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
