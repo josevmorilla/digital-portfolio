@@ -49,9 +49,27 @@ exports.download = async (req, res) => {
       return res.status(404).json({ error: 'Resume not found' });
     }
 
-    const filePath = path.join(__dirname, '../../..', resume.fileUrl);
+    // Handle both old paths (/uploads/file.pdf) and new paths (/uploads/resumes/file.pdf)
+    let filePath;
+    if (resume.fileUrl.startsWith('/uploads/resumes/')) {
+      filePath = path.join(__dirname, '../../..', resume.fileUrl);
+    } else if (resume.fileUrl.startsWith('/uploads/')) {
+      // Check if file exists in old location
+      const oldPath = path.join(__dirname, '../../..', resume.fileUrl);
+      if (fs.existsSync(oldPath)) {
+        filePath = oldPath;
+      } else {
+        // Try new resumes subdirectory
+        const filename = path.basename(resume.fileUrl);
+        filePath = path.join(__dirname, '../../../uploads/resumes', filename);
+      }
+    } else {
+      filePath = path.join(__dirname, '../../..', resume.fileUrl);
+    }
 
     if (!fs.existsSync(filePath)) {
+      console.error('Resume file not found at:', filePath);
+      console.error('Looking for fileUrl:', resume.fileUrl);
       return res.status(404).json({ error: 'Resume file not found' });
     }
 
@@ -82,7 +100,7 @@ exports.upload = async (req, res) => {
         descriptionEn: descriptionEn || null,
         descriptionFr: descriptionFr || null,
         filename: req.file.originalname,
-        fileUrl: `/uploads/${req.file.filename}`,
+        fileUrl: `/uploads/resumes/${req.file.filename}`,
         language: language || 'en',
         order: parseInt(order) || 0,
       },
@@ -133,8 +151,22 @@ exports.delete = async (req, res) => {
       return res.status(404).json({ error: 'Resume not found' });
     }
 
-    // Delete file from filesystem
-    const filePath = path.join(__dirname, '../../..', resume.fileUrl);
+    // Delete file from filesystem - handle both old and new paths
+    let filePath;
+    if (resume.fileUrl.startsWith('/uploads/resumes/')) {
+      filePath = path.join(__dirname, '../../..', resume.fileUrl);
+    } else if (resume.fileUrl.startsWith('/uploads/')) {
+      const oldPath = path.join(__dirname, '../../..', resume.fileUrl);
+      if (fs.existsSync(oldPath)) {
+        filePath = oldPath;
+      } else {
+        const filename = path.basename(resume.fileUrl);
+        filePath = path.join(__dirname, '../../../uploads/resumes', filename);
+      }
+    } else {
+      filePath = path.join(__dirname, '../../..', resume.fileUrl);
+    }
+
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
     }

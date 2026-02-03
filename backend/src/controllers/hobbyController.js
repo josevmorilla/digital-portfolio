@@ -34,7 +34,7 @@ exports.getById = async (req, res) => {
 // Create hobby
 exports.create = async (req, res) => {
   try {
-    const { nameEn, nameFr, descriptionEn, descriptionFr, icon, order } = req.body;
+    const { nameEn, nameFr, descriptionEn, descriptionFr, icon, imageUrl, links, technologies, startDate, endDate, featured, order } = req.body;
 
     const hobby = await prisma.hobby.create({
       data: {
@@ -43,6 +43,12 @@ exports.create = async (req, res) => {
         descriptionEn,
         descriptionFr,
         icon,
+        imageUrl,
+        links: links || undefined,
+        technologies: technologies || [],
+        startDate: startDate ? new Date(startDate) : null,
+        endDate: endDate ? new Date(endDate) : null,
+        featured: featured === true || featured === 'true',
         order: order ? parseInt(order) : 0,
       },
     });
@@ -57,7 +63,7 @@ exports.create = async (req, res) => {
 // Update hobby
 exports.update = async (req, res) => {
   try {
-    const { nameEn, nameFr, descriptionEn, descriptionFr, icon, order } = req.body;
+    const { nameEn, nameFr, descriptionEn, descriptionFr, icon, imageUrl, links, technologies, startDate, endDate, featured, order } = req.body;
 
     const hobby = await prisma.hobby.update({
       where: { id: req.params.id },
@@ -67,6 +73,12 @@ exports.update = async (req, res) => {
         descriptionEn,
         descriptionFr,
         icon,
+        imageUrl,
+        links: links !== undefined ? links : undefined,
+        technologies: technologies !== undefined ? technologies : undefined,
+        startDate: startDate !== undefined ? (startDate ? new Date(startDate) : null) : undefined,
+        endDate: endDate !== undefined ? (endDate ? new Date(endDate) : null) : undefined,
+        featured: featured !== undefined ? (featured === true || featured === 'true') : undefined,
         order: order !== undefined ? parseInt(order) : undefined,
       },
     });
