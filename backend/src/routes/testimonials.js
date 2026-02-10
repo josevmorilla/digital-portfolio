@@ -6,8 +6,17 @@ const validate = require('../middleware/validation');
 
 const router = express.Router();
 
-// Public routes
-router.get('/', testimonialController.getAll);
+// Optional auth middleware - checks token but doesn't require it
+const optionalAuth = (req, res, next) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (token) {
+    return authMiddleware(req, res, next);
+  }
+  next();
+};
+
+// Public routes (with optional auth for admin view)
+router.get('/', optionalAuth, testimonialController.getAll);
 router.post(
   '/',
   [

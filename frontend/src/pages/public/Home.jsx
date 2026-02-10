@@ -33,6 +33,23 @@ const Home = () => {
   const [skillsCarouselIndex, setSkillsCarouselIndex] = useState(0);
   const [contactForm, setContactForm] = useState({ name: '', email: '', subject: '', message: '' });
   const [contactMessage, setContactMessage] = useState('');
+  const [showTestimonialModal, setShowTestimonialModal] = useState(false);
+  const [testimonialForm, setTestimonialForm] = useState({ 
+    name: '', 
+    company: '', 
+    projectName: '',
+    technicalExpertise: 0,
+    codeQuality: 0,
+    communication: 0,
+    deadlines: 0,
+    overallSatisfaction: 0,
+    problemAndResults: '',
+    doubtsOvercome: '',
+    bestPart: '',
+    wouldRecommend: '',
+    permissionGranted: false
+  });
+  const [testimonialMessage, setTestimonialMessage] = useState('');
 
   useEffect(() => {
     fetchData();
@@ -225,6 +242,96 @@ const Home = () => {
     }
   };
 
+  const handleTestimonialSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!testimonialForm.permissionGranted) {
+      setTestimonialMessage(t(
+        'Please grant permission to use your testimonial.',
+        'Veuillez autoriser l\'utilisation de votre témoignage.'
+      ));
+      return;
+    }
+
+    // Validate ratings
+    if (
+      testimonialForm.technicalExpertise === 0 ||
+      testimonialForm.codeQuality === 0 ||
+      testimonialForm.communication === 0 ||
+      testimonialForm.deadlines === 0 ||
+      testimonialForm.overallSatisfaction === 0
+    ) {
+      setTestimonialMessage(t(
+        'Please provide all ratings (1-5 stars).',
+        'Veuillez fournir toutes les notes (1-5 étoiles).'
+      ));
+      return;
+    }
+
+    try {
+      // Structure the comprehensive feedback
+      const content = `
+RATINGS (out of 5):
+- Technical Expertise: ${testimonialForm.technicalExpertise}/5
+- Code Quality: ${testimonialForm.codeQuality}/5
+- Communication: ${testimonialForm.communication}/5
+- Meeting Deadlines: ${testimonialForm.deadlines}/5
+- Overall Satisfaction: ${testimonialForm.overallSatisfaction}/5
+
+DETAILED FEEDBACK:
+
+Problem & Results:
+${testimonialForm.problemAndResults}
+
+Doubts Overcome:
+${testimonialForm.doubtsOvercome}
+
+Best Part:
+${testimonialForm.bestPart}
+
+Would Recommend:
+${testimonialForm.wouldRecommend}
+      `.trim();
+
+      const submissionData = {
+        name: testimonialForm.name || 'Anonymous',
+        position: testimonialForm.projectName || 'Client',
+        company: testimonialForm.company || null,
+        content: content
+      };
+
+      await testimonialsAPI.create(submissionData);
+      setTestimonialMessage(t(
+        'Thank you! Your testimonial will be published after review.',
+        'Merci ! Votre témoignage sera publié après examen.'
+      ));
+      setTestimonialForm({ 
+        name: '', 
+        company: '', 
+        projectName: '',
+        technicalExpertise: 0,
+        codeQuality: 0,
+        communication: 0,
+        deadlines: 0,
+        overallSatisfaction: 0,
+        problemAndResults: '',
+        doubtsOvercome: '',
+        bestPart: '',
+        wouldRecommend: '',
+        permissionGranted: false
+      });
+      setTimeout(() => {
+        setTestimonialMessage('');
+        setShowTestimonialModal(false);
+      }, 3000);
+    } catch (error) {
+      setTestimonialMessage(t(
+        'Error submitting testimonial. Please try again.',
+        'Erreur lors de la soumission. Veuillez réessayer.'
+      ));
+    }
+  };
+
   const getSkillIcon = (skillName) => {
     const iconName = skillIconMap[skillName];
     if (iconName) {
@@ -244,6 +351,61 @@ const Home = () => {
     if (info.type === 'email') return `mailto:${info.value}`;
     if (info.type === 'github' || info.type === 'linkedin') return info.value;
     return null;
+  };
+
+  // Parse structured testimonial content
+  const parseTestimonialContent = (content) => {
+    const ratings = {};
+    const feedback = {};
+    
+    // Extract ratings
+    const ratingMatches = content.match(/Technical Expertise: (\d+)\/5/i);
+    if (ratingMatches) ratings.technicalExpertise = parseInt(ratingMatches[1]);
+    
+    const codeQualityMatches = content.match(/Code Quality: (\d+)\/5/i);
+    if (codeQualityMatches) ratings.codeQuality = parseInt(codeQualityMatches[1]);
+    
+    const communicationMatches = content.match(/Communication: (\d+)\/5/i);
+    if (communicationMatches) ratings.communication = parseInt(communicationMatches[1]);
+    
+    const deadlinesMatches = content.match(/Meeting Deadlines: (\d+)\/5/i);
+    if (deadlinesMatches) ratings.deadlines = parseInt(deadlinesMatches[1]);
+    
+    const overallMatches = content.match(/Overall Satisfaction: (\d+)\/5/i);
+    if (overallMatches) ratings.overall = parseInt(overallMatches[1]);
+    
+    // Extract feedback sections
+    const problemMatch = content.match(/Problem & Results:\s*\n([\s\S]*?)(?:\n\n|Doubts Overcome:)/i);
+    if (problemMatch) feedback.problemResults = problemMatch[1].trim();
+    
+    const doubtsMatch = content.match(/Doubts Overcome:\s*\n([\s\S]*?)(?:\n\n|Best Part:)/i);
+    if (doubtsMatch) feedback.doubtsOvercome = doubtsMatch[1].trim();
+    
+    const bestPartMatch = content.match(/Best Part:\s*\n([\s\S]*?)(?:\n\n|Would Recommend:)/i);
+    if (bestPartMatch) feedback.bestPart = bestPartMatch[1].trim();
+    
+    const recommendMatch = content.match(/Would Recommend:\s*\n([\s\S]*?)$/i);
+    if (recommendMatch) feedback.wouldRecommend = recommendMatch[1].trim();
+    
+    return { ratings, feedback, isStructured: Object.keys(ratings).length > 0 };
+  };
+
+  const renderStars = (rating) => {
+    return (
+      <span className="testimonial-stars">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <span key={star} className={star <= rating ? 'star-filled' : 'star-empty'}>
+            ★
+          </span>
+        ))}
+      </span>
+    );
+  };
+
+  const getAverageRating = (ratings) => {
+    if (!ratings || Object.keys(ratings).length === 0) return 0;
+    const values = Object.values(ratings);
+    return (values.reduce((a, b) => a + b, 0) / values.length).toFixed(1);
   };
 
   return (
@@ -605,21 +767,315 @@ const Home = () => {
       {/* Testimonials Section */}
       <section id="testimonials" className="section bg-light">
         <div className="container">
-          <h2 className="section-title">{t('Testimonials', 'Témoignages')}</h2>
-          <div className="testimonials-grid">
-            {data.testimonials.map((testimonial) => (
-              <div key={testimonial.id} className="testimonial-card">
-                <p className="testimonial-content">"{testimonial.content}"</p>
-                <div className="testimonial-author">
-                  <strong>{testimonial.name}</strong>
-                  <span>{testimonial.position}</span>
-                  {testimonial.company && <span>{testimonial.company}</span>}
-                </div>
-              </div>
-            ))}
+          <div className="testimonials-header">
+            <h2 className="section-title">{t('Testimonials', 'Témoignages')}</h2>
+            <button 
+              className="btn-leave-testimonial"
+              onClick={() => setShowTestimonialModal(true)}
+            >
+              💬 {t('Leave a Testimonial', 'Laisser un Témoignage')}
+            </button>
           </div>
+          <div className="testimonials-grid">
+            {data.testimonials.map((testimonial) => {
+              const parsed = parseTestimonialContent(testimonial.content);
+              const avgRating = getAverageRating(parsed.ratings);
+              
+              return (
+                <div key={testimonial.id} className="testimonial-card">
+                  {parsed.isStructured ? (
+                    <>
+                      {/* Average Rating Display */}
+                      {avgRating > 0 && (
+                        <div className="testimonial-rating-header">
+                          {renderStars(Math.round(avgRating))}
+                          <span className="rating-number">{avgRating}/5</span>
+                        </div>
+                      )}
+                      
+                      {/* Best Part (Main Quote) */}
+                      {parsed.feedback.bestPart && (
+                        <p className="testimonial-content">
+                          "{parsed.feedback.bestPart}"
+                        </p>
+                      )}
+                      
+                      {/* Problem & Results */}
+                      {parsed.feedback.problemResults && (
+                        <div className="testimonial-detail">
+                          <strong>{t('Results:', 'Résultats :')}</strong>
+                          <p>{parsed.feedback.problemResults}</p>
+                        </div>
+                      )}
+                      
+                      {/* Would Recommend */}
+                      {parsed.feedback.wouldRecommend && (
+                        <div className="testimonial-recommend">
+                          <p><em>{parsed.feedback.wouldRecommend}</em></p>
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <p className="testimonial-content">"{testimonial.content}"</p>
+                  )}
+                  
+                  <div className="testimonial-author">
+                    <strong>{testimonial.name}</strong>
+                    <span>{testimonial.position}</span>
+                    {testimonial.company && <span>{testimonial.company}</span>}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          {data.testimonials.length === 0 && (
+            <p className="empty-state">
+              {t('No testimonials yet. Be the first to share your experience!', 
+                 'Aucun témoignage pour le moment. Soyez le premier à partager votre expérience !')}
+            </p>
+          )}
         </div>
       </section>
+
+      {/* Testimonial Modal */}
+      {showTestimonialModal && (
+        <div className="modal-overlay" onClick={() => setShowTestimonialModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <button 
+              className="modal-close"
+              onClick={() => setShowTestimonialModal(false)}
+            >
+              ×
+            </button>
+            <h2 className="modal-title">
+              {t('Share Your Experience', 'Partagez Votre Expérience')}
+            </h2>
+            <p className="modal-subtitle">
+              {t(
+                'Your testimonial will be reviewed before being published.',
+                'Votre témoignage sera examiné avant d\'être publié.'
+              )}
+            </p>
+
+            {testimonialMessage && (
+              <div className={`modal-message ${testimonialMessage.includes('Error') || testimonialMessage.includes('Erreur') ? 'error' : 'success'}`}>
+                {testimonialMessage}
+              </div>
+            )}
+
+            <form onSubmit={handleTestimonialSubmit} className="modal-form">
+              {/* Section 1: General Information */}
+              <div className="form-section">
+                <h3 className="form-section-title">
+                  {t('1. General Information (Optional)', '1. Informations Générales (Optionnel)')}
+                </h3>
+                
+                <div className="form-group">
+                  <label>{t('Name', 'Nom')}</label>
+                  <input
+                    type="text"
+                    value={testimonialForm.name}
+                    onChange={(e) => setTestimonialForm({ ...testimonialForm, name: e.target.value })}
+                    placeholder={t('Your name or stay anonymous', 'Votre nom ou restez anonyme')}
+                  />
+                </div>
+
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>{t('Company/Role', 'Entreprise/Rôle')}</label>
+                    <input
+                      type="text"
+                      value={testimonialForm.company}
+                      onChange={(e) => setTestimonialForm({ ...testimonialForm, company: e.target.value })}
+                      placeholder={t('Company or your role', 'Entreprise ou votre rôle')}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>{t('Project Name', 'Nom du Projet')}</label>
+                    <input
+                      type="text"
+                      value={testimonialForm.projectName}
+                      onChange={(e) => setTestimonialForm({ ...testimonialForm, projectName: e.target.value })}
+                      placeholder={t('Project name', 'Nom du projet')}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Section 2: Core Evaluation */}
+              <div className="form-section">
+                <h3 className="form-section-title">
+                  {t('2. Core Evaluation (Rate 1-5)', '2. Évaluation de Base (Note 1-5)')}
+                </h3>
+                
+                <div className="rating-group">
+                  <label>{t('Technical expertise?', 'Expertise technique ?')} *</label>
+                  <div className="star-rating">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        type="button"
+                        className={`star ${star <= testimonialForm.technicalExpertise ? 'active' : ''}`}
+                        onClick={() => setTestimonialForm({ ...testimonialForm, technicalExpertise: star })}
+                      >
+                        ★
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="rating-group">
+                  <label>{t('Quality of code/deliverables?', 'Qualité du code/livrables ?')} *</label>
+                  <div className="star-rating">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        type="button"
+                        className={`star ${star <= testimonialForm.codeQuality ? 'active' : ''}`}
+                        onClick={() => setTestimonialForm({ ...testimonialForm, codeQuality: star })}
+                      >
+                        ★
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="rating-group">
+                  <label>{t('Communication effectiveness?', 'Efficacité de la communication ?')} *</label>
+                  <div className="star-rating">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        type="button"
+                        className={`star ${star <= testimonialForm.communication ? 'active' : ''}`}
+                        onClick={() => setTestimonialForm({ ...testimonialForm, communication: star })}
+                      >
+                        ★
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="rating-group">
+                  <label>{t('Meeting deadlines/milestones?', 'Respect des délais ?')} *</label>
+                  <div className="star-rating">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        type="button"
+                        className={`star ${star <= testimonialForm.deadlines ? 'active' : ''}`}
+                        onClick={() => setTestimonialForm({ ...testimonialForm, deadlines: star })}
+                      >
+                        ★
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="rating-group">
+                  <label>{t('Overall satisfaction?', 'Satisfaction globale ?')} *</label>
+                  <div className="star-rating">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        type="button"
+                        className={`star ${star <= testimonialForm.overallSatisfaction ? 'active' : ''}`}
+                        onClick={() => setTestimonialForm({ ...testimonialForm, overallSatisfaction: star })}
+                      >
+                        ★
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Section 3: Qualitative Feedback */}
+              <div className="form-section">
+                <h3 className="form-section-title">
+                  {t('3. Qualitative Feedback', '3. Commentaires Qualitatifs')}
+                </h3>
+
+                <div className="form-group">
+                  <label>{t('What problem were you facing, and what specific results did the developer deliver?', 'Quel problème aviez-vous et quels résultats spécifiques le développeur a-t-il livrés ?')} *</label>
+                  <textarea
+                    rows="3"
+                    value={testimonialForm.problemAndResults}
+                    onChange={(e) => setTestimonialForm({ ...testimonialForm, problemAndResults: e.target.value })}
+                    placeholder={t('Describe the problem and results...', 'Décrivez le problème et les résultats...')}
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>{t('What was your biggest doubt when hiring, and how did they overcome it?', 'Quel était votre plus grand doute lors de l\'embauche et comment l\'ont-ils surmonté ?')} *</label>
+                  <textarea
+                    rows="3"
+                    value={testimonialForm.doubtsOvercome}
+                    onChange={(e) => setTestimonialForm({ ...testimonialForm, doubtsOvercome: e.target.value })}
+                    placeholder={t('Your doubts and how they were addressed...', 'Vos doutes et comment ils ont été résolus...')}
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>{t('What is the best part about working with this developer?', 'Quel est le meilleur aspect du travail avec ce développeur ?')} *</label>
+                  <textarea
+                    rows="3"
+                    value={testimonialForm.bestPart}
+                    onChange={(e) => setTestimonialForm({ ...testimonialForm, bestPart: e.target.value })}
+                    placeholder={t('What stood out the most...', 'Ce qui vous a le plus marqué...')}
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>{t('Would you recommend this developer to a colleague?', 'Recommanderiez-vous ce développeur à un collègue ?')} *</label>
+                  <textarea
+                    rows="2"
+                    value={testimonialForm.wouldRecommend}
+                    onChange={(e) => setTestimonialForm({ ...testimonialForm, wouldRecommend: e.target.value })}
+                    placeholder={t('Yes/No and why...', 'Oui/Non et pourquoi...')}
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* Section 4: Authorization */}
+              <div className="form-section">
+                <h3 className="form-section-title">
+                  {t('4. Authorization', '4. Autorisation')}
+                </h3>
+                
+                <div className="checkbox-group">
+                  <label className="checkbox-label">
+                    <input
+                      type="checkbox"
+                      checked={testimonialForm.permissionGranted}
+                      onChange={(e) => setTestimonialForm({ ...testimonialForm, permissionGranted: e.target.checked })}
+                      required
+                    />
+                    <span>
+                      {t(
+                        'I give permission to use this testimonial on the developer\'s portfolio/website *',
+                        'J\'autorise l\'utilisation de ce témoignage sur le portfolio/site web du développeur *'
+                      )}
+                    </span>
+                  </label>
+                </div>
+              </div>
+
+              <div className="modal-actions">
+                <button type="button" className="btn-cancel" onClick={() => setShowTestimonialModal(false)}>
+                  {t('Cancel', 'Annuler')}
+                </button>
+                <button type="submit" className="btn-submit">
+                  {t('Submit Testimonial', 'Soumettre')}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* Contact Form Section */}
       <section id="contact-form" className="section bg-light">

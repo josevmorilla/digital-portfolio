@@ -9,8 +9,44 @@
 
 .contact-section h1 {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   color: #333;
+}
+
+.contact-intro {
+  text-align: center;
+  color: #666;
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+}
+
+.testimonial-banner {
+  max-width: 700px;
+  margin: 0 auto 2rem;
+  background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+  padding: 1.25rem 1.5rem;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+}
+
+.testimonial-banner p {
+  margin: 0;
+  color: white;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.testimonial-banner a {
+  color: #fbbf24;
+  text-decoration: none;
+  font-weight: 700;
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.3s;
+}
+
+.testimonial-banner a:hover {
+  border-bottom-color: #fbbf24;
 }
 
 .tabs {
