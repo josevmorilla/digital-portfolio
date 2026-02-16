@@ -62,8 +62,9 @@ const Contact = () => {
 
           <form onSubmit={handleContactSubmit} className="contact-form">
               <div className="form-group">
-                <label>{t('Name', 'Nom')} *</label>
+                <label htmlFor="contact-name">{t('Name', 'Nom')} *</label>
                 <input
+                  id="contact-name"
                   type="text"
                   value={contactForm.name}
                   onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
@@ -72,8 +73,9 @@ const Contact = () => {
               </div>
 
               <div className="form-group">
-                <label>{t('Email', 'Email')} *</label>
+                <label htmlFor="contact-email">{t('Email', 'Email')} *</label>
                 <input
+                  id="contact-email"
                   type="email"
                   value={contactForm.email}
                   onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
@@ -82,8 +84,9 @@ const Contact = () => {
               </div>
 
               <div className="form-group">
-                <label>{t('Subject', 'Sujet')}</label>
+                <label htmlFor="contact-subject">{t('Subject', 'Sujet')}</label>
                 <input
+                  id="contact-subject"
                   type="text"
                   value={contactForm.subject}
                   onChange={(e) => setContactForm({ ...contactForm, subject: e.target.value })}
@@ -91,8 +94,9 @@ const Contact = () => {
               </div>
 
               <div className="form-group">
-                <label>{t('Message', 'Message')} *</label>
+                <label htmlFor="contact-message">{t('Message', 'Message')} *</label>
                 <textarea
+                  id="contact-message"
                   rows="5"
                   value={contactForm.message}
                   onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}

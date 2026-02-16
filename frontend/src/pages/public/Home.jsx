@@ -436,12 +436,12 @@ ${testimonialForm.wouldRecommend}
       <section className="hero">
         <div className="container">
           <h1 className="hero-title">Jose Villegas</h1>
-          <p className="hero-subtitle">
+          <h2 className="hero-subtitle">
             {t(
               'Full Stack Developer & Digital Creator',
               'Développeur full stack et créateur digital'
             )}
-          </p>
+          </h2>
           <div className="hero-contact-icons">
             {data.contactInfo
               .filter((info) => ['email', 'github', 'linkedin', 'location'].includes(info.type))
@@ -540,7 +540,7 @@ ${testimonialForm.wouldRecommend}
                   {/* Image */}
                   <div className="project-showcase-image">
                     {project.imageUrl ? (
-                      <img src={getUploadUrl(project.imageUrl)} alt={language === 'en' ? project.titleEn : project.titleFr} />
+                      <img src={getUploadUrl(project.imageUrl)} alt="" />
                     ) : (
                       <div className="project-placeholder">
                         <FiGithub size={64} />
@@ -695,7 +695,7 @@ ${testimonialForm.wouldRecommend}
                     {/* Image */}
                     <div className="project-showcase-image">
                       {hobby.imageUrl ? (
-                        <img src={getUploadUrl(hobby.imageUrl)} alt={language === 'en' ? hobby.nameEn : hobby.nameFr} />
+                        <img src={getUploadUrl(hobby.imageUrl)} alt="" />
                       ) : (
                         <div className="project-placeholder">
                           <FiGithub size={64} />
