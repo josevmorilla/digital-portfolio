@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
-import { testimonialsAPI } from '../../services/api';
+import { testimonialsAPI, getUploadUrl } from '../../services/api';
 import './Testimonials.css';
 
 const Testimonials = () => {
@@ -209,7 +209,7 @@ const Testimonials = () => {
                   <div className="testimonial-author">
                     {testimonial.imageUrl && (
                       <img 
-                        src={testimonial.imageUrl} 
+                        src={getUploadUrl(testimonial.imageUrl)} 
                         alt={testimonial.name}
                         className="author-image"
                       />

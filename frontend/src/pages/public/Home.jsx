@@ -13,6 +13,7 @@ import {
   hobbiesAPI,
   testimonialsAPI,
   resumesAPI,
+  getUploadUrl,
 } from '../../services/api';
 import './Home.css';
 
@@ -539,7 +540,7 @@ ${testimonialForm.wouldRecommend}
                   {/* Image */}
                   <div className="project-showcase-image">
                     {project.imageUrl ? (
-                      <img src={project.imageUrl} alt={language === 'en' ? project.titleEn : project.titleFr} />
+                      <img src={getUploadUrl(project.imageUrl)} alt={language === 'en' ? project.titleEn : project.titleFr} />
                     ) : (
                       <div className="project-placeholder">
                         <FiGithub size={64} />
@@ -694,7 +695,7 @@ ${testimonialForm.wouldRecommend}
                     {/* Image */}
                     <div className="project-showcase-image">
                       {hobby.imageUrl ? (
-                        <img src={hobby.imageUrl} alt={language === 'en' ? hobby.nameEn : hobby.nameFr} />
+                        <img src={getUploadUrl(hobby.imageUrl)} alt={language === 'en' ? hobby.nameEn : hobby.nameFr} />
                       ) : (
                         <div className="project-placeholder">
                           <FiGithub size={64} />

@@ -3,6 +3,19 @@ import axios from 'axios';
 // Prefer explicit API base URL (e.g., VITE_API_URL in Docker), fall back to proxied /api in dev
 const API_URL = import.meta.env.VITE_API_URL || '/api';
 
+// Base URL for serving uploaded files (strips /api suffix from API_URL)
+const BACKEND_URL = API_URL.replace(/\/api\/?$/, '');
+
+/**
+ * Convert a relative upload path (e.g. /uploads/projects/img.png) to a full URL
+ * pointing at the backend server. Returns the original value if it's already absolute.
+ */
+export const getUploadUrl = (path) => {
+  if (!path) return path;
+  if (path.startsWith('http://') || path.startsWith('https://')) return path;
+  return `${BACKEND_URL}${path.startsWith('/') ? '' : '/'}${path}`;
+};
+
 // Skills
 export const skillsAPI = {
   getAll: () => axios.get(`${API_URL}/skills`),

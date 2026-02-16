@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { projectsAPI } from '../../services/api';
+import { projectsAPI, getUploadUrl } from '../../services/api';
 import './AdminCrud.css';
 
 const AdminProjects = () => {
@@ -270,7 +270,7 @@ const AdminProjects = () => {
                     {uploading && <small className="text-muted">Uploading...</small>}
                     {formData.imageUrl && (
                       <div className="image-preview">
-                        <img src={formData.imageUrl} alt="Preview" style={{ maxWidth: '200px', marginTop: '10px' }} />
+                        <img src={getUploadUrl(formData.imageUrl)} alt="Preview" style={{ maxWidth: '200px', marginTop: '10px' }} />
                         <button 
                           type="button" 
                           onClick={() => setFormData({ ...formData, imageUrl: '' })}
