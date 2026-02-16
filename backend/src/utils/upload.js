@@ -3,7 +3,9 @@ const path = require('path');
 const fs = require('fs');
 
 // Create uploads directory if it doesn't exist
-const uploadDir = process.env.UPLOAD_DIR || './uploads';
+// Use absolute path relative to project root to avoid CWD issues when
+// the start script does "cd backend && node src/server.js"
+const uploadDir = process.env.UPLOAD_DIR || path.resolve(__dirname, '../../../uploads');
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }

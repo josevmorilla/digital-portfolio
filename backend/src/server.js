@@ -1,7 +1,7 @@
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 const express = require('express');
 const cors = require('cors');
-const path = require('path');
 
 // Routes
 const authRoutes = require('./routes/auth');
@@ -18,9 +18,34 @@ const resumeRoutes = require('./routes/resumes');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
+// CORS: support comma-separated origins in FRONTEND_URL
+// Automatically handles www / non-www variants so you don't have to list both
+const configuredOrigins = (process.env.FRONTEND_URL || 'http://localhost:5173')
+  .split(',')
+  .map(url => url.trim().replace(/\/+$/, '')); // strip trailing slashes
+
+// Build full set: for every origin, add its www/non-www counterpart
+const allowedOrigins = new Set();
+configuredOrigins.forEach(origin => {
+  allowedOrigins.add(origin);
+  try {
+    const u = new URL(origin);
+    if (u.hostname.startsWith('www.')) {
+      u.hostname = u.hostname.slice(4);
+    } else {
+      u.hostname = 'www.' + u.hostname;
+    }
+    allowedOrigins.add(u.origin);
+  } catch (_) { /* ignore malformed URLs */ }
+});
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: (origin, callback) => {
+    // Allow requests with no origin (server-to-server, curl, health checks)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.has(origin)) return callback(null, true);
+    callback(new Error(`CORS: origin ${origin} not allowed`));
+  },
   credentials: true,
 }));
 app.use(express.json());
