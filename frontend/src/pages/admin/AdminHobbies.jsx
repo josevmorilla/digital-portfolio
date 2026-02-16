@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { hobbiesAPI } from '../../services/api';
+import { hobbiesAPI, getUploadUrl } from '../../services/api';
 import './AdminCrud.css';
 
 const AdminHobbies = () => {
@@ -23,6 +23,7 @@ const AdminHobbies = () => {
     order: 0,
   });
   const [message, setMessage] = useState('');
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     fetchHobbies();
@@ -36,6 +37,37 @@ const AdminHobbies = () => {
       console.error('Error fetching hobbies:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      setMessage('Invalid file type. Please upload JPG, PNG, GIF, or WEBP images.');
+      return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      setMessage('File size too large. Maximum size is 10MB.');
+      return;
+    }
+
+    setUploading(true);
+    const uploadFormData = new FormData();
+    uploadFormData.append('image', file);
+
+    try {
+      const response = await hobbiesAPI.uploadImage(uploadFormData);
+      setFormData({ ...formData, imageUrl: response.data.imageUrl });
+      setMessage('Image uploaded successfully!');
+      setTimeout(() => setMessage(''), 3000);
+    } catch (error) {
+      setMessage('Error uploading image: ' + (error.response?.data?.error || error.message));
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -210,14 +242,40 @@ const AdminHobbies = () => {
                   />
                 </div>
 
-                <div className="form-group">
-                  <label>Image URL</label>
-                  <input
-                    type="text"
-                    value={formData.imageUrl}
-                    onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
-                    placeholder="https://example.com/image.png or /uploads/projects/image.png"
-                  />
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Hobby Image</label>
+                    <input
+                      type="file"
+                      accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+                      onChange={handleImageUpload}
+                      disabled={uploading}
+                    />
+                    {uploading && <small className="text-muted">Uploading...</small>}
+                    {formData.imageUrl && (
+                      <div className="image-preview">
+                        <img src={getUploadUrl(formData.imageUrl)} alt="Preview" style={{ maxWidth: '200px', marginTop: '10px' }} />
+                        <button
+                          type="button"
+                          onClick={() => setFormData({ ...formData, imageUrl: '' })}
+                          className="btn-small"
+                          style={{ marginTop: '5px' }}
+                        >
+                          Remove Image
+                        </button>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="form-group">
+                    <label>Image URL (Alternative)</label>
+                    <input
+                      type="text"
+                      value={formData.imageUrl}
+                      onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
+                      placeholder="https://example.com/image.png"
+                    />
+                  </div>
                 </div>
 
                 <div className="form-group">

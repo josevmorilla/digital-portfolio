@@ -18,8 +18,9 @@ if (!fs.existsSync(uploadDir)) {
 // Create subdirectories for different file types
 const resumesDir = path.join(uploadDir, 'resumes');
 const projectsDir = path.join(uploadDir, 'projects');
+const hobbiesDir = path.join(uploadDir, 'hobbies');
 
-[resumesDir, projectsDir].forEach(dir => {
+[resumesDir, projectsDir, hobbiesDir].forEach(dir => {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
   }
@@ -87,9 +88,29 @@ const uploadProjectImage = multer({
   },
 });
 
+// Configure storage for hobby images
+const hobbyImageStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, hobbiesDir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    cb(null, 'hobby-' + uniqueSuffix + path.extname(file.originalname));
+  },
+});
+
+const uploadHobbyImage = multer({
+  storage: hobbyImageStorage,
+  fileFilter: imageFileFilter,
+  limits: {
+    fileSize: parseInt(process.env.MAX_IMAGE_SIZE) || 10 * 1024 * 1024, // 10MB default
+  },
+});
+
 module.exports = {
   uploadResume,
   uploadProjectImage,
+  uploadHobbyImage,
   // For backward compatibility
   upload: uploadResume,
   // Expose the resolved upload directory so server.js can serve from the same path

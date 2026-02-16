@@ -71,6 +71,9 @@ export const hobbiesAPI = {
   create: (data) => axios.post(`${API_URL}/hobbies`, data),
   update: (id, data) => axios.put(`${API_URL}/hobbies/${id}`, data),
   delete: (id) => axios.delete(`${API_URL}/hobbies/${id}`),
+  uploadImage: (formData) => axios.post(`${API_URL}/hobbies/upload-image`, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  }),
 };
 
 // Testimonials
