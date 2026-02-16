@@ -40,7 +40,6 @@ uploads/projects/*
 uploads/resumes/*
 !uploads/projects/dominic-cyr.png
 !uploads/projects/great-music-llm.png
-!uploads/projects/quake-fortress.jpg
 !uploads/projects/open-fortress-hud.jpg
 !uploads/resumes/cv-english.pdf
 !uploads/resumes/cv-french.pdf
