@@ -1,4 +1,5 @@
 const express = require('express');
+const fs = require('fs');
 const { body } = require('express-validator');
 const projectController = require('../controllers/projectController');
 const authMiddleware = require('../middleware/auth');
@@ -37,6 +38,14 @@ router.post(
       }
       // Return the path relative to uploads directory
       const imageUrl = `/uploads/projects/${req.file.filename}`;
+
+      // Verify the file was actually written to disk
+      const savedPath = req.file.path;
+      if (!fs.existsSync(savedPath)) {
+        console.error('Upload verification failed! File not found at:', savedPath);
+        return res.status(500).json({ error: 'File was not saved correctly', savedPath });
+      }
+      console.log('Upload OK:', savedPath, '| size:', req.file.size);
       res.json({ imageUrl });
     } catch (error) {
       console.error('Image upload error:', error);

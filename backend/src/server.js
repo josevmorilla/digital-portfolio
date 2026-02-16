@@ -1,7 +1,9 @@
 const path = require('path');
+const fs = require('fs');
 require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 const express = require('express');
 const cors = require('cors');
+const { uploadDir } = require('./utils/upload');
 
 // Routes
 const authRoutes = require('./routes/auth');
@@ -51,8 +53,9 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve uploaded files
-app.use('/uploads', express.static(path.join(__dirname, '../../uploads')));
+// Serve uploaded files – use the same resolved uploadDir that multer writes to
+console.log('Serving uploads from:', uploadDir);
+app.use('/uploads', express.static(uploadDir));
 
 // API Routes
 app.use('/api/auth', authRoutes);
@@ -77,6 +80,16 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500).json({
     error: err.message || 'Internal server error',
   });
+});
+
+// Fallback handler for /uploads – diagnose missing files
+app.use('/uploads', (req, res) => {
+  const requestedFile = path.join(uploadDir, req.path);
+  const dirPath = path.dirname(requestedFile);
+  const dirExists = fs.existsSync(dirPath);
+  const files = dirExists ? fs.readdirSync(dirPath) : [];
+  console.error(`Upload 404: ${requestedFile} | dir exists: ${dirExists} | files in dir: [${files.join(', ')}]`);
+  res.status(404).json({ error: 'File not found', path: requestedFile, dirExists, filesInDir: files });
 });
 
 // 404 handler

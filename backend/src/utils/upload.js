@@ -87,4 +87,6 @@ module.exports = {
   uploadProjectImage,
   // For backward compatibility
   upload: uploadResume,
+  // Expose the resolved upload directory so server.js can serve from the same path
+  uploadDir,
 };
