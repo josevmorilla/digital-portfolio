@@ -192,7 +192,7 @@
 .projects-grid { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
 .hobbies-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
 .testimonials-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
-.contact-info-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+.contact-info-grid { grid-template-columns: repeat(4, 1fr); justify-items: center; }
 
 .skills-section {
   display: flex;
@@ -676,9 +676,82 @@
   to { transform: rotate(360deg); }
 }
 
+/* Hamburger menu button */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  z-index: 1001;
+}
+
+.hamburger span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--text);
+  transition: all 0.3s ease;
+  border-radius: 2px;
+}
+
+.hamburger.open span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.hamburger.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.open span:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+
 @media (max-width: 768px) {
-  .nav { flex-direction: column; align-items: flex-start; }
-  .nav-links { width: 100%; justify-content: flex-start; }
+  .nav {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--surface);
+    flex-direction: column;
+    padding: 1rem;
+    gap: 0.5rem;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    z-index: 1000;
+    width: 100%;
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+
+  .nav-links a {
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    transition: background 0.2s;
+  }
+
+  .nav-links a:hover {
+    background: rgba(99, 102, 241, 0.08);
+  }
+
   .hero { text-align: left; padding: 72px 0; }
   .hero::after { inset: 16px; }
 }
@@ -1659,6 +1732,10 @@
 
 /* Responsive adjustments for new form */
 @media (max-width: 768px) {
+  .contact-info-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
   .form-section {
     padding: 1.25rem;
   }

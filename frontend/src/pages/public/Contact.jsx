@@ -52,9 +52,13 @@ const Contact = () => {
           <div className="testimonial-banner">
             <p>
               {t(
-                '💬 Want to share your experience working with me? Visit the home page to leave a testimonial!',
-                '💬 Vous souhaitez partager votre expérience de collaboration ? Visitez la page d\'accueil pour laisser un témoignage !'
+                '💬 Want to share your experience working with me?',
+                '💬 Vous souhaitez partager votre expérience de collaboration ?'
               )}
+              {' '}
+              <Link to="/testimonials" style={{ color: '#6366f1', fontWeight: '600' }}>
+                {t('Leave a testimonial!', 'Laissez un témoignage !')}
+              </Link>
             </p>
           </div>
 

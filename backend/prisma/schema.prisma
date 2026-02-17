@@ -19,6 +19,18 @@ model User {
   updatedAt DateTime @updatedAt
 }
 
+model Profile {
+  id            String   @id @default(uuid())
+  nameEn        String
+  nameFr        String
+  titleEn       String
+  titleFr       String
+  bioEn         String?  @db.Text
+  bioFr         String?  @db.Text
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
 model Skill {
   id          String   @id @default(uuid())
   nameEn      String

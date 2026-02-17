@@ -54,7 +54,18 @@ router.post(
   }
 );
 
-router.put('/:id', authMiddleware, projectController.update);
+router.put(
+  '/:id',
+  authMiddleware,
+  [
+    body('titleEn').optional().notEmpty().withMessage('English title cannot be empty'),
+    body('titleFr').optional().notEmpty().withMessage('French title cannot be empty'),
+    body('descriptionEn').optional().notEmpty().withMessage('English description cannot be empty'),
+    body('descriptionFr').optional().notEmpty().withMessage('French description cannot be empty'),
+    validate,
+  ],
+  projectController.update
+);
 router.delete('/:id', authMiddleware, projectController.delete);
 
 module.exports = router;

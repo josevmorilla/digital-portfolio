@@ -27,7 +27,21 @@ router.post(
   workExperienceController.create
 );
 
-router.put('/:id', authMiddleware, workExperienceController.update);
+router.put(
+  '/:id',
+  authMiddleware,
+  [
+    body('companyEn').optional().notEmpty().withMessage('English company name cannot be empty'),
+    body('companyFr').optional().notEmpty().withMessage('French company name cannot be empty'),
+    body('positionEn').optional().notEmpty().withMessage('English position cannot be empty'),
+    body('positionFr').optional().notEmpty().withMessage('French position cannot be empty'),
+    body('descriptionEn').optional().notEmpty().withMessage('English description cannot be empty'),
+    body('descriptionFr').optional().notEmpty().withMessage('French description cannot be empty'),
+    body('startDate').optional().isISO8601().withMessage('Valid start date is required'),
+    validate,
+  ],
+  workExperienceController.update
+);
 router.delete('/:id', authMiddleware, workExperienceController.delete);
 
 module.exports = router;

@@ -37,6 +37,19 @@ async function seed() {
     
     console.log('Database is empty, seeding initial data...');
 
+    // Profile
+    await prisma.profile.create({
+      data: {
+        nameEn: 'Jose Villegas',
+        nameFr: 'Jose Villegas',
+        titleEn: 'Full Stack Developer & Digital Creator',
+        titleFr: 'Développeur full stack et créateur digital',
+        bioEn: 'Passionate full stack developer creating modern web applications.',
+        bioFr: 'Développeur full stack passionné créant des applications web modernes.',
+      },
+    });
+    console.log('Profile seeded');
+
     // Skills
     const skillsData = [
       { nameEn: 'Java', nameFr: 'Java', level: 85, category: 'Languages', order: 1 },

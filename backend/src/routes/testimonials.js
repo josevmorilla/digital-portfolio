@@ -30,8 +30,19 @@ router.post(
 
 // Admin routes
 router.get('/:id', authMiddleware, testimonialController.getById);
-router.put('/:id', authMiddleware, testimonialController.update);
+router.put(
+  '/:id',
+  authMiddleware,
+  [
+    body('name').optional().notEmpty().withMessage('Name cannot be empty'),
+    body('position').optional().notEmpty().withMessage('Position cannot be empty'),
+    body('content').optional().notEmpty().withMessage('Content cannot be empty'),
+    validate,
+  ],
+  testimonialController.update
+);
 router.post('/:id/approve', authMiddleware, testimonialController.approve);
+router.post('/:id/reject', authMiddleware, testimonialController.reject);
 router.delete('/:id', authMiddleware, testimonialController.delete);
 
 module.exports = router;

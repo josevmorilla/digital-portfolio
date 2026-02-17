@@ -13,7 +13,8 @@ import {
   FiInbox,
   FiEye,
   FiCheckCircle,
-  FiLogOut
+  FiLogOut,
+  FiSettings
 } from 'react-icons/fi';
 import './AdminDashboard.css';
 
@@ -21,6 +22,7 @@ const AdminDashboard = () => {
   const { user, logout } = useAuth();
 
   const sections = [
+    { name: 'Profile', path: '/admin/profile', icon: <FiSettings /> },
     { name: 'Skills', path: '/admin/skills', icon: <FiCode /> },
     { name: 'Projects', path: '/admin/projects', icon: <FiBriefcase /> },
     { name: 'Work Experience', path: '/admin/work-experience', icon: <FiUser /> },

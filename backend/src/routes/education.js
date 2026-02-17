@@ -27,7 +27,21 @@ router.post(
   educationController.create
 );
 
-router.put('/:id', authMiddleware, educationController.update);
+router.put(
+  '/:id',
+  authMiddleware,
+  [
+    body('institutionEn').optional().notEmpty().withMessage('English institution name cannot be empty'),
+    body('institutionFr').optional().notEmpty().withMessage('French institution name cannot be empty'),
+    body('degreeEn').optional().notEmpty().withMessage('English degree cannot be empty'),
+    body('degreeFr').optional().notEmpty().withMessage('French degree cannot be empty'),
+    body('fieldEn').optional().notEmpty().withMessage('English field cannot be empty'),
+    body('fieldFr').optional().notEmpty().withMessage('French field cannot be empty'),
+    body('startDate').optional().isISO8601().withMessage('Valid start date is required'),
+    validate,
+  ],
+  educationController.update
+);
 router.delete('/:id', authMiddleware, educationController.delete);
 
 module.exports = router;

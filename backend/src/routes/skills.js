@@ -24,7 +24,18 @@ router.post(
   skillController.create
 );
 
-router.put('/:id', authMiddleware, skillController.update);
+router.put(
+  '/:id',
+  authMiddleware,
+  [
+    body('nameEn').optional().notEmpty().withMessage('English name cannot be empty'),
+    body('nameFr').optional().notEmpty().withMessage('French name cannot be empty'),
+    body('level').optional().isInt({ min: 1, max: 100 }).withMessage('Level must be between 1 and 100'),
+    body('category').optional().notEmpty().withMessage('Category cannot be empty'),
+    validate,
+  ],
+  skillController.update
+);
 router.delete('/:id', authMiddleware, skillController.delete);
 
 module.exports = router;

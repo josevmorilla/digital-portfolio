@@ -16,6 +16,7 @@ const hobbyRoutes = require('./routes/hobbies');
 const testimonialRoutes = require('./routes/testimonials');
 const contactMessageRoutes = require('./routes/contactMessages');
 const resumeRoutes = require('./routes/resumes');
+const profileRoutes = require('./routes/profile');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -68,6 +69,7 @@ app.use('/api/hobbies', hobbyRoutes);
 app.use('/api/testimonials', testimonialRoutes);
 app.use('/api/contact-messages', contactMessageRoutes);
 app.use('/api/resumes', resumeRoutes);
+app.use('/api/profile', profileRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

@@ -101,6 +101,19 @@ const AdminTestimonials = () => {
     }
   };
 
+  const handleReject = async (id) => {
+    if (!window.confirm('Are you sure you want to reject this testimonial? It will be permanently removed.')) return;
+    
+    try {
+      await testimonialsAPI.reject(id);
+      setMessage('Testimonial rejected and removed successfully!');
+      fetchTestimonials();
+      setTimeout(() => setMessage(''), 3000);
+    } catch (error) {
+      setMessage('Error rejecting testimonial');
+    }
+  };
+
   const resetForm = () => {
     setEditing(null);
     setShowForm(false);
@@ -401,6 +414,17 @@ const AdminTestimonials = () => {
                           }}
                         >
                           ✓ Approve
+                        </button>
+                        <button 
+                          onClick={() => handleReject(testimonial.id)} 
+                          className="delete-btn"
+                          style={{
+                            background: '#ef4444',
+                            color: 'white',
+                            fontWeight: '600'
+                          }}
+                        >
+                          ✗ Reject
                         </button>
                         <button onClick={() => handleEdit(testimonial)} className="edit-btn">
                           Edit

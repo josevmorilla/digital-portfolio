@@ -13,6 +13,7 @@ import {
   hobbiesAPI,
   testimonialsAPI,
   resumesAPI,
+  profileAPI,
   getUploadUrl,
 } from '../../services/api';
 import './Home.css';
@@ -20,6 +21,7 @@ import './Home.css';
 const Home = () => {
   const { language, toggleLanguage } = useLanguage();
   const [loading, setLoading] = useState(true);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [data, setData] = useState({
     skills: [],
     projects: [],
@@ -29,6 +31,7 @@ const Home = () => {
     hobbies: [],
     testimonials: [],
   });
+  const [profile, setProfile] = useState(null);
   const [resumeEn, setResumeEn] = useState(null);
   const [resumeFr, setResumeFr] = useState(null);
   const [skillsCarouselIndex, setSkillsCarouselIndex] = useState(0);
@@ -67,6 +70,7 @@ const Home = () => {
         contactRes,
         hobbiesRes,
         testimonialsRes,
+        profileRes,
       ] = await Promise.all([
         skillsAPI.getAll(),
         projectsAPI.getAll(),
@@ -75,6 +79,7 @@ const Home = () => {
         contactInfoAPI.getAll(),
         hobbiesAPI.getAll(),
         testimonialsAPI.getAll(),
+        profileAPI.get().catch(() => ({ data: null })),
       ]);
 
       setData({
@@ -86,6 +91,8 @@ const Home = () => {
         hobbies: hobbiesRes.data,
         testimonials: testimonialsRes.data,
       });
+
+      setProfile(profileRes.data);
 
       // Fetch both English and French resumes
       try {
@@ -415,15 +422,24 @@ ${testimonialForm.wouldRecommend}
       <header className="header">
         <div className="container">
           <nav className="nav">
-            <h1 className="logo">Jose Villegas</h1>
-            <div className="nav-links">
-              <a href="#skills">{t('Skills', 'Compétences')}</a>
-              <a href="#projects">{t('Projects', 'Projets')}</a>
-              <a href="#experience">{t('Experience', 'Expérience')}</a>
-              <a href="#education">{t('Education', 'Éducation')}</a>
-              <a href="#hobbies">{t('Hobbies', 'Loisirs')}</a>
-              <a href="#testimonials">{t('Testimonials', 'Témoignages')}</a>
-              <a href="#contact-form">{t('Get in Touch', 'Contactez-moi')}</a>
+            <h1 className="logo">{profile ? (language === 'en' ? profile.nameEn : profile.nameFr) : ''}</h1>
+            <button 
+              className={`hamburger ${mobileMenuOpen ? 'open' : ''}`} 
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
+            <div className={`nav-links ${mobileMenuOpen ? 'active' : ''}`}>
+              <a href="#skills" onClick={() => setMobileMenuOpen(false)}>{t('Skills', 'Compétences')}</a>
+              <a href="#projects" onClick={() => setMobileMenuOpen(false)}>{t('Projects', 'Projets')}</a>
+              <a href="#experience" onClick={() => setMobileMenuOpen(false)}>{t('Experience', 'Expérience')}</a>
+              <a href="#education" onClick={() => setMobileMenuOpen(false)}>{t('Education', 'Éducation')}</a>
+              <a href="#hobbies" onClick={() => setMobileMenuOpen(false)}>{t('Hobbies', 'Loisirs')}</a>
+              <a href="#testimonials" onClick={() => setMobileMenuOpen(false)}>{t('Testimonials', 'Témoignages')}</a>
+              <a href="#contact-form" onClick={() => setMobileMenuOpen(false)}>{t('Get in Touch', 'Contactez-moi')}</a>
               <button onClick={toggleLanguage} className="lang-btn">
                 {language === 'en' ? 'FR' : 'EN'}
               </button>
@@ -435,16 +451,13 @@ ${testimonialForm.wouldRecommend}
       {/* Hero Section */}
       <section className="hero">
         <div className="container">
-          <h1 className="hero-title">Jose Villegas</h1>
+          <h1 className="hero-title">{profile ? (language === 'en' ? profile.nameEn : profile.nameFr) : ''}</h1>
           <h2 className="hero-subtitle">
-            {t(
-              'Full Stack Developer & Digital Creator',
-              'Développeur full stack et créateur digital'
-            )}
+            {profile ? (language === 'en' ? profile.titleEn : profile.titleFr) : ''}
           </h2>
           <div className="hero-contact-icons">
             {data.contactInfo
-              .filter((info) => ['email', 'github', 'linkedin', 'location'].includes(info.type))
+              .filter((info) => ['email', 'github', 'linkedin'].includes(info.type))
               .map((info) => (
                 <a
                   key={info.id}
@@ -1167,7 +1180,7 @@ ${testimonialForm.wouldRecommend}
       {/* Footer */}
       <footer className="footer">
         <div className="container">
-          <p>&copy; {new Date().getFullYear()} Jose Villegas</p>
+          <p>&copy; {new Date().getFullYear()} {profile ? (language === 'en' ? profile.nameEn : profile.nameFr) : ''}</p>
         </div>
       </footer>
     </div>

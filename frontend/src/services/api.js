@@ -16,6 +16,18 @@ export const getUploadUrl = (path) => {
   return `${BACKEND_URL}${path.startsWith('/') ? '' : '/'}${path}`;
 };
 
+// Profile
+export const profileAPI = {
+  get: () => axios.get(`${API_URL}/profile`),
+  update: (data) => axios.put(`${API_URL}/profile`, data),
+};
+
+// Profile
+export const profileAPI = {
+  get: () => axios.get(`${API_URL}/profile`),
+  update: (data) => axios.put(`${API_URL}/profile`, data),
+};
+
 // Skills
 export const skillsAPI = {
   getAll: () => axios.get(`${API_URL}/skills`),
@@ -83,6 +95,7 @@ export const testimonialsAPI = {
   create: (data) => axios.post(`${API_URL}/testimonials`, data),
   update: (id, data) => axios.put(`${API_URL}/testimonials/${id}`, data),
   approve: (id) => axios.post(`${API_URL}/testimonials/${id}/approve`),
+  reject: (id) => axios.post(`${API_URL}/testimonials/${id}/reject`),
   delete: (id) => axios.delete(`${API_URL}/testimonials/${id}`),
 };
 

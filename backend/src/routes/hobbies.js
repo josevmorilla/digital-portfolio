@@ -51,7 +51,16 @@ router.post(
   }
 );
 
-router.put('/:id', authMiddleware, hobbyController.update);
+router.put(
+  '/:id',
+  authMiddleware,
+  [
+    body('nameEn').optional().notEmpty().withMessage('English name cannot be empty'),
+    body('nameFr').optional().notEmpty().withMessage('French name cannot be empty'),
+    validate,
+  ],
+  hobbyController.update
+);
 router.delete('/:id', authMiddleware, hobbyController.delete);
 
 module.exports = router;

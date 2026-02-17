@@ -108,6 +108,23 @@ exports.approve = async (req, res) => {
   }
 };
 
+// Reject testimonial (admin only) - deletes it
+exports.reject = async (req, res) => {
+  try {
+    await prisma.testimonial.delete({
+      where: { id: req.params.id },
+    });
+
+    res.json({ message: 'Testimonial rejected and removed successfully' });
+  } catch (error) {
+    console.error('Reject testimonial error:', error);
+    if (error.code === 'P2025') {
+      return res.status(404).json({ error: 'Testimonial not found' });
+    }
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 // Delete testimonial
 exports.delete = async (req, res) => {
   try {
