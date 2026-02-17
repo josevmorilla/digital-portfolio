@@ -4,7 +4,7 @@
   "description": "A fully dynamic, responsive, bilingual portfolio website with admin dashboard",
   "main": "backend/src/server.js",
   "scripts": {
-    "start": "cd backend && npx prisma migrate deploy && (node prisma/seed.js || echo 'Seed skipped') && node src/server.js",
+    "start": "cd backend && node fix-migrations.js && npx prisma migrate deploy && (node prisma/seed.js || echo 'Seed skipped') && node src/server.js",
     "dev": "nodemon backend/src/server.js",
     "dev:frontend": "cd frontend && npm run dev",
     "dev:backend": "nodemon backend/src/server.js",
