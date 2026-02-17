@@ -15,13 +15,14 @@ const optionalAuth = (req, res, next) => {
   next();
 };
 
-const { formLimiter } = require('../middleware/rateLimiter');
+const { formLimiter, contentSpamGuard } = require('../middleware/rateLimiter');
 
 // Public routes (with optional auth for admin view)
 router.get('/', optionalAuth, testimonialController.getAll);
 router.post(
   '/',
   formLimiter,
+  contentSpamGuard,
   [
     body('name').notEmpty().withMessage('Name is required'),
     body('position').notEmpty().withMessage('Position is required'),

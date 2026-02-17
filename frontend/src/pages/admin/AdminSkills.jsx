@@ -99,7 +99,7 @@ const AdminSkills = () => {
       <header className="admin-header">
         <div className="container">
           <h1>Manage Skills</h1>
-          <Link to="/admin" className="secondary">Back to Dashboard</Link>
+          <Link to="/manage" className="secondary">Back to Dashboard</Link>
         </div>
       </header>
 

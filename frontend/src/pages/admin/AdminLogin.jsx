@@ -19,7 +19,7 @@ const AdminLogin = () => {
     const result = await login(email, password);
 
     if (result.success) {
-      navigate('/admin');
+      navigate('/manage');
     } else {
       setError(result.error);
     }
@@ -30,7 +30,7 @@ const AdminLogin = () => {
   return (
     <div className="admin-login">
       <div className="login-container">
-        <h1>Admin Login</h1>
+        <h1>Dashboard Login</h1>
         <p className="login-subtitle">Portfolio Management System</p>
 
         {error && <div className="message error">{error}</div>}

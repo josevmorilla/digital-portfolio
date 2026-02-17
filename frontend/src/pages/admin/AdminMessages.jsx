@@ -26,7 +26,7 @@ const AdminMessages = () => {
 
   const handleMarkAsRead = async (id) => {
     try {
-      await contactMessagesAPI.update(id, { read: true });
+      await contactMessagesAPI.markAsRead(id);
       fetchMessages();
     } catch (error) {
       console.error('Error marking message as read:', error);
@@ -65,7 +65,7 @@ const AdminMessages = () => {
       <header className="admin-header">
         <div className="container">
           <h1>Contact Messages</h1>
-          <Link to="/admin" className="secondary">Back to Dashboard</Link>
+          <Link to="/manage" className="secondary">Back to Dashboard</Link>
         </div>
       </header>
 

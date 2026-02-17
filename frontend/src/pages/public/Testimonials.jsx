@@ -43,21 +43,33 @@ const Testimonials = () => {
       ));
       setFormData({ name: '', position: '', company: '', content: '' });
       
-      setTimeout(() => {
-        document.querySelector('.testimonials-showcase')?.scrollIntoView({ 
-          behavior: 'smooth' 
-        });
-      }, 2000);
+      // Auto-dismiss after 5 seconds
+      setTimeout(() => setMessage(''), 5000);
     } catch (error) {
-      setMessage(t(
+      const errMsg = error.response?.data?.error;
+      setMessage(errMsg || t(
         'Error submitting testimonial. Please try again.',
         'Erreur lors de la soumission du témoignage. Veuillez réessayer.'
       ));
+      setTimeout(() => setMessage(''), 5000);
     }
   };
 
   return (
     <div className="testimonials-page">
+      {/* Toast popup for success/error messages */}
+      {message && (
+        <div className={`toast-popup ${message.includes('Error') || message.includes('Erreur') || message.includes('Too many') ? 'error' : 'success'}`}>
+          <div className="toast-content">
+            <svg width="24" height="24" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            </svg>
+            <span>{message}</span>
+            <button className="toast-close" onClick={() => setMessage('')}>×</button>
+          </div>
+        </div>
+      )}
+
       <header className="header">
         <div className="container">
           <nav className="nav">
@@ -103,15 +115,6 @@ const Testimonials = () => {
                 )}
               </p>
             </div>
-
-            {message && (
-              <div className={`message ${message.includes('Error') || message.includes('Erreur') ? 'error' : 'success'}`}>
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                {message}
-              </div>
-            )}
 
             <form onSubmit={handleSubmit} className="testimonial-form">
               <div className="form-grid">

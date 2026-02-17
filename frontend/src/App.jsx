@@ -37,18 +37,18 @@ function App() {
             <Route path="/testimonials" element={<Testimonials />} />
 
             {/* Admin Routes */}
-            <Route path="/admin/login" element={<AdminLogin />} />
-            <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
-            <Route path="/admin/skills" element={<ProtectedRoute><AdminSkills /></ProtectedRoute>} />
-            <Route path="/admin/projects" element={<ProtectedRoute><AdminProjects /></ProtectedRoute>} />
-            <Route path="/admin/work-experience" element={<ProtectedRoute><AdminWorkExperience /></ProtectedRoute>} />
-            <Route path="/admin/education" element={<ProtectedRoute><AdminEducation /></ProtectedRoute>} />
-            <Route path="/admin/contact-info" element={<ProtectedRoute><AdminContactInfo /></ProtectedRoute>} />
-            <Route path="/admin/hobbies" element={<ProtectedRoute><AdminHobbies /></ProtectedRoute>} />
-            <Route path="/admin/testimonials" element={<ProtectedRoute><AdminTestimonials /></ProtectedRoute>} />
-            <Route path="/admin/messages" element={<ProtectedRoute><AdminMessages /></ProtectedRoute>} />
-            <Route path="/admin/resumes" element={<ProtectedRoute><AdminResumes /></ProtectedRoute>} />
-            <Route path="/admin/profile" element={<ProtectedRoute><AdminProfile /></ProtectedRoute>} />
+            <Route path="/manage/login" element={<AdminLogin />} />
+            <Route path="/manage" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+            <Route path="/manage/skills" element={<ProtectedRoute><AdminSkills /></ProtectedRoute>} />
+            <Route path="/manage/projects" element={<ProtectedRoute><AdminProjects /></ProtectedRoute>} />
+            <Route path="/manage/work-experience" element={<ProtectedRoute><AdminWorkExperience /></ProtectedRoute>} />
+            <Route path="/manage/education" element={<ProtectedRoute><AdminEducation /></ProtectedRoute>} />
+            <Route path="/manage/contact-info" element={<ProtectedRoute><AdminContactInfo /></ProtectedRoute>} />
+            <Route path="/manage/hobbies" element={<ProtectedRoute><AdminHobbies /></ProtectedRoute>} />
+            <Route path="/manage/testimonials" element={<ProtectedRoute><AdminTestimonials /></ProtectedRoute>} />
+            <Route path="/manage/messages" element={<ProtectedRoute><AdminMessages /></ProtectedRoute>} />
+            <Route path="/manage/resumes" element={<ProtectedRoute><AdminResumes /></ProtectedRoute>} />
+            <Route path="/manage/profile" element={<ProtectedRoute><AdminProfile /></ProtectedRoute>} />
 
             {/* 404 */}
             <Route path="*" element={<Navigate to="/" replace />} />

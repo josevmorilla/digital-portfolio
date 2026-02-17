@@ -118,7 +118,68 @@
   line-height: 1.6;
 }
 
-/* Messages */
+/* Toast Popup – fixed position so it's always visible */
+.toast-popup {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  animation: toastSlideIn 0.4s ease-out;
+  min-width: 320px;
+  max-width: 90vw;
+}
+
+.toast-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+}
+
+.toast-popup.success .toast-content {
+  background: #065f46;
+  color: #d1fae5;
+  border: 2px solid #6ee7b7;
+}
+
+.toast-popup.error .toast-content {
+  background: #991b1b;
+  color: #fee2e2;
+  border: 2px solid #fca5a5;
+}
+
+.toast-close {
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: 1.4rem;
+  cursor: pointer;
+  padding: 0 0 0 8px;
+  line-height: 1;
+  opacity: 0.8;
+}
+
+.toast-close:hover {
+  opacity: 1;
+}
+
+@keyframes toastSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* Messages (legacy) */
 .message {
   padding: 1rem 1.5rem;
   border-radius: 10px;

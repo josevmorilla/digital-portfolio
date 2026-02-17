@@ -22,23 +22,23 @@ const AdminDashboard = () => {
   const { user, logout } = useAuth();
 
   const sections = [
-    { name: 'Profile', path: '/admin/profile', icon: <FiSettings /> },
-    { name: 'Skills', path: '/admin/skills', icon: <FiCode /> },
-    { name: 'Projects', path: '/admin/projects', icon: <FiBriefcase /> },
-    { name: 'Work Experience', path: '/admin/work-experience', icon: <FiUser /> },
-    { name: 'Education', path: '/admin/education', icon: <FiBook /> },
-    { name: 'Contact Info', path: '/admin/contact-info', icon: <FiMail /> },
-    { name: 'Hobbies', path: '/admin/hobbies', icon: <FiHeart /> },
-    { name: 'Testimonials', path: '/admin/testimonials', icon: <FiMessageSquare /> },
-    { name: 'Messages', path: '/admin/messages', icon: <FiInbox /> },
-    { name: 'Resumes', path: '/admin/resumes', icon: <FiFileText /> },
+    { name: 'Profile', path: '/manage/profile', icon: <FiSettings /> },
+    { name: 'Skills', path: '/manage/skills', icon: <FiCode /> },
+    { name: 'Projects', path: '/manage/projects', icon: <FiBriefcase /> },
+    { name: 'Work Experience', path: '/manage/work-experience', icon: <FiUser /> },
+    { name: 'Education', path: '/manage/education', icon: <FiBook /> },
+    { name: 'Contact Info', path: '/manage/contact-info', icon: <FiMail /> },
+    { name: 'Hobbies', path: '/manage/hobbies', icon: <FiHeart /> },
+    { name: 'Testimonials', path: '/manage/testimonials', icon: <FiMessageSquare /> },
+    { name: 'Messages', path: '/manage/messages', icon: <FiInbox /> },
+    { name: 'Resumes', path: '/manage/resumes', icon: <FiFileText /> },
   ];
 
   return (
     <div className="admin-dashboard">
       <header className="admin-header">
         <div className="container">
-          <h1>Admin Dashboard</h1>
+          <h1>Dashboard</h1>
           <div className="admin-user">
             <span>Welcome, {user?.name}</span>
             <button onClick={logout} className="btn-logout">
@@ -65,10 +65,10 @@ const AdminDashboard = () => {
               <a href="/" target="_blank" rel="noopener noreferrer" className="action-btn">
                 <FiEye /> View Public Site
               </a>
-              <Link to="/admin/messages" className="action-btn">
+              <Link to="/manage/messages" className="action-btn">
                 <FiInbox /> View Messages
               </Link>
-              <Link to="/admin/testimonials" className="action-btn">
+              <Link to="/manage/testimonials" className="action-btn">
                 <FiCheckCircle /> Approve Testimonials
               </Link>
             </div>

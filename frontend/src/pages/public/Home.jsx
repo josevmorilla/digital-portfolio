@@ -331,9 +331,10 @@ ${testimonialForm.wouldRecommend}
       setTimeout(() => {
         setTestimonialMessage('');
         setShowTestimonialModal(false);
-      }, 3000);
+      }, 4000);
     } catch (error) {
-      setTestimonialMessage(t(
+      const errMsg = error.response?.data?.error;
+      setTestimonialMessage(errMsg || t(
         'Error submitting testimonial. Please try again.',
         'Erreur lors de la soumission. Veuillez réessayer.'
       ));
