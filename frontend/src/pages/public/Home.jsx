@@ -428,10 +428,10 @@ ${testimonialForm.wouldRecommend}
   return (
     <div className="home">
       {/* Header */}
-      <header className="header">
+      <header className="header" role="banner">
         <div className="container">
           <nav className="nav">
-            <h1 className="logo">{profile ? (language === 'en' ? profile.nameEn : profile.nameFr) : ''}</h1>
+            <span className="logo">{profile ? (language === 'en' ? profile.nameEn : profile.nameFr) : ''}</span>
             <button 
               className={`hamburger ${mobileMenuOpen ? 'open' : ''}`} 
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -457,13 +457,14 @@ ${testimonialForm.wouldRecommend}
         </div>
       </header>
 
+      <main>
       {/* Hero Section */}
       <section className="hero">
         <div className="container">
           <h1 className="hero-title">{profile ? (language === 'en' ? profile.nameEn : profile.nameFr) : ''}</h1>
-          <h2 className="hero-subtitle">
+          <p className="hero-subtitle">
             {profile ? (language === 'en' ? profile.titleEn : profile.titleFr) : ''}
-          </h2>
+          </p>
           <div className="hero-contact-icons">
             {data.contactInfo
               .filter((info) => ['email', 'github', 'linkedin'].includes(info.type))
@@ -520,7 +521,7 @@ ${testimonialForm.wouldRecommend}
                     <div className="skill-icon-wrapper-carousel">
                       {getSkillIcon(skill.displayName)}
                     </div>
-                    <h4>{skill.displayName}</h4>
+                    <h3>{skill.displayName}</h3>
                   </div>
                 ))}
               </div>
@@ -555,7 +556,7 @@ ${testimonialForm.wouldRecommend}
                   {/* Image */}
                   <div className="project-showcase-image">
                     {project.imageUrl ? (
-                      <img src={getUploadUrl(project.imageUrl)} alt="" />
+                      <img src={getUploadUrl(project.imageUrl)} alt="" loading="lazy" />
                     ) : (
                       <div className="project-placeholder">
                         <FiGithub size={64} />
@@ -710,7 +711,7 @@ ${testimonialForm.wouldRecommend}
                     {/* Image */}
                     <div className="project-showcase-image">
                       {hobby.imageUrl ? (
-                        <img src={getUploadUrl(hobby.imageUrl)} alt="" />
+                        <img src={getUploadUrl(hobby.imageUrl)} alt="" loading="lazy" />
                       ) : (
                         <div className="project-placeholder">
                           <FiGithub size={64} />
@@ -1190,6 +1191,8 @@ ${testimonialForm.wouldRecommend}
           </div>
         </div>
       </section>
+
+      </main>
 
       {/* Footer */}
       <footer className="footer">

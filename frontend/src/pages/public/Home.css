@@ -448,8 +448,9 @@
   border: 1px solid var(--border);
   border-radius: 999px;
   font-size: 0.85rem;
-  color: var(--dark);
-  background: var(--light);
+  color: #1a1a2e;
+  background: #e8e8f0;
+  font-weight: 500;
 }
 
 .project-links { display: flex; gap: 0.8rem; }
