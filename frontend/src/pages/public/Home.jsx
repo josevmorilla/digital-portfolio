@@ -363,9 +363,10 @@ ${testimonialForm.wouldRecommend}
   };
 
   const contactDisplayValue = (info) => {
+    if (info.type === 'email') return info.value;
+    if (info.type === 'location') return info.value;
     if (info.type === 'linkedin') return 'LinkedIn';
     if (info.type === 'github') return 'GitHub';
-    if (info.type === 'email') return info.label || 'Email';
     return info.value;
   };
 
@@ -1170,13 +1171,12 @@ ${testimonialForm.wouldRecommend}
               <div key={info.id} className="contact-info-item">
                 <div className="contact-icon">{contactIcon[info.type] || <FiMapPin />}</div>
                 <div className="contact-body">
-                  <span className="contact-label">{info.label}</span>
                   {contactHref(info) ? (
-                    <a href={contactHref(info)} target={info.type === 'location' ? '_self' : '_blank'} rel="noopener noreferrer">
+                    <a href={contactHref(info)} target={info.type === 'email' ? '_self' : '_blank'} rel="noopener noreferrer" className="contact-link">
                       {contactDisplayValue(info)}
                     </a>
                   ) : (
-                    <span>{contactDisplayValue(info)}</span>
+                    <span className="contact-link">{contactDisplayValue(info)}</span>
                   )}
                 </div>
               </div>

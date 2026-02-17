@@ -591,7 +591,9 @@
 .contact-info-item {
   display: flex;
   gap: 0.8rem;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: center;
+  min-height: 70px;
 }
 
 .contact-icon {
@@ -608,22 +610,21 @@
 
 .contact-body {
   display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
+  align-items: center;
 }
 
-.contact-label {
-  font-weight: 700;
+.contact-link {
+  font-weight: 600;
   color: var(--dark);
-}
-
-.contact-body a {
-  color: var(--primary);
   text-decoration: none;
-  word-break: break-word;
+  font-size: 0.95rem;
 }
 
-.contact-body a:hover {
+a.contact-link {
+  color: var(--primary);
+}
+
+a.contact-link:hover {
   text-decoration: underline;
 }
 
