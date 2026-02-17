@@ -19,7 +19,7 @@ const AdminLogin = () => {
     const result = await login(email, password);
 
     if (result.success) {
-      navigate('/manage');
+      navigate('/dashboard');
     } else {
       setError(result.error);
     }

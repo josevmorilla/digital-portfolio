@@ -52,6 +52,11 @@ app.use(cors({
     // Allow requests with no origin (server-to-server, curl, health checks)
     if (!origin) return callback(null, true);
     if (allowedOrigins.has(origin)) return callback(null, true);
+    // Allow Vercel preview deployments (random subdomain pattern)
+    try {
+      const u = new URL(origin);
+      if (u.hostname.endsWith('.vercel.app')) return callback(null, true);
+    } catch (_) { /* ignore */ }
     callback(new Error(`CORS: origin ${origin} not allowed`));
   },
   credentials: true,

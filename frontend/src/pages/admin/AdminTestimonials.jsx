@@ -189,7 +189,7 @@ const AdminTestimonials = () => {
       <header className="admin-header">
         <div className="container">
           <h1>Manage Testimonials</h1>
-          <Link to="/manage" className="secondary">Back to Dashboard</Link>
+          <Link to="/dashboard" className="secondary">Back to Dashboard</Link>
         </div>
       </header>
 

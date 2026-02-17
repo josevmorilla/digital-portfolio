@@ -101,7 +101,7 @@ const AdminContactInfo = () => {
       <header className="admin-header">
         <div className="container">
           <h1>Manage Contact Info</h1>
-          <Link to="/manage" className="secondary">Back to Dashboard</Link>
+          <Link to="/dashboard" className="secondary">Back to Dashboard</Link>
         </div>
       </header>
 

@@ -22,16 +22,16 @@ const AdminDashboard = () => {
   const { user, logout } = useAuth();
 
   const sections = [
-    { name: 'Profile', path: '/manage/profile', icon: <FiSettings /> },
-    { name: 'Skills', path: '/manage/skills', icon: <FiCode /> },
-    { name: 'Projects', path: '/manage/projects', icon: <FiBriefcase /> },
-    { name: 'Work Experience', path: '/manage/work-experience', icon: <FiUser /> },
-    { name: 'Education', path: '/manage/education', icon: <FiBook /> },
-    { name: 'Contact Info', path: '/manage/contact-info', icon: <FiMail /> },
-    { name: 'Hobbies', path: '/manage/hobbies', icon: <FiHeart /> },
-    { name: 'Testimonials', path: '/manage/testimonials', icon: <FiMessageSquare /> },
-    { name: 'Messages', path: '/manage/messages', icon: <FiInbox /> },
-    { name: 'Resumes', path: '/manage/resumes', icon: <FiFileText /> },
+    { name: 'Profile', path: '/profile', icon: <FiSettings /> },
+    { name: 'Skills', path: '/skills', icon: <FiCode /> },
+    { name: 'Projects', path: '/projects', icon: <FiBriefcase /> },
+    { name: 'Work Experience', path: '/work-experience', icon: <FiUser /> },
+    { name: 'Education', path: '/education', icon: <FiBook /> },
+    { name: 'Contact Info', path: '/contact-info', icon: <FiMail /> },
+    { name: 'Hobbies', path: '/hobbies', icon: <FiHeart /> },
+    { name: 'Testimonials', path: '/review-testimonials', icon: <FiMessageSquare /> },
+    { name: 'Messages', path: '/messages', icon: <FiInbox /> },
+    { name: 'Resumes', path: '/resumes', icon: <FiFileText /> },
   ];
 
   return (
@@ -65,10 +65,10 @@ const AdminDashboard = () => {
               <a href="/" target="_blank" rel="noopener noreferrer" className="action-btn">
                 <FiEye /> View Public Site
               </a>
-              <Link to="/manage/messages" className="action-btn">
+              <Link to="/messages" className="action-btn">
                 <FiInbox /> View Messages
               </Link>
-              <Link to="/manage/testimonials" className="action-btn">
+              <Link to="/review-testimonials" className="action-btn">
                 <FiCheckCircle /> Approve Testimonials
               </Link>
             </div>
