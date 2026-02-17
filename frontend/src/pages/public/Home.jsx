@@ -362,6 +362,17 @@ ${testimonialForm.wouldRecommend}
     return null;
   };
 
+  const contactDisplayValue = (info) => {
+    if (info.type === 'email' || info.type === 'location') return info.value;
+    try {
+      const url = new URL(info.value);
+      // e.g. "linkedin.com/in/jose" or "github.com/josevmorilla"
+      return (url.hostname.replace('www.', '') + url.pathname).replace(/\/$/, '');
+    } catch {
+      return info.value;
+    }
+  };
+
   // Parse structured testimonial content
   const parseTestimonialContent = (content) => {
     const ratings = {};
@@ -1166,10 +1177,10 @@ ${testimonialForm.wouldRecommend}
                   <span className="contact-label">{info.label}</span>
                   {contactHref(info) ? (
                     <a href={contactHref(info)} target={info.type === 'location' ? '_self' : '_blank'} rel="noopener noreferrer">
-                      {info.value}
+                      {contactDisplayValue(info)}
                     </a>
                   ) : (
-                    <span>{info.value}</span>
+                    <span>{contactDisplayValue(info)}</span>
                   )}
                 </div>
               </div>
