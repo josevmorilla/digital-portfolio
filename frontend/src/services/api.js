@@ -22,12 +22,6 @@ export const profileAPI = {
   update: (data) => axios.put(`${API_URL}/profile`, data),
 };
 
-// Profile
-export const profileAPI = {
-  get: () => axios.get(`${API_URL}/profile`),
-  update: (data) => axios.put(`${API_URL}/profile`, data),
-};
-
 // Skills
 export const skillsAPI = {
   getAll: () => axios.get(`${API_URL}/skills`),
