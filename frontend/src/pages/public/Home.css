@@ -1735,6 +1735,12 @@ a.contact-link:hover {
 @media (max-width: 768px) {
   .contact-info-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 0.8rem;
+  }
+
+  .contact-info-item {
+    padding: 1rem;
+    min-height: auto;
   }
 
   .form-section {
