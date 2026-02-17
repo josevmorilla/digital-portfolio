@@ -363,14 +363,10 @@ ${testimonialForm.wouldRecommend}
   };
 
   const contactDisplayValue = (info) => {
-    if (info.type === 'email' || info.type === 'location') return info.value;
-    try {
-      const url = new URL(info.value);
-      // e.g. "linkedin.com/in/jose" or "github.com/josevmorilla"
-      return (url.hostname.replace('www.', '') + url.pathname).replace(/\/$/, '');
-    } catch {
-      return info.value;
-    }
+    if (info.type === 'linkedin') return 'LinkedIn';
+    if (info.type === 'github') return 'GitHub';
+    if (info.type === 'email') return info.label || 'Email';
+    return info.value;
   };
 
   // Parse structured testimonial content
