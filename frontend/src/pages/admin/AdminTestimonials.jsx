@@ -152,23 +152,23 @@ const AdminTestimonials = () => {
             {pendingTestimonials.length > 0 && (
               <div className="pending-section" style={{ marginBottom: '2rem' }}>
                 <div className="section-header" style={{
-                  background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
+                  background: '#f59e0b',
                   color: 'white',
-                  padding: '1rem 1.5rem',
+                  padding: '0.85rem 1.25rem',
                   borderRadius: '8px',
                   marginBottom: '1rem',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between'
                 }}>
-                  <h3 style={{ margin: 0, fontSize: '1.3rem', fontWeight: '700' }}>
-                    ⏳ Pending Approval ({pendingTestimonials.length})
+                  <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: '700' }}>
+                    Pending Approval ({pendingTestimonials.length})
                   </h3>
                   <span style={{
-                    background: 'rgba(255, 255, 255, 0.3)',
-                    padding: '0.5rem 1rem',
+                    background: 'rgba(255, 255, 255, 0.25)',
+                    padding: '0.35rem 0.85rem',
                     borderRadius: '20px',
-                    fontSize: '0.9rem',
+                    fontSize: '0.85rem',
                     fontWeight: '600'
                   }}>
                     Review Required
@@ -181,8 +181,8 @@ const AdminTestimonials = () => {
                       <div key={testimonial.id} className="item-card testimonial-detailed" style={{ borderLeft: '4px solid #fbbf24' }}>
                         <div className="item-header">
                           <h3>{testimonial.name}</h3>
-                          <span className="badge" style={{background: '#fbbf24', fontWeight: '700'}}>
-                            Pending ⚠️
+                          <span className="badge" style={{background: '#f59e0b', color: 'white', fontWeight: '600'}}>
+                            Pending
                           </span>
                         </div>
                         <p className="item-meta">
@@ -288,14 +288,14 @@ const AdminTestimonials = () => {
             {approvedTestimonials.length > 0 && (
               <div className="approved-section">
                 <div className="section-header" style={{
-                  background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                  background: '#10b981',
                   color: 'white',
-                  padding: '1rem 1.5rem',
+                  padding: '0.85rem 1.25rem',
                   borderRadius: '8px',
                   marginBottom: '1rem'
                 }}>
-                  <h3 style={{ margin: 0, fontSize: '1.3rem', fontWeight: '700' }}>
-                    ✓ Approved Testimonials ({approvedTestimonials.length})
+                  <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: '700' }}>
+                    Approved Testimonials ({approvedTestimonials.length})
                   </h3>
                 </div>
                 <div className="items-list">
