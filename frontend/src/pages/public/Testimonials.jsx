@@ -15,6 +15,7 @@ const Testimonials = () => {
   const [approvedTestimonials, setApprovedTestimonials] = useState([]);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(true);
+  const [showForm, setShowForm] = useState(true);
 
   const t = (en, fr) => (language === 'en' ? en : fr);
 
@@ -42,9 +43,10 @@ const Testimonials = () => {
         'Merci pour votre témoignage ! Il sera publié après examen.'
       ));
       setFormData({ name: '', position: '', company: '', content: '' });
+      setShowForm(false);
       
-      // Auto-dismiss after 5 seconds
-      setTimeout(() => setMessage(''), 5000);
+      // Auto-dismiss after 8 seconds
+      setTimeout(() => setMessage(''), 8000);
     } catch (error) {
       const errMsg = error.response?.data?.error;
       setMessage(errMsg || t(
@@ -116,6 +118,20 @@ const Testimonials = () => {
               </p>
             </div>
 
+            {!showForm ? (
+              <div style={{ textAlign: 'center', padding: '2rem 0' }}>
+                <p style={{ color: '#666', marginBottom: '1rem', fontSize: '1.05rem' }}>
+                  {t('Want to submit another testimonial?', 'Voulez-vous soumettre un autre témoignage ?')}
+                </p>
+                <button
+                  onClick={() => setShowForm(true)}
+                  className="submit-btn"
+                  style={{ display: 'inline-block' }}
+                >
+                  {t('Write Another Testimonial', 'Écrire un Autre Témoignage')}
+                </button>
+              </div>
+            ) : (
             <form onSubmit={handleSubmit} className="testimonial-form">
               <div className="form-grid">
                 <div className="form-group">
@@ -193,6 +209,7 @@ const Testimonials = () => {
                 </button>
               </div>
             </form>
+            )}
           </div>
         </div>
       </section>
