@@ -4,11 +4,14 @@ const authController = require('../controllers/authController');
 const authMiddleware = require('../middleware/auth');
 const validate = require('../middleware/validation');
 
+const { authLimiter } = require('../middleware/rateLimiter');
+
 const router = express.Router();
 
-// Login
+// Login – strict rate limit: 5 attempts per 15 min per IP
 router.post(
   '/login',
+  authLimiter,
   [
     body('email').isEmail().withMessage('Valid email is required'),
     body('password').notEmpty().withMessage('Password is required'),

@@ -18,6 +18,8 @@ const contactMessageRoutes = require('./routes/contactMessages');
 const resumeRoutes = require('./routes/resumes');
 const profileRoutes = require('./routes/profile');
 
+const { globalLimiter } = require('./middleware/rateLimiter');
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -53,6 +55,9 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Rate limiting – defend against spam / brute-force
+app.use('/api', globalLimiter);
 
 // Serve uploaded files – use the same resolved uploadDir that multer writes to
 console.log('Serving uploads from:', uploadDir);

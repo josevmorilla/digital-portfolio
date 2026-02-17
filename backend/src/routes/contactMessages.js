@@ -4,11 +4,14 @@ const contactMessageController = require('../controllers/contactMessageControlle
 const authMiddleware = require('../middleware/auth');
 const validate = require('../middleware/validation');
 
+const { formLimiter } = require('../middleware/rateLimiter');
+
 const router = express.Router();
 
-// Public route
+// Public route – rate limited to prevent spam
 router.post(
   '/',
+  formLimiter,
   [
     body('name').notEmpty().withMessage('Name is required'),
     body('email').isEmail().withMessage('Valid email is required'),
