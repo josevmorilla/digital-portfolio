@@ -54,6 +54,7 @@ const Home = () => {
     permissionGranted: false
   });
   const [testimonialMessage, setTestimonialMessage] = useState('');
+  const [testimonialToast, setTestimonialToast] = useState('');
 
   useEffect(() => {
     fetchData();
@@ -309,7 +310,9 @@ ${testimonialForm.wouldRecommend}
       };
 
       await testimonialsAPI.create(submissionData);
-      setTestimonialMessage(t(
+      setShowTestimonialModal(false);
+      setTestimonialMessage('');
+      setTestimonialToast(t(
         'Thank you! Your testimonial will be published after review.',
         'Merci ! Votre témoignage sera publié après examen.'
       ));
@@ -328,10 +331,7 @@ ${testimonialForm.wouldRecommend}
         wouldRecommend: '',
         permissionGranted: false
       });
-      setTimeout(() => {
-        setTestimonialMessage('');
-        setShowTestimonialModal(false);
-      }, 4000);
+      setTimeout(() => setTestimonialToast(''), 6000);
     } catch (error) {
       const errMsg = error.response?.data?.error;
       setTestimonialMessage(errMsg || t(
@@ -859,6 +859,19 @@ ${testimonialForm.wouldRecommend}
           )}
         </div>
       </section>
+
+      {/* Testimonial success toast */}
+      {testimonialToast && (
+        <div className="toast-popup success" style={{ position: 'fixed', top: '2rem', right: '2rem', zIndex: 10000, maxWidth: '400px', animation: 'slideIn 0.3s ease' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', background: '#ecfdf5', border: '1px solid #10b981', borderRadius: '12px', padding: '1rem 1.25rem', boxShadow: '0 8px 24px rgba(0,0,0,0.15)' }}>
+            <svg width="24" height="24" viewBox="0 0 20 20" fill="#10b981">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            </svg>
+            <span style={{ color: '#065f46', fontWeight: '600', flex: 1 }}>{testimonialToast}</span>
+            <button onClick={() => setTestimonialToast('')} style={{ background: 'none', border: 'none', fontSize: '1.2rem', cursor: 'pointer', color: '#065f46' }}>&times;</button>
+          </div>
+        </div>
+      )}
 
       {/* Testimonial Modal */}
       {showTestimonialModal && (
