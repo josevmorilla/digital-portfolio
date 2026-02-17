@@ -536,14 +536,7 @@ ${testimonialForm.wouldRecommend}
           </div>
 
           <div className="carousel-indicators">
-            {Array.from({ length: totalSlides }).map((_, idx) => (
-              <button
-                key={idx}
-                className={`indicator ${idx === currentSlide ? 'active' : ''}`}
-                onClick={() => setSkillsCarouselIndex(idx)}
-                aria-label={`Go to slide ${idx + 1}`}
-              />
-            ))}
+            <span className="carousel-counter">{currentSlide + 1} / {totalSlides}</span>
           </div>
         </div>
       </section>
