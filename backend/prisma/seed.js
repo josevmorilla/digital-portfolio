@@ -26,6 +26,24 @@ async function seed() {
     });
 
     console.log('Admin user created:', admin.email);
+
+    // Profile – always ensure one exists (upsert, like admin user)
+    const existingProfile = await prisma.profile.findFirst();
+    if (!existingProfile) {
+      await prisma.profile.create({
+        data: {
+          nameEn: 'Jose Villegas',
+          nameFr: 'Jose Villegas',
+          titleEn: 'Full Stack Developer & Digital Creator',
+          titleFr: 'Développeur full stack et créateur digital',
+          bioEn: 'Passionate full stack developer creating modern web applications.',
+          bioFr: 'Développeur full stack passionné créant des applications web modernes.',
+        },
+      });
+      console.log('Profile seeded');
+    } else {
+      console.log('Profile already exists, skipping');
+    }
     
     // Check if data already exists
     const existingData = await prisma.hobby.count();
@@ -36,19 +54,6 @@ async function seed() {
     }
     
     console.log('Database is empty, seeding initial data...');
-
-    // Profile
-    await prisma.profile.create({
-      data: {
-        nameEn: 'Jose Villegas',
-        nameFr: 'Jose Villegas',
-        titleEn: 'Full Stack Developer & Digital Creator',
-        titleFr: 'Développeur full stack et créateur digital',
-        bioEn: 'Passionate full stack developer creating modern web applications.',
-        bioFr: 'Développeur full stack passionné créant des applications web modernes.',
-      },
-    });
-    console.log('Profile seeded');
 
     // Skills
     const skillsData = [
