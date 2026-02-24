@@ -478,6 +478,11 @@ ${testimonialForm.wouldRecommend}
           <p className="hero-subtitle">
             {profile ? (language === 'en' ? profile.titleEn : profile.titleFr) : ''}
           </p>
+          {profile && (language === 'en' ? profile.bioEn : profile.bioFr) && (
+            <p className="hero-bio">
+              {language === 'en' ? profile.bioEn : profile.bioFr}
+            </p>
+          )}
           <div className="hero-contact-icons">
             {data.contactInfo
               .filter((info) => ['email', 'github', 'linkedin'].includes(info.type))
