@@ -35,9 +35,10 @@ const Home = () => {
   const [resumeEn, setResumeEn] = useState(null);
   const [resumeFr, setResumeFr] = useState(null);
   const [skillsCarouselIndex, setSkillsCarouselIndex] = useState(0);
-  const [contactForm, setContactForm] = useState({ name: '', email: '', subject: '', message: '' });
+  const [contactForm, setContactForm] = useState({ name: '', email: '', subject: '', message: '', website: '' });
   const [contactMessage, setContactMessage] = useState('');
   const [showTestimonialModal, setShowTestimonialModal] = useState(false);
+  const [formLoadedAt, setFormLoadedAt] = useState(Date.now());
   const [testimonialForm, setTestimonialForm] = useState({ 
     name: '', 
     company: '', 
@@ -51,7 +52,8 @@ const Home = () => {
     doubtsOvercome: '',
     bestPart: '',
     wouldRecommend: '',
-    permissionGranted: false
+    permissionGranted: false,
+    website: ''
   });
   const [testimonialMessage, setTestimonialMessage] = useState('');
   const [testimonialToast, setTestimonialToast] = useState('');
@@ -241,10 +243,14 @@ const Home = () => {
 
   const handleContactSubmit = async (e) => {
     e.preventDefault();
+    if (Date.now() - formLoadedAt < 3000) {
+      setContactMessage(t('Please wait a moment before submitting.', 'Veuillez patienter un instant avant de soumettre.'));
+      return;
+    }
     try {
       await contactMessagesAPI.create(contactForm);
       setContactMessage(t('Message sent successfully!', 'Message envoyé avec succès !'));
-      setContactForm({ name: '', email: '', subject: '', message: '' });
+      setContactForm({ name: '', email: '', subject: '', message: '', website: '' });
       setTimeout(() => setContactMessage(''), 3000);
     } catch (error) {
       setContactMessage(t('Error sending message', 'Erreur lors de l\'envoi du message'));
@@ -306,8 +312,14 @@ ${testimonialForm.wouldRecommend}
         name: testimonialForm.name || 'Anonymous',
         position: testimonialForm.projectName || 'Client',
         company: testimonialForm.company || null,
-        content: content
+        content: content,
+        website: testimonialForm.website || ''
       };
+
+      if (Date.now() - formLoadedAt < 3000) {
+        setTestimonialMessage(t('Please wait a moment before submitting.', 'Veuillez patienter un instant avant de soumettre.'));
+        return;
+      }
 
       await testimonialsAPI.create(submissionData);
       setShowTestimonialModal(false);
@@ -320,6 +332,7 @@ ${testimonialForm.wouldRecommend}
         name: '', 
         company: '', 
         projectName: '',
+        website: '',
         technicalExpertise: 0,
         codeQuality: 0,
         communication: 0,
@@ -788,7 +801,7 @@ ${testimonialForm.wouldRecommend}
             <h2 className="section-title">{t('Testimonials', 'Témoignages')}</h2>
             <button 
               className="btn-leave-testimonial"
-              onClick={() => setShowTestimonialModal(true)}
+              onClick={() => { setShowTestimonialModal(true); setFormLoadedAt(Date.now()); }}
             >
               💬 {t('Leave a Testimonial', 'Laisser un Témoignage')}
             </button>
@@ -894,6 +907,19 @@ ${testimonialForm.wouldRecommend}
             )}
 
             <form onSubmit={handleTestimonialSubmit} className="modal-form">
+              {/* Honeypot - hidden from real users */}
+              <div style={{ position: 'absolute', left: '-9999px', opacity: 0, height: 0, overflow: 'hidden' }} aria-hidden="true" tabIndex={-1}>
+                <label htmlFor="website-hp-testimonial">Website</label>
+                <input
+                  id="website-hp-testimonial"
+                  type="text"
+                  name="website"
+                  value={testimonialForm.website}
+                  onChange={(e) => setTestimonialForm({ ...testimonialForm, website: e.target.value })}
+                  autoComplete="off"
+                  tabIndex={-1}
+                />
+              </div>
               {/* Section 1: General Information */}
               <div className="form-section">
                 <h3 className="form-section-title">
@@ -1119,6 +1145,19 @@ ${testimonialForm.wouldRecommend}
           )}
 
           <form onSubmit={handleContactSubmit} className="contact-form">
+            {/* Honeypot - hidden from real users */}
+            <div style={{ position: 'absolute', left: '-9999px', opacity: 0, height: 0, overflow: 'hidden' }} aria-hidden="true" tabIndex={-1}>
+              <label htmlFor="website-hp-contact">Website</label>
+              <input
+                id="website-hp-contact"
+                type="text"
+                name="website"
+                value={contactForm.website}
+                onChange={(e) => setContactForm({ ...contactForm, website: e.target.value })}
+                autoComplete="off"
+                tabIndex={-1}
+              />
+            </div>
             <div className="form-group">
               <label>{t('Name', 'Nom')} *</label>
               <input

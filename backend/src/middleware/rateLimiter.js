@@ -53,6 +53,14 @@ const contentSpamGuard = (req, res, next) => {
     return res.status(200).json({ message: 'Thank you for your submission.' });
   }
 
+  // Time-gate: reject if _formTs is present and form was filled in under 3 seconds
+  if (req.body._formTs) {
+    const elapsed = Date.now() - Number(req.body._formTs);
+    if (elapsed < 3000) {
+      return res.status(200).json({ message: 'Thank you for your submission.' });
+    }
+  }
+
   // Build a fingerprint from the submission content
   const { name, email, message, content, position } = req.body;
   const raw = [name, email, message, content, position].filter(Boolean).join('|').toLowerCase().trim();

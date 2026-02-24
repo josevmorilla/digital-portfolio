@@ -6,17 +6,22 @@ import './Contact.css';
 
 const Contact = () => {
   const { language, toggleLanguage } = useLanguage();
-  const [contactForm, setContactForm] = useState({ name: '', email: '', subject: '', message: '' });
+  const [contactForm, setContactForm] = useState({ name: '', email: '', subject: '', message: '', website: '' });
   const [message, setMessage] = useState('');
+  const [formLoadedAt] = useState(Date.now());
 
   const t = (en, fr) => (language === 'en' ? en : fr);
 
   const handleContactSubmit = async (e) => {
     e.preventDefault();
+    if (Date.now() - formLoadedAt < 3000) {
+      setMessage(t('Please wait a moment before submitting.', 'Veuillez patienter un instant avant de soumettre.'));
+      return;
+    }
     try {
       await contactMessagesAPI.create(contactForm);
       setMessage(t('Message sent successfully!', 'Message envoyé avec succès !'));
-      setContactForm({ name: '', email: '', subject: '', message: '' });
+      setContactForm({ name: '', email: '', subject: '', message: '', website: '' });
     } catch (error) {
       setMessage(t('Error sending message', 'Erreur lors de l\'envoi du message'));
     }
@@ -65,6 +70,19 @@ const Contact = () => {
           {message && <div className="message success">{message}</div>}
 
           <form onSubmit={handleContactSubmit} className="contact-form">
+              {/* Honeypot - hidden from real users */}
+              <div style={{ position: 'absolute', left: '-9999px', opacity: 0, height: 0, overflow: 'hidden' }} aria-hidden="true" tabIndex={-1}>
+                <label htmlFor="website-hp-cpage">Website</label>
+                <input
+                  id="website-hp-cpage"
+                  type="text"
+                  name="website"
+                  value={contactForm.website}
+                  onChange={(e) => setContactForm({ ...contactForm, website: e.target.value })}
+                  autoComplete="off"
+                  tabIndex={-1}
+                />
+              </div>
               <div className="form-group">
                 <label htmlFor="contact-name">{t('Name', 'Nom')} *</label>
                 <input

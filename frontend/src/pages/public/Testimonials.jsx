@@ -10,12 +10,14 @@ const Testimonials = () => {
     name: '', 
     position: '', 
     company: '', 
-    content: '' 
+    content: '',
+    website: '' 
   });
   const [approvedTestimonials, setApprovedTestimonials] = useState([]);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(true);
+  const [formLoadedAt] = useState(Date.now());
 
   const t = (en, fr) => (language === 'en' ? en : fr);
 
@@ -36,13 +38,20 @@ const Testimonials = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (Date.now() - formLoadedAt < 3000) {
+      setMessage(t(
+        'Please wait a moment before submitting.',
+        'Veuillez patienter un instant avant de soumettre.'
+      ));
+      return;
+    }
     try {
       await testimonialsAPI.create(formData);
       setMessage(t(
         'Thank you for your testimonial! It will be published after review.',
         'Merci pour votre témoignage ! Il sera publié après examen.'
       ));
-      setFormData({ name: '', position: '', company: '', content: '' });
+      setFormData({ name: '', position: '', company: '', content: '', website: '' });
       setShowForm(false);
       
       // Auto-dismiss after 8 seconds
@@ -133,6 +142,19 @@ const Testimonials = () => {
               </div>
             ) : (
             <form onSubmit={handleSubmit} className="testimonial-form">
+              {/* Honeypot - hidden from real users */}
+              <div style={{ position: 'absolute', left: '-9999px', opacity: 0, height: 0, overflow: 'hidden' }} aria-hidden="true" tabIndex={-1}>
+                <label htmlFor="website-hp-tpage">Website</label>
+                <input
+                  id="website-hp-tpage"
+                  type="text"
+                  name="website"
+                  value={formData.website}
+                  onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+                  autoComplete="off"
+                  tabIndex={-1}
+                />
+              </div>
               <div className="form-grid">
                 <div className="form-group">
                   <label htmlFor="name">
