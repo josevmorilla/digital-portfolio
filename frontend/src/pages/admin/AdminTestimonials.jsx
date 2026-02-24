@@ -7,6 +7,7 @@ const AdminTestimonials = () => {
   const [testimonials, setTestimonials] = useState([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
 
   useEffect(() => {
     fetchTestimonials();
@@ -317,8 +318,30 @@ const AdminTestimonials = () => {
               <h2>All Testimonials ({testimonials.length})</h2>
             </div>
 
+            {/* Status Filter Bar */}
+            <div className="status-filter-bar">
+              <button
+                className={`status-filter-btn${statusFilter === 'all' ? ' active' : ''}`}
+                onClick={() => setStatusFilter('all')}
+              >
+                All <span className="filter-count">{testimonials.length}</span>
+              </button>
+              <button
+                className={`status-filter-btn status-filter-pending${statusFilter === 'pending' ? ' active' : ''}`}
+                onClick={() => setStatusFilter('pending')}
+              >
+                Pending <span className="filter-count">{pendingTestimonials.length}</span>
+              </button>
+              <button
+                className={`status-filter-btn status-filter-approved${statusFilter === 'approved' ? ' active' : ''}`}
+                onClick={() => setStatusFilter('approved')}
+              >
+                Approved <span className="filter-count">{approvedTestimonials.length}</span>
+              </button>
+            </div>
+
             {/* Pending Testimonials Section */}
-            {pendingTestimonials.length > 0 && (
+            {(statusFilter === 'all' || statusFilter === 'pending') && pendingTestimonials.length > 0 && (
               <div style={{ marginBottom: '2rem' }}>
                 <h3 className="testimonial-group-title">
                   Pending Review
@@ -331,7 +354,7 @@ const AdminTestimonials = () => {
             )}
 
             {/* Approved Testimonials Section */}
-            {approvedTestimonials.length > 0 && (
+            {(statusFilter === 'all' || statusFilter === 'approved') && approvedTestimonials.length > 0 && (
               <div>
                 <h3 className="testimonial-group-title">
                   Approved
@@ -346,6 +369,18 @@ const AdminTestimonials = () => {
             {testimonials.length === 0 && (
               <p style={{ textAlign: 'center', color: '#666', padding: '2rem' }}>
                 No testimonials yet. Add one or wait for submissions!
+              </p>
+            )}
+
+            {statusFilter === 'pending' && pendingTestimonials.length === 0 && testimonials.length > 0 && (
+              <p style={{ textAlign: 'center', color: '#666', padding: '2rem' }}>
+                No pending testimonials.
+              </p>
+            )}
+
+            {statusFilter === 'approved' && approvedTestimonials.length === 0 && testimonials.length > 0 && (
+              <p style={{ textAlign: 'center', color: '#666', padding: '2rem' }}>
+                No approved testimonials.
               </p>
             )}
           </div>
