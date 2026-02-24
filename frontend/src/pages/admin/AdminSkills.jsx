@@ -239,19 +239,11 @@ const AdminSkills = () => {
                     required
                   >
                     <option value="">Select category...</option>
-                    {categories.map(cat => (
-                      <option key={cat} value={cat}>{cat}</option>
-                    ))}
-                    <option value="__new__">+ New category...</option>
+                    <option value="Languages">Languages</option>
+                    <option value="Frameworks">Frameworks</option>
+                    <option value="Databases">Databases</option>
+                    <option value="Tools">Tools</option>
                   </select>
-                  {formData.category === '__new__' && (
-                    <input
-                      type="text"
-                      placeholder="Enter new category name"
-                      style={{ marginTop: '0.5rem' }}
-                      onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    />
-                  )}
                 </div>
                 <div className="form-group">
                   <label>Icon (optional)</label>
