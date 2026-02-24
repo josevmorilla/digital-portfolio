@@ -82,6 +82,24 @@ exports.markAsRead = async (req, res) => {
   }
 };
 
+// Mark message as unread (admin only)
+exports.markAsUnread = async (req, res) => {
+  try {
+    const message = await prisma.contactMessage.update({
+      where: { id: req.params.id },
+      data: { read: false },
+    });
+
+    res.json({ message: 'Message marked as unread', data: message });
+  } catch (error) {
+    console.error('Mark as unread error:', error);
+    if (error.code === 'P2025') {
+      return res.status(404).json({ error: 'Contact message not found' });
+    }
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 // Delete contact message (admin only)
 exports.delete = async (req, res) => {
   try {

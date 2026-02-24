@@ -27,6 +27,7 @@ router.get('/', authMiddleware, contactMessageController.getAll);
 router.get('/unread-count', authMiddleware, contactMessageController.getUnreadCount);
 router.get('/:id', authMiddleware, contactMessageController.getById);
 router.post('/:id/read', authMiddleware, contactMessageController.markAsRead);
+router.post('/:id/unread', authMiddleware, contactMessageController.markAsUnread);
 router.delete('/:id', authMiddleware, contactMessageController.delete);
 
 module.exports = router;

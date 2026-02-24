@@ -27,9 +27,20 @@ const AdminMessages = () => {
   const handleMarkAsRead = async (id) => {
     try {
       await contactMessagesAPI.markAsRead(id);
+      setSelectedMessage(prev => prev ? { ...prev, read: true } : null);
       fetchMessages();
     } catch (error) {
       console.error('Error marking message as read:', error);
+    }
+  };
+
+  const handleMarkAsUnread = async (id) => {
+    try {
+      await contactMessagesAPI.markAsUnread(id);
+      setSelectedMessage(prev => prev ? { ...prev, read: false } : null);
+      fetchMessages();
+    } catch (error) {
+      console.error('Error marking message as unread:', error);
     }
   };
 
@@ -139,7 +150,14 @@ const AdminMessages = () => {
                   </div>
                   
                   <div className="detail-actions">
-                    {!selectedMessage.read && (
+                    {selectedMessage.read ? (
+                      <button 
+                        onClick={() => handleMarkAsUnread(selectedMessage.id)} 
+                        className="btn-unread"
+                      >
+                        Mark as Unread
+                      </button>
+                    ) : (
                       <button 
                         onClick={() => handleMarkAsRead(selectedMessage.id)} 
                         className="primary"
@@ -149,7 +167,7 @@ const AdminMessages = () => {
                     )}
                     <button 
                       onClick={() => handleDelete(selectedMessage.id)} 
-                      className="btn-delete"
+                      className="btn-danger"
                     >
                       Delete Message
                     </button>

@@ -100,6 +100,7 @@ export const contactMessagesAPI = {
   create: (data) => axios.post(`${API_URL}/contact-messages`, data),
   update: (id, data) => axios.put(`${API_URL}/contact-messages/${id}`, data),
   markAsRead: (id) => axios.post(`${API_URL}/contact-messages/${id}/read`),
+  markAsUnread: (id) => axios.post(`${API_URL}/contact-messages/${id}/unread`),
   delete: (id) => axios.delete(`${API_URL}/contact-messages/${id}`),
   getUnreadCount: () => axios.get(`${API_URL}/contact-messages/unread-count`),
 };
