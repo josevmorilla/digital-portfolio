@@ -11,7 +11,6 @@ const AdminSkills = () => {
   const [formData, setFormData] = useState({
     nameEn: '',
     nameFr: '',
-    level: 50,
     category: '',
     icon: '',
     order: 0,
@@ -96,7 +95,6 @@ const AdminSkills = () => {
     setFormData({
       nameEn: skill.nameEn,
       nameFr: skill.nameFr,
-      level: skill.level,
       category: skill.category,
       icon: skill.icon || '',
       order: skill.order,
@@ -120,7 +118,7 @@ const AdminSkills = () => {
   const resetForm = () => {
     setEditing(null);
     setShowForm(false);
-    setFormData({ nameEn: '', nameFr: '', level: 50, category: '', icon: '', order: 0 });
+    setFormData({ nameEn: '', nameFr: '', category: '', icon: '', order: 0 });
   };
 
   const categories = [...new Set(skills.map(s => s.category))];
@@ -221,17 +219,6 @@ const AdminSkills = () => {
                   />
                 </div>
                 <div className="form-group">
-                  <label>Level (1-100) *</label>
-                  <input
-                    type="number"
-                    min="1"
-                    max="100"
-                    value={formData.level}
-                    onChange={(e) => setFormData({ ...formData, level: parseInt(e.target.value) })}
-                    required
-                  />
-                </div>
-                <div className="form-group">
                   <label>Category *</label>
                   <select
                     value={formData.category}
@@ -295,7 +282,7 @@ const AdminSkills = () => {
                       <div key={skill.id} className="item-card">
                         <div className="item-info">
                           <h3>{skill.nameEn} / {skill.nameFr}</h3>
-                          <p><strong>Level:</strong> {skill.level}% | <strong>Order:</strong> {skill.order}</p>
+                          <p><strong>Order:</strong> {skill.order}</p>
                           {skill.icon && <p><strong>Icon:</strong> {skill.icon}</p>}
                         </div>
                         <div className="item-actions">
