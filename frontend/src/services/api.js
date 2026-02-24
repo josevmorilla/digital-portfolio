@@ -31,6 +31,12 @@ export const skillsAPI = {
   delete: (id) => axios.delete(`${API_URL}/skills/${id}`),
 };
 
+// Category Settings
+export const categorySettingsAPI = {
+  getAll: () => axios.get(`${API_URL}/category-settings`),
+  updateAll: (settings) => axios.put(`${API_URL}/category-settings`, { settings }),
+};
+
 // Projects
 export const projectsAPI = {
   getAll: (featured) => axios.get(`${API_URL}/projects${featured ? '?featured=true' : ''}`),

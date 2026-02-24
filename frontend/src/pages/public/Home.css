@@ -209,6 +209,38 @@
   gap: 2rem;
 }
 
+/* Skills Tabs */
+.skills-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.skills-tab {
+  padding: 0.6rem 1.4rem;
+  border: 2px solid var(--border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--gray);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.skills-tab:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.skills-tab.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--white);
+}
+
 /* Skills Carousel */
 .skills-carousel-container {
   display: flex;

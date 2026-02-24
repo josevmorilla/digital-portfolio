@@ -17,6 +17,7 @@ const testimonialRoutes = require('./routes/testimonials');
 const contactMessageRoutes = require('./routes/contactMessages');
 const resumeRoutes = require('./routes/resumes');
 const profileRoutes = require('./routes/profile');
+const categorySettingsRoutes = require('./routes/categorySettings');
 
 const { globalLimiter } = require('./middleware/rateLimiter');
 
@@ -96,6 +97,7 @@ app.use('/api/testimonials', testimonialRoutes);
 app.use('/api/contact-messages', contactMessageRoutes);
 app.use('/api/resumes', resumeRoutes);
 app.use('/api/profile', profileRoutes);
+app.use('/api/category-settings', categorySettingsRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

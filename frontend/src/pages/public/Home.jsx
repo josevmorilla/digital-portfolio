@@ -14,6 +14,7 @@ import {
   testimonialsAPI,
   resumesAPI,
   profileAPI,
+  categorySettingsAPI,
   getUploadUrl,
 } from '../../services/api';
 import './Home.css';
@@ -34,7 +35,9 @@ const Home = () => {
   const [profile, setProfile] = useState(null);
   const [resumeEn, setResumeEn] = useState(null);
   const [resumeFr, setResumeFr] = useState(null);
-  const [skillsCarouselIndex, setSkillsCarouselIndex] = useState(0);
+  const [activeSkillTab, setActiveSkillTab] = useState(null);
+  const [skillTabIndexes, setSkillTabIndexes] = useState({});
+  const [categorySettings, setCategorySettings] = useState([]);
   const [contactForm, setContactForm] = useState({ name: '', email: '', subject: '', message: '', website: '' });
   const [contactMessage, setContactMessage] = useState('');
   const [showTestimonialModal, setShowTestimonialModal] = useState(false);
@@ -74,6 +77,7 @@ const Home = () => {
         hobbiesRes,
         testimonialsRes,
         profileRes,
+        catSettingsRes,
       ] = await Promise.all([
         skillsAPI.getAll(),
         projectsAPI.getAll(),
@@ -83,6 +87,7 @@ const Home = () => {
         hobbiesAPI.getAll(),
         testimonialsAPI.getAll(),
         profileAPI.get().catch(() => ({ data: null })),
+        categorySettingsAPI.getAll().catch(() => ({ data: [] })),
       ]);
 
       setData({
@@ -96,6 +101,7 @@ const Home = () => {
       });
 
       setProfile(profileRes.data);
+      setCategorySettings(catSettingsRes.data || []);
 
       // Fetch both English and French resumes
       try {
@@ -182,48 +188,46 @@ const Home = () => {
     Figma: 'figma',
   };
 
-  // Consolidated category mapping
-  const categoryMap = {
-    Languages: 'Programming',
-    Frontend: 'Frontend',
-    Frameworks: 'Frontend',
-    Backend: 'Backend',
-    Databases: 'Databases',
-    Tools: 'Tools',
-    Testing: 'Tools',
-    Cloud: 'Tools',
-    Other: 'Other',
-  };
+  // Group skills by category
+  const skillsByCategory = {};
+  data.skills.forEach(skill => {
+    if (!skillsByCategory[skill.category]) skillsByCategory[skill.category] = [];
+    skillsByCategory[skill.category].push({
+      ...skill,
+      displayName: language === 'en' ? skill.nameEn : skill.nameFr,
+    });
+  });
 
-  const categoryLabels = {
-    Programming: t('Programming Languages', 'Langages de Programmation'),
-    Frontend: t('Frontend', 'Frontend'),
-    Backend: t('Backend', 'Backend'),
-    Databases: t('Databases', 'Bases de données'),
-    Tools: t('Tools & DevOps', 'Outils et DevOps'),
-    Other: t('Other', 'Autres'),
-  };
+  // Order categories by their displayOrder from settings
+  const orderedCategories = categorySettings
+    .filter(cs => skillsByCategory[cs.category])
+    .sort((a, b) => a.displayOrder - b.displayOrder);
 
-  // Get flat list of all skills for carousel
-  const allSkills = data.skills.map(skill => ({
-    ...skill,
-    displayName: language === 'en' ? skill.nameEn : skill.nameFr,
-  }));
+  // Set default active tab on first load
+  useEffect(() => {
+    if (orderedCategories.length > 0 && !activeSkillTab) {
+      setActiveSkillTab(orderedCategories[0].category);
+    }
+  }, [orderedCategories.length]);
 
   const skillsPerSlide = 6;
-  const totalSlides = Math.ceil(allSkills.length / skillsPerSlide);
-  const currentSlide = Math.min(skillsCarouselIndex, totalSlides - 1);
-  const startIndex = currentSlide * skillsPerSlide;
-  const visibleSkills = allSkills.slice(startIndex, startIndex + skillsPerSlide);
 
-  // Auto-advance skills carousel
+  // Auto-advance carousel for each active tab at its configured speed
   useEffect(() => {
-    if (totalSlides <= 1) return;
+    if (!activeSkillTab) return;
+    const setting = categorySettings.find(cs => cs.category === activeSkillTab);
+    const speed = setting?.speed || 4000;
+    const skills = skillsByCategory[activeSkillTab] || [];
+    const total = Math.ceil(skills.length / skillsPerSlide);
+    if (total <= 1) return;
     const id = setInterval(() => {
-      setSkillsCarouselIndex(prev => (prev + 1) % totalSlides);
-    }, 4000);
+      setSkillTabIndexes(prev => ({
+        ...prev,
+        [activeSkillTab]: ((prev[activeSkillTab] || 0) + 1) % total,
+      }));
+    }, speed);
     return () => clearInterval(id);
-  }, [totalSlides]);
+  }, [activeSkillTab, categorySettings, data.skills.length]);
 
   if (loading) {
     return (
@@ -234,11 +238,23 @@ const Home = () => {
   }
 
   const handleSkillsPrev = () => {
-    setSkillsCarouselIndex(prev => (prev - 1 + totalSlides) % totalSlides);
+    if (!activeSkillTab) return;
+    const skills = skillsByCategory[activeSkillTab] || [];
+    const total = Math.ceil(skills.length / skillsPerSlide);
+    setSkillTabIndexes(prev => ({
+      ...prev,
+      [activeSkillTab]: ((prev[activeSkillTab] || 0) - 1 + total) % total,
+    }));
   };
 
   const handleSkillsNext = () => {
-    setSkillsCarouselIndex(prev => (prev + 1) % totalSlides);
+    if (!activeSkillTab) return;
+    const skills = skillsByCategory[activeSkillTab] || [];
+    const total = Math.ceil(skills.length / skillsPerSlide);
+    setSkillTabIndexes(prev => ({
+      ...prev,
+      [activeSkillTab]: ((prev[activeSkillTab] || 0) + 1) % total,
+    }));
   };
 
   const handleContactSubmit = async (e) => {
@@ -523,40 +539,75 @@ ${testimonialForm.wouldRecommend}
       <section id="skills" className="section">
         <div className="container">
           <h2 className="section-title">{t('Skills', 'Compétences')}</h2>
-          <div className="skills-carousel-container">
-            <button 
-              className="carousel-btn carousel-btn-prev" 
-              onClick={handleSkillsPrev}
-              aria-label="Previous skills"
-            >
-              ←
-            </button>
-            
-            <div className="skills-carousel">
-              <div className="skills-carousel-track">
-                {visibleSkills.map((skill) => (
-                  <div key={skill.id} className="skill-card-carousel">
-                    <div className="skill-icon-wrapper-carousel">
-                      {getSkillIcon(skill.displayName)}
-                    </div>
-                    <h3>{skill.displayName}</h3>
-                  </div>
-                ))}
-              </div>
+
+          {/* Category Tabs */}
+          {orderedCategories.length > 0 && (
+            <div className="skills-tabs">
+              {orderedCategories.map((cs) => (
+                <button
+                  key={cs.category}
+                  className={`skills-tab${activeSkillTab === cs.category ? ' active' : ''}`}
+                  onClick={() => { setActiveSkillTab(cs.category); }}
+                >
+                  {cs.category}
+                </button>
+              ))}
             </div>
+          )}
 
-            <button 
-              className="carousel-btn carousel-btn-next" 
-              onClick={handleSkillsNext}
-              aria-label="Next skills"
-            >
-              →
-            </button>
-          </div>
+          {/* Carousel for active tab */}
+          {activeSkillTab && skillsByCategory[activeSkillTab] && (() => {
+            const tabSkills = skillsByCategory[activeSkillTab];
+            const totalSlides = Math.ceil(tabSkills.length / skillsPerSlide);
+            const currentSlide = Math.min(skillTabIndexes[activeSkillTab] || 0, totalSlides - 1);
+            const startIdx = currentSlide * skillsPerSlide;
+            const visible = tabSkills.slice(startIdx, startIdx + skillsPerSlide);
 
-          <div className="carousel-indicators">
-            <span className="carousel-counter">{currentSlide + 1} / {totalSlides}</span>
-          </div>
+            return (
+              <>
+                <div className="skills-carousel-container">
+                  {totalSlides > 1 && (
+                    <button
+                      className="carousel-btn carousel-btn-prev"
+                      onClick={handleSkillsPrev}
+                      aria-label="Previous skills"
+                    >
+                      ←
+                    </button>
+                  )}
+
+                  <div className="skills-carousel">
+                    <div className="skills-carousel-track">
+                      {visible.map((skill) => (
+                        <div key={skill.id} className="skill-card-carousel">
+                          <div className="skill-icon-wrapper-carousel">
+                            {getSkillIcon(skill.displayName)}
+                          </div>
+                          <h3>{skill.displayName}</h3>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {totalSlides > 1 && (
+                    <button
+                      className="carousel-btn carousel-btn-next"
+                      onClick={handleSkillsNext}
+                      aria-label="Next skills"
+                    >
+                      →
+                    </button>
+                  )}
+                </div>
+
+                {totalSlides > 1 && (
+                  <div className="carousel-indicators">
+                    <span className="carousel-counter">{currentSlide + 1} / {totalSlides}</span>
+                  </div>
+                )}
+              </>
+            );
+          })()}
         </div>
       </section>
 
