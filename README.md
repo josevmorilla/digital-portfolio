@@ -4,6 +4,9 @@ My personal portfolio website built with React and Express.js.
 
 View it live at [josevmorilla.me](https://www.josevmorilla.me).
 
+<img width="1920" height="946" alt="image" src="https://github.com/user-attachments/assets/83f41cee-c66f-4b8e-aaae-0bd8022386c7" />
+
+
 ## Overview
 
 A bilingual (English/French) portfolio that showcases my projects, skills, work experience, education, and hobbies. Visitors can leave testimonials and send me messages through a contact form. All content is managed through a private dashboard.
