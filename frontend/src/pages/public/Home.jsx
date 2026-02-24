@@ -460,7 +460,7 @@ ${testimonialForm.wouldRecommend}
       <header className="header" role="banner">
         <div className="container">
           <nav className="nav">
-            <span className="logo">{profile ? (language === 'en' ? profile.nameEn : profile.nameFr) : ''}</span>
+            <a href="#" className="logo" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); setMobileMenuOpen(false); }}>{profile ? (language === 'en' ? profile.nameEn : profile.nameFr) : ''}</a>
             <button 
               className={`hamburger ${mobileMenuOpen ? 'open' : ''}`} 
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}

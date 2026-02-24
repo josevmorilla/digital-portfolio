@@ -24,6 +24,14 @@
   font-size: 1.6rem;
   font-weight: 800;
   letter-spacing: -0.01em;
+  color: var(--dark);
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.logo:hover {
+  color: var(--primary);
 }
 
 .nav-links {
