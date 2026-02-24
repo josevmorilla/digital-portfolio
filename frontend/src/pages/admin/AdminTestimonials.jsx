@@ -130,6 +130,175 @@ const AdminTestimonials = () => {
   const pendingTestimonials = testimonials.filter(t => !t.approved);
   const approvedTestimonials = testimonials.filter(t => t.approved);
 
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+    });
+  };
+
+  const renderTestimonialCard = (testimonial, type) => {
+    const parsed = parseTestimonialContent(testimonial.content);
+
+    return (
+      <div key={testimonial.id} className="testimonial-card-full">
+        {/* Header */}
+        <div className="testimonial-card-header">
+          <div>
+            <h3 className="testimonial-card-name">{testimonial.name}</h3>
+            <span className={`status-badge status-${type}`}>
+              {type === 'pending' ? 'Pending' : 'Approved'}
+            </span>
+          </div>
+          <span className="testimonial-card-date">{formatDate(testimonial.createdAt)}</span>
+        </div>
+
+        {/* Section 1: General Information */}
+        <div className="testimonial-section">
+          <h4 className="testimonial-section-title">1. General Information</h4>
+          <div className="testimonial-fields">
+            <div className="testimonial-field">
+              <span className="field-label">Name</span>
+              <span className="field-value">{testimonial.name}</span>
+            </div>
+            {testimonial.company && (
+              <div className="testimonial-field">
+                <span className="field-label">Company / Role</span>
+                <span className="field-value">{testimonial.company}</span>
+              </div>
+            )}
+            {testimonial.position && (
+              <div className="testimonial-field">
+                <span className="field-label">Project Name</span>
+                <span className="field-value">{testimonial.position}</span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Section 2: Core Evaluation */}
+        {parsed.isStructured && Object.keys(parsed.ratings).length > 0 && (
+          <div className="testimonial-section">
+            <h4 className="testimonial-section-title">2. Core Evaluation</h4>
+            <div className="testimonial-ratings">
+              {parsed.ratings.technicalExpertise && (
+                <div className="rating-row">
+                  <span className="rating-question">Technical expertise?</span>
+                  <div className="rating-answer">
+                    {renderStars(parsed.ratings.technicalExpertise)}
+                    <span className="rating-num">{parsed.ratings.technicalExpertise}/5</span>
+                  </div>
+                </div>
+              )}
+              {parsed.ratings.codeQuality && (
+                <div className="rating-row">
+                  <span className="rating-question">Quality of code/deliverables?</span>
+                  <div className="rating-answer">
+                    {renderStars(parsed.ratings.codeQuality)}
+                    <span className="rating-num">{parsed.ratings.codeQuality}/5</span>
+                  </div>
+                </div>
+              )}
+              {parsed.ratings.communication && (
+                <div className="rating-row">
+                  <span className="rating-question">Communication effectiveness?</span>
+                  <div className="rating-answer">
+                    {renderStars(parsed.ratings.communication)}
+                    <span className="rating-num">{parsed.ratings.communication}/5</span>
+                  </div>
+                </div>
+              )}
+              {parsed.ratings.deadlines && (
+                <div className="rating-row">
+                  <span className="rating-question">Meeting deadlines/milestones?</span>
+                  <div className="rating-answer">
+                    {renderStars(parsed.ratings.deadlines)}
+                    <span className="rating-num">{parsed.ratings.deadlines}/5</span>
+                  </div>
+                </div>
+              )}
+              {parsed.ratings.overall && (
+                <div className="rating-row">
+                  <span className="rating-question">Overall satisfaction?</span>
+                  <div className="rating-answer">
+                    {renderStars(parsed.ratings.overall)}
+                    <span className="rating-num">{parsed.ratings.overall}/5</span>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Section 3: Qualitative Feedback */}
+        {parsed.isStructured ? (
+          <div className="testimonial-section">
+            <h4 className="testimonial-section-title">3. Qualitative Feedback</h4>
+            <div className="testimonial-feedback">
+              {parsed.feedback.problemResults && (
+                <div className="feedback-block">
+                  <span className="feedback-question">What problem were you facing, and what specific results did the developer deliver?</span>
+                  <p className="feedback-answer">{parsed.feedback.problemResults}</p>
+                </div>
+              )}
+              {parsed.feedback.doubtsOvercome && (
+                <div className="feedback-block">
+                  <span className="feedback-question">What was your biggest doubt when hiring, and how did they overcome it?</span>
+                  <p className="feedback-answer">{parsed.feedback.doubtsOvercome}</p>
+                </div>
+              )}
+              {parsed.feedback.bestPart && (
+                <div className="feedback-block">
+                  <span className="feedback-question">What is the best part about working with this developer?</span>
+                  <p className="feedback-answer">{parsed.feedback.bestPart}</p>
+                </div>
+              )}
+              {parsed.feedback.wouldRecommend && (
+                <div className="feedback-block">
+                  <span className="feedback-question">Would you recommend this developer to a colleague?</span>
+                  <p className="feedback-answer">{parsed.feedback.wouldRecommend}</p>
+                </div>
+              )}
+            </div>
+          </div>
+        ) : (
+          <div className="testimonial-section">
+            <h4 className="testimonial-section-title">Testimonial Content</h4>
+            <p className="feedback-answer" style={{whiteSpace: 'pre-wrap'}}>{testimonial.content}</p>
+          </div>
+        )}
+
+        {/* Section 4: Authorization */}
+        <div className="testimonial-section">
+          <h4 className="testimonial-section-title">4. Authorization</h4>
+          <p className="auth-granted">✓ Permission granted to use this testimonial</p>
+        </div>
+
+        {/* Actions */}
+        <div className="testimonial-card-actions">
+          {type === 'pending' ? (
+            <>
+              <button onClick={() => handleApprove(testimonial.id)} className="btn-approve">
+                ✓ Approve
+              </button>
+              <button onClick={() => handleReject(testimonial.id)} className="btn-danger">
+                ✗ Reject
+              </button>
+            </>
+          ) : (
+            <>
+              <button onClick={() => handleUnapprove(testimonial)} className="btn-unapprove">
+                Unapprove
+              </button>
+              <button onClick={() => handleDelete(testimonial.id)} className="btn-danger">
+                Delete
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="admin-crud">
       <header className="admin-header">
@@ -150,242 +319,26 @@ const AdminTestimonials = () => {
 
             {/* Pending Testimonials Section */}
             {pendingTestimonials.length > 0 && (
-              <div className="pending-section" style={{ marginBottom: '2rem' }}>
-                <div className="section-header" style={{
-                  background: '#f59e0b',
-                  color: 'white',
-                  padding: '0.85rem 1.25rem',
-                  borderRadius: '8px',
-                  marginBottom: '1rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between'
-                }}>
-                  <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: '700' }}>
-                    Pending Approval ({pendingTestimonials.length})
-                  </h3>
-                  <span style={{
-                    background: 'rgba(255, 255, 255, 0.25)',
-                    padding: '0.35rem 0.85rem',
-                    borderRadius: '20px',
-                    fontSize: '0.85rem',
-                    fontWeight: '600'
-                  }}>
-                    Review Required
-                  </span>
-                </div>
-                <div className="items-list">
-                  {pendingTestimonials.map((testimonial) => {
-                    const parsed = parseTestimonialContent(testimonial.content);
-                    return (
-                      <div key={testimonial.id} className="item-card testimonial-detailed" style={{ borderLeft: '4px solid #fbbf24' }}>
-                        <div className="item-header">
-                          <h3>{testimonial.name}</h3>
-                          <span className="badge" style={{background: '#f59e0b', color: 'white', fontWeight: '600'}}>
-                            Pending
-                          </span>
-                        </div>
-                        <p className="item-meta">
-                          {testimonial.position} {testimonial.company && `at ${testimonial.company}`}
-                        </p>
-                        
-                        {parsed.isStructured ? (
-                          <div className="testimonial-structured">
-                            {/* Ratings Display */}
-                            {Object.keys(parsed.ratings).length > 0 && (
-                              <div className="ratings-grid">
-                                {parsed.ratings.technicalExpertise && (
-                                  <div className="rating-item">
-                                    <span className="rating-label">Technical:</span>
-                                    {renderStars(parsed.ratings.technicalExpertise)}
-                                    <span className="rating-value">{parsed.ratings.technicalExpertise}/5</span>
-                                  </div>
-                                )}
-                                {parsed.ratings.codeQuality && (
-                                  <div className="rating-item">
-                                    <span className="rating-label">Code Quality:</span>
-                                    {renderStars(parsed.ratings.codeQuality)}
-                                    <span className="rating-value">{parsed.ratings.codeQuality}/5</span>
-                                  </div>
-                                )}
-                                {parsed.ratings.communication && (
-                                  <div className="rating-item">
-                                    <span className="rating-label">Communication:</span>
-                                    {renderStars(parsed.ratings.communication)}
-                                    <span className="rating-value">{parsed.ratings.communication}/5</span>
-                                  </div>
-                                )}
-                                {parsed.ratings.deadlines && (
-                                  <div className="rating-item">
-                                    <span className="rating-label">Deadlines:</span>
-                                    {renderStars(parsed.ratings.deadlines)}
-                                    <span className="rating-value">{parsed.ratings.deadlines}/5</span>
-                                  </div>
-                                )}
-                                {parsed.ratings.overall && (
-                                  <div className="rating-item">
-                                    <span className="rating-label">Overall:</span>
-                                    {renderStars(parsed.ratings.overall)}
-                                    <span className="rating-value">{parsed.ratings.overall}/5</span>
-                                  </div>
-                                )}
-                              </div>
-                            )}
-                            
-                            {/* Feedback Preview */}
-                            {parsed.feedback.problemResults && (
-                              <div className="feedback-preview">
-                                <strong>Problem & Results:</strong>
-                                <p>{parsed.feedback.problemResults.substring(0, 200)}...</p>
-                              </div>
-                            )}
-                            
-                            {parsed.feedback.bestPart && (
-                              <div className="feedback-preview">
-                                <strong>Best Part:</strong>
-                                <p>{parsed.feedback.bestPart.substring(0, 150)}...</p>
-                              </div>
-                            )}
-                          </div>
-                        ) : (
-                          <p className="item-meta" style={{fontStyle: 'italic', marginTop: '0.5rem'}}>
-                            "{testimonial.content.substring(0, 150)}..."
-                          </p>
-                        )}
-                        
-                        <div className="item-actions">
-                        <button 
-                          onClick={() => handleApprove(testimonial.id)} 
-                          className="approve-btn"
-                          style={{
-                            background: '#10b981',
-                            color: 'white',
-                            fontWeight: '600'
-                          }}
-                        >
-                          ✓ Approve
-                        </button>
-                        <button 
-                          onClick={() => handleReject(testimonial.id)} 
-                          className="delete-btn"
-                          style={{
-                            background: '#ef4444',
-                            color: 'white',
-                            fontWeight: '600'
-                          }}
-                        >
-                          ✗ Reject
-                        </button>
-                      </div>
-                    </div>
-                  );
-                  })}
+              <div style={{ marginBottom: '2rem' }}>
+                <h3 className="testimonial-group-title">
+                  Pending Review
+                  <span className="testimonial-group-count">{pendingTestimonials.length}</span>
+                </h3>
+                <div className="testimonial-cards-list">
+                  {pendingTestimonials.map((t) => renderTestimonialCard(t, 'pending'))}
                 </div>
               </div>
             )}
 
             {/* Approved Testimonials Section */}
             {approvedTestimonials.length > 0 && (
-              <div className="approved-section">
-                <div className="section-header" style={{
-                  background: '#10b981',
-                  color: 'white',
-                  padding: '0.85rem 1.25rem',
-                  borderRadius: '8px',
-                  marginBottom: '1rem'
-                }}>
-                  <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: '700' }}>
-                    Approved Testimonials ({approvedTestimonials.length})
-                  </h3>
-                </div>
-                <div className="items-list">
-                  {approvedTestimonials.map((testimonial) => {
-                    const parsed = parseTestimonialContent(testimonial.content);
-                    return (
-                      <div key={testimonial.id} className="item-card testimonial-detailed" style={{ borderLeft: '4px solid #10b981' }}>
-                        <div className="item-header">
-                          <h3>{testimonial.name}</h3>
-                          <span className="badge" style={{background: '#10b981'}}>Approved</span>
-                        </div>
-                        <p className="item-meta">
-                          {testimonial.position} {testimonial.company && `at ${testimonial.company}`}
-                        </p>
-                        
-                        {parsed.isStructured ? (
-                          <div className="testimonial-structured">
-                            {/* Ratings Display */}
-                            {Object.keys(parsed.ratings).length > 0 && (
-                              <div className="ratings-grid">
-                                {parsed.ratings.technicalExpertise && (
-                                  <div className="rating-item">
-                                    <span className="rating-label">Technical:</span>
-                                    {renderStars(parsed.ratings.technicalExpertise)}
-                                    <span className="rating-value">{parsed.ratings.technicalExpertise}/5</span>
-                                  </div>
-                                )}
-                                {parsed.ratings.codeQuality && (
-                                  <div className="rating-item">
-                                    <span className="rating-label">Code Quality:</span>
-                                    {renderStars(parsed.ratings.codeQuality)}
-                                    <span className="rating-value">{parsed.ratings.codeQuality}/5</span>
-                                  </div>
-                                )}
-                                {parsed.ratings.communication && (
-                                  <div className="rating-item">
-                                    <span className="rating-label">Communication:</span>
-                                    {renderStars(parsed.ratings.communication)}
-                                    <span className="rating-value">{parsed.ratings.communication}/5</span>
-                                  </div>
-                                )}
-                                {parsed.ratings.deadlines && (
-                                  <div className="rating-item">
-                                    <span className="rating-label">Deadlines:</span>
-                                    {renderStars(parsed.ratings.deadlines)}
-                                    <span className="rating-value">{parsed.ratings.deadlines}/5</span>
-                                  </div>
-                                )}
-                                {parsed.ratings.overall && (
-                                  <div className="rating-item">
-                                    <span className="rating-label">Overall:</span>
-                                    {renderStars(parsed.ratings.overall)}
-                                    <span className="rating-value">{parsed.ratings.overall}/5</span>
-                                  </div>
-                                )}
-                              </div>
-                            )}
-                            
-                            {/* Feedback Preview */}
-                            {parsed.feedback.problemResults && (
-                              <div className="feedback-preview">
-                                <strong>Problem & Results:</strong>
-                                <p>{parsed.feedback.problemResults.substring(0, 200)}...</p>
-                              </div>
-                            )}
-                            
-                            {parsed.feedback.bestPart && (
-                              <div className="feedback-preview">
-                                <strong>Best Part:</strong>
-                                <p>{parsed.feedback.bestPart.substring(0, 150)}...</p>
-                              </div>
-                            )}
-                          </div>
-                        ) : (
-                          <p className="item-meta" style={{fontStyle: 'italic', marginTop: '0.5rem'}}>
-                            "{testimonial.content.substring(0, 150)}..."
-                          </p>
-                        )}
-                        
-                        <div className="item-actions">
-                        <button onClick={() => handleUnapprove(testimonial)} className="secondary">
-                          Unapprove
-                        </button>
-                        <button onClick={() => handleDelete(testimonial.id)} className="delete-btn">
-                          Delete
-                        </button>
-                      </div>
-                    </div>
-                    );
-                  })}
+              <div>
+                <h3 className="testimonial-group-title">
+                  Approved
+                  <span className="testimonial-group-count">{approvedTestimonials.length}</span>
+                </h3>
+                <div className="testimonial-cards-list">
+                  {approvedTestimonials.map((t) => renderTestimonialCard(t, 'approved'))}
                 </div>
               </div>
             )}
