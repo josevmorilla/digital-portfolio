@@ -1,6 +1,8 @@
 # Digital Portfolio
 
-My personal portfolio website built with React and Express.js. View it live at [josevmorilla.me](https://www.josevmorilla.me).
+My personal portfolio website built with React and Express.js. 
+
+View it live at [josevmorilla.me](https://www.josevmorilla.me).
 
 ## Overview
 
