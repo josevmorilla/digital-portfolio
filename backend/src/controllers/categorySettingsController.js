@@ -1,6 +1,6 @@
 const prisma = require('../config/database');
 
-// Get all category settings (auto-creates missing ones from existing skills)
+// Get all category settings (auto-creates missing ones, auto-removes empty ones)
 exports.getAll = async (req, res) => {
   try {
     // Discover categories from skills
@@ -22,6 +22,14 @@ exports.getAll = async (req, res) => {
         })),
         skipDuplicates: true,
       });
+    }
+
+    // Auto-remove settings for categories with 0 skills
+    const emptyCats = existing
+      .filter((s) => !uniqueCategories.includes(s.category))
+      .map((s) => s.id);
+    if (emptyCats.length > 0) {
+      await prisma.categorySettings.deleteMany({ where: { id: { in: emptyCats } } });
     }
 
     const all = await prisma.categorySettings.findMany({
