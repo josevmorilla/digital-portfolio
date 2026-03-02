@@ -818,8 +818,9 @@ const Home = () => {
               </div>
 
               <div className="form-group">
-                <label>{t('Name', 'Nom')}</label>
+                <label htmlFor="testimonial-name">{t('Name', 'Nom')}</label>
                 <input
+                  id="testimonial-name"
                   type="text"
                   value={testimonialForm.name}
                   onChange={(e) => setTestimonialForm({ ...testimonialForm, name: e.target.value })}
@@ -829,8 +830,9 @@ const Home = () => {
 
               <div className="form-row">
                 <div className="form-group">
-                  <label>{t('Company/Role', 'Entreprise/Rôle')}</label>
+                  <label htmlFor="testimonial-company">{t('Company/Role', 'Entreprise/Rôle')}</label>
                   <input
+                    id="testimonial-company"
                     type="text"
                     value={testimonialForm.company}
                     onChange={(e) => setTestimonialForm({ ...testimonialForm, company: e.target.value })}
@@ -838,8 +840,9 @@ const Home = () => {
                   />
                 </div>
                 <div className="form-group">
-                  <label>{t('Project', 'Projet')}</label>
+                  <label htmlFor="testimonial-project">{t('Project', 'Projet')}</label>
                   <input
+                    id="testimonial-project"
                     type="text"
                     value={testimonialForm.projectName}
                     onChange={(e) => setTestimonialForm({ ...testimonialForm, projectName: e.target.value })}
@@ -849,8 +852,9 @@ const Home = () => {
               </div>
 
               <div className="form-group">
-                <label>{t('Your Experience', 'Votre Expérience')} *</label>
+                <label htmlFor="testimonial-content">{t('Your Experience', 'Votre Expérience')} *</label>
                 <textarea
+                  id="testimonial-content"
                   rows="5"
                   value={testimonialForm.content}
                   onChange={(e) => setTestimonialForm({ ...testimonialForm, content: e.target.value })}
@@ -898,8 +902,9 @@ const Home = () => {
               />
             </div>
             <div className="form-group">
-              <label>{t('Name', 'Nom')} *</label>
+              <label htmlFor="contact-name">{t('Name', 'Nom')} *</label>
               <input
+                id="contact-name"
                 type="text"
                 value={contactForm.name}
                 onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
@@ -909,8 +914,9 @@ const Home = () => {
             </div>
 
             <div className="form-group">
-              <label>{t('Email', 'Email')} *</label>
+              <label htmlFor="contact-email">{t('Email', 'Email')} *</label>
               <input
+                id="contact-email"
                 type="email"
                 value={contactForm.email}
                 onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
@@ -920,8 +926,9 @@ const Home = () => {
             </div>
 
             <div className="form-group">
-              <label>{t('Subject', 'Sujet')}</label>
+              <label htmlFor="contact-subject">{t('Subject', 'Sujet')}</label>
               <input
+                id="contact-subject"
                 type="text"
                 value={contactForm.subject}
                 onChange={(e) => setContactForm({ ...contactForm, subject: e.target.value })}
@@ -930,8 +937,9 @@ const Home = () => {
             </div>
 
             <div className="form-group">
-              <label>{t('Message', 'Message')} *</label>
+              <label htmlFor="contact-message">{t('Message', 'Message')} *</label>
               <textarea
+                id="contact-message"
                 rows="5"
                 value={contactForm.message}
                 onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}

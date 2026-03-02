@@ -3,12 +3,12 @@
 
 :root {
   /* Minimal monochrome with muted red accent */
-  --primary: #c24040;
-  --primary-dark: #a33232;
+  --primary: #b53636;
+  --primary-dark: #962b2b;
   --accent: #8c8f96;
   --dark: #0f0f10;
   --dark-light: #1a1b1d;
-  --gray: #5a5d63;
+  --gray: #4d5057;
   --light: #f7f7f8;
   --white: #ffffff;
   --border: #e4e5e7;

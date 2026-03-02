@@ -311,7 +311,7 @@
   line-height: 1;
 }
 
-.skill-card-carousel h4 {
+.skill-card-carousel h3 {
   margin: 0;
   font-size: 0.95rem;
   font-weight: 600;
@@ -666,13 +666,6 @@ a.contact-link {
 
 a.contact-link:hover {
   text-decoration: underline;
-}
-
-.footer {
-  padding: 2rem 0;
-  text-align: center;
-  color: var(--text-light);
-  background: var(--white);
 }
 
 .footer p {
