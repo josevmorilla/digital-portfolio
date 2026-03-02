@@ -4,7 +4,10 @@ My personal portfolio website built with React and Express.js.
 
 View it live at [josevmorilla.me](https://www.josevmorilla.me).
 
-<img width="1920" height="946" alt="image" src="https://github.com/user-attachments/assets/83f41cee-c66f-4b8e-aaae-0bd8022386c7" />
+<img width="1868" height="977" alt="image" src="https://github.com/user-attachments/assets/11f71b3c-b721-4632-a318-49358f47525a" />
+
+
+
 
 
 ## Overview
