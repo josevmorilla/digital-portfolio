@@ -8,8 +8,8 @@ const Testimonials = () => {
   const { language, toggleLanguage } = useLanguage();
   const [formData, setFormData] = useState({ 
     name: '', 
-    position: '', 
     company: '', 
+    projectName: '',
     content: '',
     website: '' 
   });
@@ -46,12 +46,18 @@ const Testimonials = () => {
       return;
     }
     try {
-      await testimonialsAPI.create(formData);
+      await testimonialsAPI.create({
+        name: formData.name || 'Anonymous',
+        position: formData.projectName || 'Client',
+        company: formData.company || null,
+        content: formData.content,
+        website: formData.website || ''
+      });
       setMessage(t(
         'Thank you for your testimonial! It will be published after review.',
         'Merci pour votre témoignage ! Il sera publié après examen.'
       ));
-      setFormData({ name: '', position: '', company: '', content: '', website: '' });
+      setFormData({ name: '', company: '', projectName: '', content: '', website: '' });
       setShowForm(false);
       
       // Auto-dismiss after 8 seconds
@@ -158,50 +164,50 @@ const Testimonials = () => {
               <div className="form-grid">
                 <div className="form-group">
                   <label htmlFor="name">
-                    {t('Your Name', 'Votre Nom')} <span className="required">*</span>
+                    {t('Your Name', 'Votre Nom')}
+                    <span className="optional"> ({t('Optional', 'Optionnel')})</span>
                   </label>
                   <input
                     id="name"
                     type="text"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder={t('John Doe', 'Jean Dupont')}
-                    required
+                    placeholder={t('Your name or leave blank for anonymous', 'Votre nom ou laissez vide pour anonyme')}
                   />
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="position">
-                    {t('Your Position', 'Votre Poste')} <span className="required">*</span>
+                  <label htmlFor="project">
+                    {t('Project', 'Projet')}
+                    <span className="optional"> ({t('Optional', 'Optionnel')})</span>
                   </label>
                   <input
-                    id="position"
+                    id="project"
                     type="text"
-                    value={formData.position}
-                    onChange={(e) => setFormData({ ...formData, position: e.target.value })}
-                    placeholder={t('Software Engineer', 'Ingénieur Logiciel')}
-                    required
+                    value={formData.projectName}
+                    onChange={(e) => setFormData({ ...formData, projectName: e.target.value })}
+                    placeholder={t('Project name', 'Nom du projet')}
                   />
                 </div>
               </div>
 
               <div className="form-group">
                 <label htmlFor="company">
-                  {t('Company / Organization', 'Entreprise / Organisation')} 
-                  <span className="optional">({t('Optional', 'Optionnel')})</span>
+                  {t('Company / Role', 'Entreprise / Rôle')} 
+                  <span className="optional"> ({t('Optional', 'Optionnel')})</span>
                 </label>
                 <input
                   id="company"
                   type="text"
                   value={formData.company}
                   onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                  placeholder={t('Tech Corp Inc.', 'Tech Corp Inc.')}
+                  placeholder={t('Company or your role', 'Entreprise ou votre rôle')}
                 />
               </div>
 
               <div className="form-group">
                 <label htmlFor="content">
-                  {t('Your Testimonial', 'Votre Témoignage')} <span className="required">*</span>
+                  {t('Your Experience', 'Votre Expérience')} <span className="required">*</span>
                 </label>
                 <textarea
                   id="content"
@@ -209,8 +215,8 @@ const Testimonials = () => {
                   value={formData.content}
                   onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                   placeholder={t(
-                    'Share your experience working with me, the quality of work delivered, communication, etc.',
-                    'Partagez votre expérience de collaboration, la qualité du travail livré, la communication, etc.'
+                    'Share your experience working together...',
+                    'Partagez votre expérience de collaboration...'
                   )}
                   required
                 ></textarea>

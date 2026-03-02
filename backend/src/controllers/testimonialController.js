@@ -42,8 +42,8 @@ exports.create = async (req, res) => {
 
     const testimonial = await prisma.testimonial.create({
       data: {
-        name,
-        position,
+        name: name || 'Anonymous',
+        position: position || 'Client',
         company,
         content,
         imageUrl,

@@ -24,8 +24,6 @@ router.post(
   formLimiter,
   contentSpamGuard,
   [
-    body('name').notEmpty().withMessage('Name is required'),
-    body('position').notEmpty().withMessage('Position is required'),
     body('content').notEmpty().withMessage('Content is required'),
     validate,
   ],

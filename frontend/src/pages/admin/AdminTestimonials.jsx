@@ -75,55 +75,6 @@ const AdminTestimonials = () => {
     }
   };
 
-  // Parse structured testimonial content
-  const parseTestimonialContent = (content) => {
-    const ratings = {};
-    const feedback = {};
-    
-    // Extract ratings
-    const ratingMatches = content.match(/Technical Expertise: (\d+)\/5/i);
-    if (ratingMatches) ratings.technicalExpertise = ratingMatches[1];
-    
-    const codeQualityMatches = content.match(/Code Quality: (\d+)\/5/i);
-    if (codeQualityMatches) ratings.codeQuality = codeQualityMatches[1];
-    
-    const communicationMatches = content.match(/Communication: (\d+)\/5/i);
-    if (communicationMatches) ratings.communication = communicationMatches[1];
-    
-    const deadlinesMatches = content.match(/Meeting Deadlines: (\d+)\/5/i);
-    if (deadlinesMatches) ratings.deadlines = deadlinesMatches[1];
-    
-    const overallMatches = content.match(/Overall Satisfaction: (\d+)\/5/i);
-    if (overallMatches) ratings.overall = overallMatches[1];
-    
-    // Extract feedback sections
-    const problemMatch = content.match(/Problem & Results:\s*\n([\s\S]*?)(?:\n\n|Doubts Overcome:)/i);
-    if (problemMatch) feedback.problemResults = problemMatch[1].trim();
-    
-    const doubtsMatch = content.match(/Doubts Overcome:\s*\n([\s\S]*?)(?:\n\n|Best Part:)/i);
-    if (doubtsMatch) feedback.doubtsOvercome = doubtsMatch[1].trim();
-    
-    const bestPartMatch = content.match(/Best Part:\s*\n([\s\S]*?)(?:\n\n|Would Recommend:)/i);
-    if (bestPartMatch) feedback.bestPart = bestPartMatch[1].trim();
-    
-    const recommendMatch = content.match(/Would Recommend:\s*\n([\s\S]*?)$/i);
-    if (recommendMatch) feedback.wouldRecommend = recommendMatch[1].trim();
-    
-    return { ratings, feedback, isStructured: Object.keys(ratings).length > 0 };
-  };
-
-  const renderStars = (rating) => {
-    return (
-      <div className="star-display">
-        {[1, 2, 3, 4, 5].map((star) => (
-          <span key={star} className={star <= rating ? 'star-filled' : 'star-empty'}>
-            ★
-          </span>
-        ))}
-      </div>
-    );
-  };
-
   if (loading) {
     return <div className="loading"><div className="spinner"></div></div>;
   }
@@ -138,8 +89,6 @@ const AdminTestimonials = () => {
   };
 
   const renderTestimonialCard = (testimonial, type) => {
-    const parsed = parseTestimonialContent(testimonial.content);
-
     return (
       <div key={testimonial.id} className="testimonial-card-full">
         {/* Header */}
@@ -153,9 +102,8 @@ const AdminTestimonials = () => {
           <span className="testimonial-card-date">{formatDate(testimonial.createdAt)}</span>
         </div>
 
-        {/* Section 1: General Information */}
+        {/* Info */}
         <div className="testimonial-section">
-          <h4 className="testimonial-section-title">1. General Information</h4>
           <div className="testimonial-fields">
             <div className="testimonial-field">
               <span className="field-label">Name</span>
@@ -169,109 +117,17 @@ const AdminTestimonials = () => {
             )}
             {testimonial.position && (
               <div className="testimonial-field">
-                <span className="field-label">Project Name</span>
+                <span className="field-label">Project</span>
                 <span className="field-value">{testimonial.position}</span>
               </div>
             )}
           </div>
         </div>
 
-        {/* Section 2: Core Evaluation */}
-        {parsed.isStructured && Object.keys(parsed.ratings).length > 0 && (
-          <div className="testimonial-section">
-            <h4 className="testimonial-section-title">2. Core Evaluation</h4>
-            <div className="testimonial-ratings">
-              {parsed.ratings.technicalExpertise && (
-                <div className="rating-row">
-                  <span className="rating-question">Technical expertise?</span>
-                  <div className="rating-answer">
-                    {renderStars(parsed.ratings.technicalExpertise)}
-                    <span className="rating-num">{parsed.ratings.technicalExpertise}/5</span>
-                  </div>
-                </div>
-              )}
-              {parsed.ratings.codeQuality && (
-                <div className="rating-row">
-                  <span className="rating-question">Quality of code/deliverables?</span>
-                  <div className="rating-answer">
-                    {renderStars(parsed.ratings.codeQuality)}
-                    <span className="rating-num">{parsed.ratings.codeQuality}/5</span>
-                  </div>
-                </div>
-              )}
-              {parsed.ratings.communication && (
-                <div className="rating-row">
-                  <span className="rating-question">Communication effectiveness?</span>
-                  <div className="rating-answer">
-                    {renderStars(parsed.ratings.communication)}
-                    <span className="rating-num">{parsed.ratings.communication}/5</span>
-                  </div>
-                </div>
-              )}
-              {parsed.ratings.deadlines && (
-                <div className="rating-row">
-                  <span className="rating-question">Meeting deadlines/milestones?</span>
-                  <div className="rating-answer">
-                    {renderStars(parsed.ratings.deadlines)}
-                    <span className="rating-num">{parsed.ratings.deadlines}/5</span>
-                  </div>
-                </div>
-              )}
-              {parsed.ratings.overall && (
-                <div className="rating-row">
-                  <span className="rating-question">Overall satisfaction?</span>
-                  <div className="rating-answer">
-                    {renderStars(parsed.ratings.overall)}
-                    <span className="rating-num">{parsed.ratings.overall}/5</span>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Section 3: Qualitative Feedback */}
-        {parsed.isStructured ? (
-          <div className="testimonial-section">
-            <h4 className="testimonial-section-title">3. Qualitative Feedback</h4>
-            <div className="testimonial-feedback">
-              {parsed.feedback.problemResults && (
-                <div className="feedback-block">
-                  <span className="feedback-question">What problem were you facing, and what specific results did the developer deliver?</span>
-                  <p className="feedback-answer">{parsed.feedback.problemResults}</p>
-                </div>
-              )}
-              {parsed.feedback.doubtsOvercome && (
-                <div className="feedback-block">
-                  <span className="feedback-question">What was your biggest doubt when hiring, and how did they overcome it?</span>
-                  <p className="feedback-answer">{parsed.feedback.doubtsOvercome}</p>
-                </div>
-              )}
-              {parsed.feedback.bestPart && (
-                <div className="feedback-block">
-                  <span className="feedback-question">What is the best part about working with this developer?</span>
-                  <p className="feedback-answer">{parsed.feedback.bestPart}</p>
-                </div>
-              )}
-              {parsed.feedback.wouldRecommend && (
-                <div className="feedback-block">
-                  <span className="feedback-question">Would you recommend this developer to a colleague?</span>
-                  <p className="feedback-answer">{parsed.feedback.wouldRecommend}</p>
-                </div>
-              )}
-            </div>
-          </div>
-        ) : (
-          <div className="testimonial-section">
-            <h4 className="testimonial-section-title">Testimonial Content</h4>
-            <p className="feedback-answer" style={{whiteSpace: 'pre-wrap'}}>{testimonial.content}</p>
-          </div>
-        )}
-
-        {/* Section 4: Authorization */}
+        {/* Content */}
         <div className="testimonial-section">
-          <h4 className="testimonial-section-title">4. Authorization</h4>
-          <p className="auth-granted">✓ Permission granted to use this testimonial</p>
+          <h4 className="testimonial-section-title">Testimonial</h4>
+          <p className="feedback-answer" style={{whiteSpace: 'pre-wrap'}}>{testimonial.content}</p>
         </div>
 
         {/* Actions */}
