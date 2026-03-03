@@ -7,6 +7,7 @@ import { LanguageProvider } from './context/LanguageContext';
 import Home from './pages/public/Home';
 import Contact from './pages/public/Contact';
 import Testimonials from './pages/public/Testimonials';
+import PrivacyPolicy from './pages/public/PrivacyPolicy';
 
 // Admin pages
 import AdminLogin from './pages/admin/AdminLogin';
@@ -35,6 +36,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/testimonials" element={<Testimonials />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
 
             {/* Admin Routes */}
             <Route path="/login" element={<AdminLogin />} />

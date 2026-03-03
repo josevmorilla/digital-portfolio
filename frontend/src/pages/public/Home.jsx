@@ -984,6 +984,11 @@ const Home = () => {
       <footer className="footer">
         <div className="container">
           <p>&copy; {new Date().getFullYear()} {profile ? (language === 'en' ? profile.nameEn : profile.nameFr) : ''}</p>
+          <p style={{ marginTop: '0.5rem', fontSize: '0.85rem' }}>
+            <Link to="/privacy-policy" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none' }}>
+              {t('Privacy Policy', 'Politique de Confidentialité')}
+            </Link>
+          </p>
         </div>
       </footer>
     </div>

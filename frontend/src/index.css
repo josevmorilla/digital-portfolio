@@ -1,5 +1,4 @@
-/* Import modern fonts */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&family=Caveat:wght@600;700&display=swap');
+/* Fonts loaded via index.html <link> tags for better performance and SRI support */
 
 :root {
   /* Minimal monochrome with muted red accent */
