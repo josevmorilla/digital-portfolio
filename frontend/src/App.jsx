@@ -8,6 +8,7 @@ import Home from './pages/public/Home';
 import Contact from './pages/public/Contact';
 import Testimonials from './pages/public/Testimonials';
 import PrivacyPolicy from './pages/public/PrivacyPolicy';
+import ErrorPage from './pages/public/ErrorPage';
 
 // Admin pages
 import AdminLogin from './pages/admin/AdminLogin';
@@ -52,8 +53,11 @@ function App() {
             <Route path="/resumes" element={<ProtectedRoute><AdminResumes /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><AdminProfile /></ProtectedRoute>} />
 
-            {/* 404 */}
-            <Route path="*" element={<Navigate to="/" replace />} />
+            {/* Error pages (accessible via navigation) */}
+            <Route path="/error" element={<ErrorPage />} />
+
+            {/* 404 — catch all unknown routes */}
+            <Route path="*" element={<ErrorPage code={404} />} />
           </Routes>
         </LanguageProvider>
       </AuthProvider>
