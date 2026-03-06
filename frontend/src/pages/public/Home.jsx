@@ -767,8 +767,8 @@ const Home = () => {
 
       {/* Testimonial Modal */}
       {showTestimonialModal && (
-        <div className="modal-overlay" role="presentation" onClick={() => setShowTestimonialModal(false)}>
-          <div className="modal-content" role="dialog" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-overlay" role="presentation" onClick={() => setShowTestimonialModal(false)} onKeyDown={(e) => { if (e.key === 'Escape') setShowTestimonialModal(false); }}>
+          <div className="modal-content" role="dialog" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
             <button 
               className="modal-close"
               onClick={() => setShowTestimonialModal(false)}
