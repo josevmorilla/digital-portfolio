@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import '../pages/public/ErrorPage.css';
 
 class ErrorBoundary extends React.Component {
@@ -16,7 +17,7 @@ class ErrorBoundary extends React.Component {
   }
 
   handleReload = () => {
-    window.location.href = '/';
+    globalThis.location.href = '/';
   };
 
   render() {
@@ -44,7 +45,7 @@ class ErrorBoundary extends React.Component {
               </button>
               <button
                 className="error-page-btn error-page-btn-secondary"
-                onClick={() => window.location.reload()}
+                onClick={() => globalThis.location.reload()}
               >
                 Refresh Page
               </button>
@@ -56,5 +57,10 @@ class ErrorBoundary extends React.Component {
     return this.props.children;
   }
 }
+
+ErrorBoundary.propTypes = {
+  fallback: PropTypes.string,
+  children: PropTypes.node,
+};
 
 export default ErrorBoundary;

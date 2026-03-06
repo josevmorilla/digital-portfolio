@@ -1,5 +1,5 @@
 const rateLimit = require('express-rate-limit');
-const crypto = require('crypto');
+const crypto = require('node:crypto');
 
 // ── Global limiter: 100 requests per 15 minutes per IP ──────────────
 const globalLimiter = rateLimit({

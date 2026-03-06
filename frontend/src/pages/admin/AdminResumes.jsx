@@ -31,6 +31,7 @@ const AdminResumes = () => {
       setResumes(response.data.sort((a, b) => a.order - b.order));
     } catch (error) {
       console.error('Error fetching resumes:', error);
+      setMessage('Error fetching resumes: ' + (error.response?.data?.error || error.message));
     } finally {
       setLoading(false);
     }
@@ -108,11 +109,11 @@ const AdminResumes = () => {
       order: resume.order,
     });
     setShowForm(true);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    globalThis.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this resume?')) return;
+    if (!globalThis.confirm('Are you sure you want to delete this resume?')) return;
     
     try {
       await resumesAPI.delete(id);
@@ -120,7 +121,7 @@ const AdminResumes = () => {
       fetchResumes();
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
-      setMessage('Error deleting resume');
+      setMessage('Error deleting resume: ' + (error.response?.data?.error || error.message));
     }
   };
 
@@ -164,8 +165,9 @@ const AdminResumes = () => {
               <h2>{editing ? 'Edit Resume' : 'Add New Resume'}</h2>
               <form onSubmit={handleSubmit}>
                 <div className="form-group">
-                  <label>Title (English) *</label>
+                  <label htmlFor="res-titleEn">Title (English) *</label>
                   <input
+                    id="res-titleEn"
                     type="text"
                     value={formData.titleEn}
                     onChange={(e) => setFormData({ ...formData, titleEn: e.target.value })}
@@ -175,8 +177,9 @@ const AdminResumes = () => {
                 </div>
 
                 <div className="form-group">
-                  <label>Title (French) *</label>
+                  <label htmlFor="res-titleFr">Title (French) *</label>
                   <input
+                    id="res-titleFr"
                     type="text"
                     value={formData.titleFr}
                     onChange={(e) => setFormData({ ...formData, titleFr: e.target.value })}
@@ -186,8 +189,9 @@ const AdminResumes = () => {
                 </div>
 
                 <div className="form-group">
-                  <label>Description (English)</label>
+                  <label htmlFor="res-descriptionEn">Description (English)</label>
                   <textarea
+                    id="res-descriptionEn"
                     rows="3"
                     value={formData.descriptionEn}
                     onChange={(e) => setFormData({ ...formData, descriptionEn: e.target.value })}
@@ -196,8 +200,9 @@ const AdminResumes = () => {
                 </div>
 
                 <div className="form-group">
-                  <label>Description (French)</label>
+                  <label htmlFor="res-descriptionFr">Description (French)</label>
                   <textarea
+                    id="res-descriptionFr"
                     rows="3"
                     value={formData.descriptionFr}
                     onChange={(e) => setFormData({ ...formData, descriptionFr: e.target.value })}
@@ -207,7 +212,7 @@ const AdminResumes = () => {
 
                 {!editing && (
                   <div className="form-group">
-                    <label>Upload Resume PDF *</label>
+                    <label htmlFor="resume-file-input">Upload Resume PDF *</label>
                     <input
                       id="resume-file-input"
                       type="file"
@@ -226,8 +231,9 @@ const AdminResumes = () => {
 
                 {editing && (
                   <div className="form-group">
-                    <label>Current File</label>
+                    <label htmlFor="res-currentFile">Current File</label>
                     <input
+                      id="res-currentFile"
                       type="text"
                       value={formData.fileUrl}
                       disabled
@@ -239,8 +245,9 @@ const AdminResumes = () => {
 
                 <div className="form-row">
                   <div className="form-group">
-                    <label>Language *</label>
+                    <label htmlFor="res-language">Language *</label>
                     <select
+                      id="res-language"
                       value={formData.language}
                       onChange={(e) => setFormData({ ...formData, language: e.target.value })}
                       required
@@ -251,11 +258,12 @@ const AdminResumes = () => {
                   </div>
 
                   <div className="form-group">
-                    <label>Order</label>
+                    <label htmlFor="res-order">Order</label>
                     <input
+                      id="res-order"
                       type="number"
                       value={formData.order}
-                      onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) })}
+                      onChange={(e) => setFormData({ ...formData, order: Number.parseInt(e.target.value) })}
                     />
                     <small>Lower numbers appear first</small>
                   </div>
@@ -263,7 +271,11 @@ const AdminResumes = () => {
 
                 <div className="form-actions">
                   <button type="submit" className="primary" disabled={uploading}>
-                    {uploading ? 'Uploading...' : (editing ? 'Update Resume' : 'Upload Resume')}
+                    {(() => {
+                      if (uploading) return 'Uploading...';
+                      if (editing) return 'Update Resume';
+                      return 'Upload Resume';
+                    })()}
                   </button>
                   <button type="button" onClick={resetForm} className="secondary">
                     Cancel

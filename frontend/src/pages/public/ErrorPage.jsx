@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link, useLocation } from 'react-router-dom';
 import './ErrorPage.css';
 
@@ -57,7 +58,7 @@ export default function ErrorPage({ code = 404, title, message }) {
           </Link>
           <button
             className="error-page-btn error-page-btn-secondary"
-            onClick={() => window.history.back()}
+            onClick={() => globalThis.history.back()}
           >
             Go Back
           </button>
@@ -66,3 +67,9 @@ export default function ErrorPage({ code = 404, title, message }) {
     </div>
   );
 }
+
+ErrorPage.propTypes = {
+  code: PropTypes.number,
+  title: PropTypes.string,
+  message: PropTypes.string,
+};

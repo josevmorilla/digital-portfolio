@@ -1,6 +1,6 @@
 const prisma = require('../config/database');
-const path = require('path');
-const fs = require('fs');
+const path = require('node:path');
+const fs = require('node:fs');
 
 // Get all resumes (admin sees all, public sees only current ones)
 exports.getAll = async (req, res) => {
@@ -102,7 +102,7 @@ exports.upload = async (req, res) => {
         filename: req.file.originalname,
         fileUrl: `/uploads/resumes/${req.file.filename}`,
         language: language || 'en',
-        order: parseInt(order) || 0,
+        order: Number.parseInt(order) || 0,
       },
     });
 
@@ -123,10 +123,10 @@ exports.update = async (req, res) => {
       data: {
         titleEn: titleEn || undefined,
         titleFr: titleFr || undefined,
-        descriptionEn: descriptionEn !== undefined ? descriptionEn || null : undefined,
-        descriptionFr: descriptionFr !== undefined ? descriptionFr || null : undefined,
+        descriptionEn: descriptionEn === undefined ? undefined : descriptionEn || null,
+        descriptionFr: descriptionFr === undefined ? undefined : descriptionFr || null,
         language: language || undefined,
-        order: order !== undefined ? parseInt(order) : undefined,
+        order: order === undefined ? undefined : Number.parseInt(order),
       },
     });
 

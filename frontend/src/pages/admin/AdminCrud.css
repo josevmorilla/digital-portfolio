@@ -532,7 +532,7 @@
 }
 
 .status-filter-btn.active .filter-count {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.3);
   color: #fff;
 }
 
@@ -548,7 +548,7 @@
 
 .filter-count {
   background: #f3f4f6;
-  color: #6b7280;
+  color: #4b5563;
   font-size: 0.75rem;
   font-weight: 700;
   padding: 0.15rem 0.5rem;
@@ -776,7 +776,7 @@
 }
 
 .btn-approve {
-  background: #10b981;
+  background: #059669;
   color: white;
   border: none;
   padding: 0.6rem 1.25rem;
@@ -809,7 +809,7 @@
 
 .btn-danger {
   background: #fee2e2;
-  color: #dc2626;
+  color: #b91c1c;
   border: 1px solid #fca5a5;
   padding: 0.6rem 1.25rem;
   border-radius: 6px;

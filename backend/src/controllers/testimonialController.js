@@ -75,8 +75,8 @@ exports.update = async (req, res) => {
         company,
         content,
         imageUrl,
-        approved: approved !== undefined ? approved === true || approved === 'true' : undefined,
-        order: order !== undefined ? parseInt(order) : undefined,
+        approved: approved === undefined ? undefined : approved === true || approved === 'true',
+        order: order === undefined ? undefined : Number.parseInt(order),
       },
     });
 

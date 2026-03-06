@@ -79,11 +79,11 @@ const AdminWorkExperience = () => {
       order: exp.order,
     });
     setShowForm(true);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    globalThis.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this experience?')) return;
+    if (!globalThis.confirm('Are you sure you want to delete this experience?')) return;
     
     try {
       await workExperienceAPI.delete(id);
@@ -91,7 +91,7 @@ const AdminWorkExperience = () => {
       fetchExperiences();
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
-      setMessage('Error deleting experience');
+      setMessage('Error deleting experience: ' + (error.response?.data?.error || error.message));
     }
   };
 
@@ -136,8 +136,9 @@ const AdminWorkExperience = () => {
               <form onSubmit={handleSubmit}>
                 <div className="form-row">
                   <div className="form-group">
-                    <label>Company (English) *</label>
+                    <label htmlFor="we-companyEn">Company (English) *</label>
                     <input
+                      id="we-companyEn"
                       type="text"
                       value={formData.companyEn}
                       onChange={(e) => setFormData({ ...formData, companyEn: e.target.value })}
@@ -146,8 +147,9 @@ const AdminWorkExperience = () => {
                   </div>
 
                   <div className="form-group">
-                    <label>Company (French) *</label>
+                    <label htmlFor="we-companyFr">Company (French) *</label>
                     <input
+                      id="we-companyFr"
                       type="text"
                       value={formData.companyFr}
                       onChange={(e) => setFormData({ ...formData, companyFr: e.target.value })}
@@ -158,8 +160,9 @@ const AdminWorkExperience = () => {
 
                 <div className="form-row">
                   <div className="form-group">
-                    <label>Position (English) *</label>
+                    <label htmlFor="we-positionEn">Position (English) *</label>
                     <input
+                      id="we-positionEn"
                       type="text"
                       value={formData.positionEn}
                       onChange={(e) => setFormData({ ...formData, positionEn: e.target.value })}
@@ -168,8 +171,9 @@ const AdminWorkExperience = () => {
                   </div>
 
                   <div className="form-group">
-                    <label>Position (French) *</label>
+                    <label htmlFor="we-positionFr">Position (French) *</label>
                     <input
+                      id="we-positionFr"
                       type="text"
                       value={formData.positionFr}
                       onChange={(e) => setFormData({ ...formData, positionFr: e.target.value })}
@@ -179,8 +183,9 @@ const AdminWorkExperience = () => {
                 </div>
 
                 <div className="form-group">
-                  <label>Description (English) *</label>
+                  <label htmlFor="we-descriptionEn">Description (English) *</label>
                   <textarea
+                    id="we-descriptionEn"
                     rows="4"
                     value={formData.descriptionEn}
                     onChange={(e) => setFormData({ ...formData, descriptionEn: e.target.value })}
@@ -189,8 +194,9 @@ const AdminWorkExperience = () => {
                 </div>
 
                 <div className="form-group">
-                  <label>Description (French) *</label>
+                  <label htmlFor="we-descriptionFr">Description (French) *</label>
                   <textarea
+                    id="we-descriptionFr"
                     rows="4"
                     value={formData.descriptionFr}
                     onChange={(e) => setFormData({ ...formData, descriptionFr: e.target.value })}
@@ -200,8 +206,9 @@ const AdminWorkExperience = () => {
 
                 <div className="form-row">
                   <div className="form-group">
-                    <label>Location</label>
+                    <label htmlFor="we-location">Location</label>
                     <input
+                      id="we-location"
                       type="text"
                       value={formData.location}
                       onChange={(e) => setFormData({ ...formData, location: e.target.value })}
@@ -210,19 +217,21 @@ const AdminWorkExperience = () => {
                   </div>
 
                   <div className="form-group">
-                    <label>Order</label>
+                    <label htmlFor="we-order">Order</label>
                     <input
+                      id="we-order"
                       type="number"
                       value={formData.order}
-                      onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) })}
+                      onChange={(e) => setFormData({ ...formData, order: Number.parseInt(e.target.value) })}
                     />
                   </div>
                 </div>
 
                 <div className="form-row">
                   <div className="form-group">
-                    <label>Start Date *</label>
+                    <label htmlFor="we-startDate">Start Date *</label>
                     <input
+                      id="we-startDate"
                       type="date"
                       value={formData.startDate}
                       onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
@@ -231,8 +240,9 @@ const AdminWorkExperience = () => {
                   </div>
 
                   <div className="form-group">
-                    <label>End Date</label>
+                    <label htmlFor="we-endDate">End Date</label>
                     <input
+                      id="we-endDate"
                       type="date"
                       value={formData.endDate}
                       onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}

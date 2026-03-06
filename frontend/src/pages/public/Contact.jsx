@@ -22,7 +22,7 @@ const Contact = () => {
       await contactMessagesAPI.create(contactForm);
       setMessage(t('Message sent successfully!', 'Message envoyé avec succès !'));
       setContactForm({ name: '', email: '', subject: '', message: '', website: '' });
-    } catch (error) {
+    } catch {
       setMessage(t('Error sending message', 'Erreur lors de l\'envoi du message'));
     }
   };

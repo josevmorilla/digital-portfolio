@@ -102,7 +102,7 @@ const Home = () => {
         ]);
         setResumeEn(enRes?.data || null);
         setResumeFr(frRes?.data || null);
-      } catch (error) {
+      } catch {
         console.log('No resume available');
       }
     } catch (error) {
@@ -113,6 +113,17 @@ const Home = () => {
   };
 
   const t = (en, fr) => (language === 'en' ? en : fr);
+
+  const formatDateRange = (startDate, endDate, presentLabel) => {
+    if (!startDate) return '';
+    const locale = language === 'en' ? 'en-US' : 'fr-FR';
+    const options = { year: 'numeric', month: 'short' };
+    const start = new Date(startDate).toLocaleDateString(locale, options);
+    if (endDate) {
+      return `${start} - ${new Date(endDate).toLocaleDateString(locale, options)}`;
+    }
+    return `${start} - ${presentLabel || t('Present', 'Présent')}`;
+  };
 
   // Devicon class mapping for skills
   const skillIconMap = {
@@ -259,7 +270,7 @@ const Home = () => {
       setContactMessage(t('Message sent successfully!', 'Message envoyé avec succès !'));
       setContactForm({ name: '', email: '', subject: '', message: '', website: '' });
       setTimeout(() => setContactMessage(''), 3000);
-    } catch (error) {
+    } catch {
       setContactMessage(t('Error sending message', 'Erreur lors de l\'envoi du message'));
     }
   };
@@ -340,7 +351,7 @@ const Home = () => {
       <header className="header" role="banner">
         <div className="container">
           <nav className="nav">
-            <a href="#" className="logo" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); setMobileMenuOpen(false); }}>{profile ? (language === 'en' ? profile.nameEn : profile.nameFr) : ''}</a>
+            <a href="#" className="logo" onClick={(e) => { e.preventDefault(); globalThis.scrollTo({ top: 0, behavior: 'smooth' }); setMobileMenuOpen(false); }}>{profile ? (language === 'en' ? profile.nameEn : profile.nameFr) : ''}</a>
             <button 
               className={`hamburger ${mobileMenuOpen ? 'open' : ''}`} 
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -397,7 +408,7 @@ const Home = () => {
           <div className="cv-download-buttons">
             <a
               href={resumeEn ? resumesAPI.download(resumeEn.id) : '#'}
-              download={resumeEn ? true : false}
+              download={!!resumeEn}
               className="btn-download"
               style={!resumeEn ? { opacity: 0.6, cursor: 'not-allowed' } : {}}
             >
@@ -405,7 +416,7 @@ const Home = () => {
             </a>
             <a
               href={resumeFr ? resumesAPI.download(resumeFr.id) : '#'}
-              download={resumeFr ? true : false}
+              download={!!resumeFr}
               className="btn-download"
               style={!resumeFr ? { opacity: 0.6, cursor: 'not-allowed' } : {}}
             >
@@ -517,22 +528,14 @@ const Home = () => {
                   <div className="project-showcase-content">
                     <h3>{language === 'en' ? project.titleEn : project.titleFr}</h3>
                     <p className="project-date">
-                      {project.startDate ? (
-                        project.endDate ? (
-                          `${new Date(project.startDate).toLocaleDateString(language === 'en' ? 'en-US' : 'fr-FR', { year: 'numeric', month: 'short' })} - ${new Date(project.endDate).toLocaleDateString(language === 'en' ? 'en-US' : 'fr-FR', { year: 'numeric', month: 'short' })}`
-                        ) : (
-                          `${new Date(project.startDate).toLocaleDateString(language === 'en' ? 'en-US' : 'fr-FR', { year: 'numeric', month: 'short' })} - ${t('Present', 'Présent')}`
-                        )
-                      ) : (
-                        ''
-                      )}
+                      {formatDateRange(project.startDate, project.endDate)}
                     </p>
                     <p className="project-description">
                       {language === 'en' ? project.descriptionEn : project.descriptionFr}
                     </p>
                     <div className="project-tech">
-                      {project.technologies.map((tech, idx) => (
-                        <span key={idx} className="tech-tag">{tech}</span>
+                      {project.technologies.map((tech) => (
+                        <span key={tech} className="tech-tag">{tech}</span>
                       ))}
                     </div>
                     <div className="project-links">
@@ -553,7 +556,7 @@ const Home = () => {
           </div>
 
           {/* Other Projects - Smaller Grid */}
-          {data.projects.filter(project => !project.featured).length > 0 && (
+          {data.projects.some(project => !project.featured) && (
             <div className="other-projects-section">
               <h3 className="other-projects-title">{t('Other Projects', 'Autres Projets')}</h3>
               <div className="projects-grid">
@@ -563,20 +566,12 @@ const Home = () => {
                     <div key={project.id} className="project-card">
                       <h3>{language === 'en' ? project.titleEn : project.titleFr}</h3>
                       <p className="project-card-date">
-                        {project.startDate ? (
-                          project.endDate ? (
-                            `${new Date(project.startDate).toLocaleDateString(language === 'en' ? 'en-US' : 'fr-FR', { year: 'numeric', month: 'short' })} - ${new Date(project.endDate).toLocaleDateString(language === 'en' ? 'en-US' : 'fr-FR', { year: 'numeric', month: 'short' })}`
-                          ) : (
-                            `${new Date(project.startDate).toLocaleDateString(language === 'en' ? 'en-US' : 'fr-FR', { year: 'numeric', month: 'short' })} - ${t('Present', 'Présent')}`
-                          )
-                        ) : (
-                          ''
-                        )}
+                        {formatDateRange(project.startDate, project.endDate)}
                       </p>
                       <p>{language === 'en' ? project.descriptionEn : project.descriptionFr}</p>
                       <div className="project-tech">
-                        {project.technologies.map((tech, idx) => (
-                          <span key={idx} className="tech-tag">{tech}</span>
+                        {project.technologies.map((tech) => (
+                          <span key={tech} className="tech-tag">{tech}</span>
                         ))}
                       </div>
                       <div className="project-links">
@@ -672,21 +667,15 @@ const Home = () => {
                     <div className="project-showcase-content">
                       <h3>{language === 'en' ? hobby.nameEn : hobby.nameFr}</h3>
                       <p className="project-date">
-                        {hobby.startDate && (
-                          hobby.endDate ? (
-                            `${new Date(hobby.startDate).toLocaleDateString(language === 'en' ? 'en-US' : 'fr-FR', { year: 'numeric', month: 'short' })} - ${new Date(hobby.endDate).toLocaleDateString(language === 'en' ? 'en-US' : 'fr-FR', { year: 'numeric', month: 'short' })}`
-                          ) : (
-                            `${new Date(hobby.startDate).toLocaleDateString(language === 'en' ? 'en-US' : 'fr-FR', { year: 'numeric', month: 'short' })} - ${t('Present', 'Présent')}`
-                          )
-                        )}
+                        {formatDateRange(hobby.startDate, hobby.endDate)}
                       </p>
                       <p className="project-description">
                         {language === 'en' ? hobby.descriptionEn : hobby.descriptionFr}
                       </p>
                       {hobby.technologies && hobby.technologies.length > 0 && (
                         <div className="project-tech">
-                          {hobby.technologies.map((tech, idx) => (
-                            <span key={idx} className="tech-tag">{tech}</span>
+                          {hobby.technologies.map((tech) => (
+                            <span key={tech} className="tech-tag">{tech}</span>
                           ))}
                         </div>
                       )}
@@ -694,7 +683,7 @@ const Home = () => {
                         <div className="project-links">
                           {hobby.links.map((link, idx) => (
                             <a 
-                              key={idx} 
+                              key={link.url || idx} 
                               href={link.url.startsWith('http') ? link.url : `https://${link.url}`} 
                               target="_blank" 
                               rel="noopener noreferrer" 
@@ -778,8 +767,8 @@ const Home = () => {
 
       {/* Testimonial Modal */}
       {showTestimonialModal && (
-        <div className="modal-overlay" onClick={() => setShowTestimonialModal(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-overlay" role="presentation" onClick={() => setShowTestimonialModal(false)}>
+          <div className="modal-content" role="dialog" onClick={(e) => e.stopPropagation()}>
             <button 
               className="modal-close"
               onClick={() => setShowTestimonialModal(false)}

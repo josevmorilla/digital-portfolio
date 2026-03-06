@@ -133,20 +133,7 @@ const Testimonials = () => {
               </p>
             </div>
 
-            {!showForm ? (
-              <div style={{ textAlign: 'center', padding: '2rem 0' }}>
-                <p style={{ color: '#666', marginBottom: '1rem', fontSize: '1.05rem' }}>
-                  {t('Want to submit another testimonial?', 'Voulez-vous soumettre un autre témoignage ?')}
-                </p>
-                <button
-                  onClick={() => setShowForm(true)}
-                  className="submit-btn"
-                  style={{ display: 'inline-block' }}
-                >
-                  {t('Write Another Testimonial', 'Écrire un Autre Témoignage')}
-                </button>
-              </div>
-            ) : (
+            {showForm ? (
             <form onSubmit={handleSubmit} className="testimonial-form">
               {/* Honeypot - hidden from real users */}
               <div style={{ position: 'absolute', left: '-9999px', opacity: 0, height: 0, overflow: 'hidden' }} aria-hidden="true" tabIndex={-1}>
@@ -237,6 +224,19 @@ const Testimonials = () => {
                 </button>
               </div>
             </form>
+            ) : (
+              <div style={{ textAlign: 'center', padding: '2rem 0' }}>
+                <p style={{ color: '#666', marginBottom: '1rem', fontSize: '1.05rem' }}>
+                  {t('Want to submit another testimonial?', 'Voulez-vous soumettre un autre témoignage ?')}
+                </p>
+                <button
+                  onClick={() => setShowForm(true)}
+                  className="submit-btn"
+                  style={{ display: 'inline-block' }}
+                >
+                  {t('Write Another Testimonial', 'Écrire un Autre Témoignage')}
+                </button>
+              </div>
             )}
           </div>
         </div>

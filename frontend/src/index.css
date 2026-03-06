@@ -58,7 +58,7 @@ button:hover {
 }
 
 button.primary {
-  background-color: #007bff;
+  background-color: #0062cc;
   color: white;
 }
 
@@ -73,7 +73,7 @@ button.danger {
 }
 
 button.success {
-  background-color: #28a745;
+  background-color: #218838;
   color: white;
 }
 

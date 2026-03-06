@@ -45,7 +45,7 @@ const AdminMessages = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this message?')) return;
+    if (!globalThis.confirm('Are you sure you want to delete this message?')) return;
     
     try {
       await contactMessagesAPI.delete(id);
@@ -89,8 +89,11 @@ const AdminMessages = () => {
                 {messages.map((message) => (
                   <div 
                     key={message.id} 
-                    className={`message-item ${!message.read ? 'unread' : ''} ${selectedMessage?.id === message.id ? 'active' : ''}`}
+                    className={`message-item ${message.read ? '' : 'unread'} ${selectedMessage?.id === message.id ? 'active' : ''}`}
+                    role="button"
+                    tabIndex={0}
                     onClick={() => setSelectedMessage(message)}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setSelectedMessage(message); }}
                   >
                     <div className="message-header">
                       <h4>{message.name}</h4>
@@ -118,35 +121,35 @@ const AdminMessages = () => {
                 
                 <div className="detail-content">
                   <div className="detail-field">
-                    <label>From:</label>
-                    <p>{selectedMessage.name}</p>
+                    <label htmlFor="msg-from">From:</label>
+                    <p id="msg-from">{selectedMessage.name}</p>
                   </div>
                   
                   <div className="detail-field">
-                    <label>Email:</label>
-                    <p><a href={`mailto:${selectedMessage.email}`}>{selectedMessage.email}</a></p>
+                    <label htmlFor="msg-email">Email:</label>
+                    <p id="msg-email"><a href={`mailto:${selectedMessage.email}`}>{selectedMessage.email}</a></p>
                   </div>
                   
                   {selectedMessage.phone && (
                     <div className="detail-field">
-                      <label>Phone:</label>
-                      <p>{selectedMessage.phone}</p>
+                      <label htmlFor="msg-phone">Phone:</label>
+                      <p id="msg-phone">{selectedMessage.phone}</p>
                     </div>
                   )}
                   
                   <div className="detail-field">
-                    <label>Subject:</label>
-                    <p>{selectedMessage.subject || 'No subject'}</p>
+                    <label htmlFor="msg-subject">Subject:</label>
+                    <p id="msg-subject">{selectedMessage.subject || 'No subject'}</p>
                   </div>
                   
                   <div className="detail-field">
-                    <label>Date:</label>
-                    <p>{formatDate(selectedMessage.createdAt)}</p>
+                    <label htmlFor="msg-date">Date:</label>
+                    <p id="msg-date">{formatDate(selectedMessage.createdAt)}</p>
                   </div>
                   
                   <div className="detail-field">
-                    <label>Message:</label>
-                    <p style={{whiteSpace: 'pre-wrap'}}>{selectedMessage.message}</p>
+                    <label htmlFor="msg-message">Message:</label>
+                    <p id="msg-message" style={{whiteSpace: 'pre-wrap'}}>{selectedMessage.message}</p>
                   </div>
                   
                   <div className="detail-actions">

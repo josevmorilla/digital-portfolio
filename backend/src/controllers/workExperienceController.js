@@ -60,7 +60,7 @@ exports.create = async (req, res) => {
         startDate: new Date(startDate),
         endDate: endDate ? new Date(endDate) : null,
         current: current === true || current === 'true',
-        order: order ? parseInt(order) : 0,
+        order: order ? Number.parseInt(order) : 0,
       },
     });
 
@@ -100,8 +100,8 @@ exports.update = async (req, res) => {
         location,
         startDate: startDate ? new Date(startDate) : undefined,
         endDate: endDate ? new Date(endDate) : undefined,
-        current: current !== undefined ? current === true || current === 'true' : undefined,
-        order: order !== undefined ? parseInt(order) : undefined,
+        current: current === undefined ? undefined : current === true || current === 'true',
+        order: order === undefined ? undefined : Number.parseInt(order),
       },
     });
 

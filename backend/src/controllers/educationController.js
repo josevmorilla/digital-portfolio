@@ -66,7 +66,7 @@ exports.create = async (req, res) => {
         endDate: endDate ? new Date(endDate) : null,
         current: current === true || current === 'true',
         gpa,
-        order: order ? parseInt(order) : 0,
+        order: order ? Number.parseInt(order) : 0,
       },
     });
 
@@ -111,9 +111,9 @@ exports.update = async (req, res) => {
         location,
         startDate: startDate ? new Date(startDate) : undefined,
         endDate: endDate ? new Date(endDate) : undefined,
-        current: current !== undefined ? current === true || current === 'true' : undefined,
+        current: current === undefined ? undefined : current === true || current === 'true',
         gpa,
-        order: order !== undefined ? parseInt(order) : undefined,
+        order: order === undefined ? undefined : Number.parseInt(order),
       },
     });
 

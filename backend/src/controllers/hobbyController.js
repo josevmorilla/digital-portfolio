@@ -49,7 +49,7 @@ exports.create = async (req, res) => {
         startDate: startDate ? new Date(startDate) : null,
         endDate: endDate ? new Date(endDate) : null,
         featured: featured === true || featured === 'true',
-        order: order ? parseInt(order) : 0,
+        order: order ? Number.parseInt(order) : 0,
       },
     });
 
@@ -74,12 +74,12 @@ exports.update = async (req, res) => {
         descriptionFr,
         icon,
         imageUrl,
-        links: links !== undefined ? links : undefined,
-        technologies: technologies !== undefined ? technologies : undefined,
-        startDate: startDate !== undefined ? (startDate ? new Date(startDate) : null) : undefined,
-        endDate: endDate !== undefined ? (endDate ? new Date(endDate) : null) : undefined,
-        featured: featured !== undefined ? (featured === true || featured === 'true') : undefined,
-        order: order !== undefined ? parseInt(order) : undefined,
+        links: links === undefined ? undefined : links,
+        technologies: technologies === undefined ? undefined : technologies,
+        startDate: startDate === undefined ? undefined : (startDate ? new Date(startDate) : null),
+        endDate: endDate === undefined ? undefined : (endDate ? new Date(endDate) : null),
+        featured: featured === undefined ? undefined : (featured === true || featured === 'true'),
+        order: order === undefined ? undefined : Number.parseInt(order),
       },
     });
 

@@ -43,7 +43,7 @@ exports.create = async (req, res) => {
         level: 0,
         category,
         icon,
-        order: order ? parseInt(order) : 0,
+        order: order ? Number.parseInt(order) : 0,
       },
     });
 
@@ -66,7 +66,7 @@ exports.update = async (req, res) => {
         nameFr,
         category,
         icon,
-        order: order !== undefined ? parseInt(order) : undefined,
+        order: order === undefined ? undefined : Number.parseInt(order),
       },
     });
 

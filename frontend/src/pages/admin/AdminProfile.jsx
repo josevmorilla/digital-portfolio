@@ -75,8 +75,9 @@ const AdminProfile = () => {
             <form onSubmit={handleSubmit}>
               <div className="form-row">
                 <div className="form-group">
-                  <label>Name (English) *</label>
+                  <label htmlFor="prof-nameEn">Name (English) *</label>
                   <input
+                    id="prof-nameEn"
                     type="text"
                     value={formData.nameEn}
                     onChange={(e) => setFormData({ ...formData, nameEn: e.target.value })}
@@ -85,8 +86,9 @@ const AdminProfile = () => {
                   />
                 </div>
                 <div className="form-group">
-                  <label>Name (French) *</label>
+                  <label htmlFor="prof-nameFr">Name (French) *</label>
                   <input
+                    id="prof-nameFr"
                     type="text"
                     value={formData.nameFr}
                     onChange={(e) => setFormData({ ...formData, nameFr: e.target.value })}
@@ -98,8 +100,9 @@ const AdminProfile = () => {
 
               <div className="form-row">
                 <div className="form-group">
-                  <label>Title (English) *</label>
+                  <label htmlFor="prof-titleEn">Title (English) *</label>
                   <input
+                    id="prof-titleEn"
                     type="text"
                     value={formData.titleEn}
                     onChange={(e) => setFormData({ ...formData, titleEn: e.target.value })}
@@ -108,8 +111,9 @@ const AdminProfile = () => {
                   />
                 </div>
                 <div className="form-group">
-                  <label>Title (French) *</label>
+                  <label htmlFor="prof-titleFr">Title (French) *</label>
                   <input
+                    id="prof-titleFr"
                     type="text"
                     value={formData.titleFr}
                     onChange={(e) => setFormData({ ...formData, titleFr: e.target.value })}
@@ -121,8 +125,9 @@ const AdminProfile = () => {
 
               <div className="form-row">
                 <div className="form-group">
-                  <label>Bio (English)</label>
+                  <label htmlFor="prof-bioEn">Bio (English)</label>
                   <textarea
+                    id="prof-bioEn"
                     rows="4"
                     value={formData.bioEn}
                     onChange={(e) => setFormData({ ...formData, bioEn: e.target.value })}
@@ -130,8 +135,9 @@ const AdminProfile = () => {
                   />
                 </div>
                 <div className="form-group">
-                  <label>Bio (French)</label>
+                  <label htmlFor="prof-bioFr">Bio (French)</label>
                   <textarea
+                    id="prof-bioFr"
                     rows="4"
                     value={formData.bioFr}
                     onChange={(e) => setFormData({ ...formData, bioFr: e.target.value })}

@@ -46,8 +46,8 @@ exports.create = async (req, res) => {
         label,
         value,
         icon,
-        order: order ? parseInt(order) : 0,
-        visible: visible !== undefined ? visible === true || visible === 'true' : true,
+        order: order ? Number.parseInt(order) : 0,
+        visible: visible === undefined ? true : visible === true || visible === 'true',
       },
     });
 
@@ -70,8 +70,8 @@ exports.update = async (req, res) => {
         label,
         value,
         icon,
-        order: order !== undefined ? parseInt(order) : undefined,
-        visible: visible !== undefined ? visible === true || visible === 'true' : undefined,
+        order: order === undefined ? undefined : Number.parseInt(order),
+        visible: visible === undefined ? undefined : visible === true || visible === 'true',
       },
     });
 

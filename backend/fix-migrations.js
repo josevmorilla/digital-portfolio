@@ -17,7 +17,7 @@ async function fixMigrations() {
     console.log('[fix-migrations] Tables exist — no repair needed.');
   } catch (tableError) {
     // Tables missing — check if _prisma_migrations has stale records
-    console.log('[fix-migrations] Core tables missing. Checking migration history...');
+    console.log('[fix-migrations] Core tables missing. Checking migration history...', tableError.message);
     try {
       const rows = await prisma.$queryRawUnsafe(
         'SELECT "migration_name" FROM "_prisma_migrations"'
@@ -31,14 +31,11 @@ async function fixMigrations() {
       }
     } catch (metaError) {
       // _prisma_migrations table doesn't exist either — fresh DB, nothing to fix
-      console.log('[fix-migrations] No migration table found — fresh database, nothing to fix.');
+      console.log('[fix-migrations] No migration table found — fresh database, nothing to fix.', metaError.message);
     }
   } finally {
     await prisma.$disconnect();
   }
 }
 
-fixMigrations().catch((err) => {
-  console.error('[fix-migrations] Unexpected error:', err.message);
-  process.exit(0); // Don't block deployment even if fix fails
-});
+await fixMigrations();

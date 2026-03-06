@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require('node:path');
 require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 const bcrypt = require('bcryptjs');
 const { PrismaClient } = require('@prisma/client');
@@ -29,7 +29,9 @@ async function seed() {
 
     // Profile – always ensure one exists (upsert, like admin user)
     const existingProfile = await prisma.profile.findFirst();
-    if (!existingProfile) {
+    if (existingProfile) {
+      console.log('Profile already exists, skipping');
+    } else {
       await prisma.profile.create({
         data: {
           nameEn: 'Jose Villegas',
@@ -41,8 +43,6 @@ async function seed() {
         },
       });
       console.log('Profile seeded');
-    } else {
-      console.log('Profile already exists, skipping');
     }
     
     // Check if data already exists
@@ -375,4 +375,4 @@ async function seed() {
   }
 }
 
-seed();
+await seed();

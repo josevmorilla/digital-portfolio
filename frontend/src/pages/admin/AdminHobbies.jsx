@@ -16,7 +16,7 @@ const AdminHobbies = () => {
     icon: '',
     imageUrl: '',
     technologies: '',
-    links: [{ label: '', url: '' }],
+    links: [{ label: '', url: '', _key: crypto.randomUUID() }],
     startDate: '',
     endDate: '',
     featured: false,
@@ -76,7 +76,7 @@ const AdminHobbies = () => {
     try {
       const hobbyData = {
         ...formData,
-        technologies: formData.technologies.split(',').map(t => t.trim()).filter(t => t),
+        technologies: formData.technologies.split(',').map(t => t.trim()).filter(Boolean),
         links: formData.links.filter(link => link.label && link.url),
         imageUrl: formData.imageUrl || null,
         startDate: formData.startDate ? new Date(formData.startDate) : null,
@@ -109,18 +109,18 @@ const AdminHobbies = () => {
       icon: hobby.icon || '',
       imageUrl: hobby.imageUrl || '',
       technologies: hobby.technologies?.join(', ') || '',
-      links: hobby.links?.length > 0 ? hobby.links : [{ label: '', url: '' }],
+      links: hobby.links?.length > 0 ? hobby.links.map(l => ({ ...l, _key: crypto.randomUUID() })) : [{ label: '', url: '', _key: crypto.randomUUID() }],
       startDate: hobby.startDate ? new Date(hobby.startDate).toISOString().split('T')[0] : '',
       endDate: hobby.endDate ? new Date(hobby.endDate).toISOString().split('T')[0] : '',
       featured: hobby.featured || false,
       order: hobby.order,
     });
     setShowForm(true);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    globalThis.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this hobby?')) return;
+    if (!globalThis.confirm('Are you sure you want to delete this hobby?')) return;
     
     try {
       await hobbiesAPI.delete(id);
@@ -128,7 +128,7 @@ const AdminHobbies = () => {
       fetchHobbies();
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
-      setMessage('Error deleting hobby');
+      setMessage('Error deleting hobby: ' + (error.response?.data?.error || error.message));
     }
   };
 
@@ -143,7 +143,7 @@ const AdminHobbies = () => {
       icon: '',
       imageUrl: '',
       technologies: '',
-      links: [{ label: '', url: '' }],
+      links: [{ label: '', url: '', _key: crypto.randomUUID() }],
       startDate: '',
       endDate: '',
       featured: false,
@@ -174,8 +174,9 @@ const AdminHobbies = () => {
               <form onSubmit={handleSubmit}>
                 <div className="form-row">
                   <div className="form-group">
-                    <label>Name (English) *</label>
+                    <label htmlFor="hobby-nameEn">Name (English) *</label>
                     <input
+                      id="hobby-nameEn"
                       type="text"
                       value={formData.nameEn}
                       onChange={(e) => setFormData({ ...formData, nameEn: e.target.value })}
@@ -184,8 +185,9 @@ const AdminHobbies = () => {
                   </div>
 
                   <div className="form-group">
-                    <label>Name (French) *</label>
+                    <label htmlFor="hobby-nameFr">Name (French) *</label>
                     <input
+                      id="hobby-nameFr"
                       type="text"
                       value={formData.nameFr}
                       onChange={(e) => setFormData({ ...formData, nameFr: e.target.value })}
@@ -195,8 +197,9 @@ const AdminHobbies = () => {
                 </div>
 
                 <div className="form-group">
-                  <label>Description (English)</label>
+                  <label htmlFor="hobby-descEn">Description (English)</label>
                   <textarea
+                    id="hobby-descEn"
                     rows="3"
                     value={formData.descriptionEn}
                     onChange={(e) => setFormData({ ...formData, descriptionEn: e.target.value })}
@@ -204,8 +207,9 @@ const AdminHobbies = () => {
                 </div>
 
                 <div className="form-group">
-                  <label>Description (French)</label>
+                  <label htmlFor="hobby-descFr">Description (French)</label>
                   <textarea
+                    id="hobby-descFr"
                     rows="3"
                     value={formData.descriptionFr}
                     onChange={(e) => setFormData({ ...formData, descriptionFr: e.target.value })}
@@ -214,8 +218,9 @@ const AdminHobbies = () => {
 
                 <div className="form-row">
                   <div className="form-group">
-                    <label>Start Date</label>
+                    <label htmlFor="hobby-startDate">Start Date</label>
                     <input
+                      id="hobby-startDate"
                       type="date"
                       value={formData.startDate}
                       onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
@@ -223,8 +228,9 @@ const AdminHobbies = () => {
                   </div>
 
                   <div className="form-group">
-                    <label>End Date (leave empty if ongoing)</label>
+                    <label htmlFor="hobby-endDate">End Date (leave empty if ongoing)</label>
                     <input
+                      id="hobby-endDate"
                       type="date"
                       value={formData.endDate}
                       onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
@@ -233,8 +239,9 @@ const AdminHobbies = () => {
                 </div>
 
                 <div className="form-group">
-                  <label>Technologies (comma-separated)</label>
+                  <label htmlFor="hobby-technologies">Technologies (comma-separated)</label>
                   <input
+                    id="hobby-technologies"
                     type="text"
                     value={formData.technologies}
                     onChange={(e) => setFormData({ ...formData, technologies: e.target.value })}
@@ -244,8 +251,9 @@ const AdminHobbies = () => {
 
                 <div className="form-row">
                   <div className="form-group">
-                    <label>Hobby Image</label>
+                    <label htmlFor="hobby-image">Hobby Image</label>
                     <input
+                      id="hobby-image"
                       type="file"
                       accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
                       onChange={handleImageUpload}
@@ -268,8 +276,9 @@ const AdminHobbies = () => {
                   </div>
 
                   <div className="form-group">
-                    <label>Image URL (Alternative)</label>
+                    <label htmlFor="hobby-imageUrl">Image URL (Alternative)</label>
                     <input
+                      id="hobby-imageUrl"
                       type="text"
                       value={formData.imageUrl}
                       onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
@@ -279,9 +288,9 @@ const AdminHobbies = () => {
                 </div>
 
                 <div className="form-group">
-                  <label>Links (GitHub, GameBanana, etc.)</label>
+                  <label htmlFor="hobby-links">Links (GitHub, GameBanana, etc.)</label>
                   {formData.links.map((link, index) => (
-                    <div key={index} className="form-row" style={{ marginBottom: '10px' }}>
+                    <div key={link._key} className="form-row" style={{ marginBottom: '10px' }}>
                       <input
                         type="text"
                         value={link.label}
@@ -321,7 +330,7 @@ const AdminHobbies = () => {
                   ))}
                   <button
                     type="button"
-                    onClick={() => setFormData({ ...formData, links: [...formData.links, { label: '', url: '' }] })}
+                    onClick={() => setFormData({ ...formData, links: [...formData.links, { label: '', url: '', _key: crypto.randomUUID() }] })}
                     className="secondary"
                     style={{ marginTop: '10px' }}
                   >
@@ -331,8 +340,9 @@ const AdminHobbies = () => {
 
                 <div className="form-row">
                   <div className="form-group">
-                    <label>Icon (optional)</label>
+                    <label htmlFor="hobby-icon">Icon (optional)</label>
                     <input
+                      id="hobby-icon"
                       type="text"
                       value={formData.icon}
                       onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
@@ -341,11 +351,12 @@ const AdminHobbies = () => {
                   </div>
 
                   <div className="form-group">
-                    <label>Order</label>
+                    <label htmlFor="hobby-order">Order</label>
                     <input
+                      id="hobby-order"
                       type="number"
                       value={formData.order}
-                      onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) })}
+                      onChange={(e) => setFormData({ ...formData, order: Number.parseInt(e.target.value, 10) })}
                     />
                   </div>
                 </div>

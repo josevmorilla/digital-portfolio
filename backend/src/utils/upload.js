@@ -1,16 +1,19 @@
 const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+const path = require('node:path');
+const fs = require('node:fs');
 
 // Create uploads directory if it doesn't exist
 // Always resolve relative to the project root (__dirname = backend/src/utils)
 // so that CWD changes (e.g. "cd backend && node src/server.js") don't matter.
 const PROJECT_ROOT = path.resolve(__dirname, '../../..');
-const uploadDir = process.env.UPLOAD_DIR
-  ? (path.isAbsolute(process.env.UPLOAD_DIR)
-      ? process.env.UPLOAD_DIR
-      : path.resolve(PROJECT_ROOT, process.env.UPLOAD_DIR))
-  : path.join(PROJECT_ROOT, 'uploads');
+let uploadDir;
+if (process.env.UPLOAD_DIR) {
+  uploadDir = path.isAbsolute(process.env.UPLOAD_DIR)
+    ? process.env.UPLOAD_DIR
+    : path.resolve(PROJECT_ROOT, process.env.UPLOAD_DIR);
+} else {
+  uploadDir = path.join(PROJECT_ROOT, 'uploads');
+}
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
@@ -76,7 +79,7 @@ const uploadResume = multer({
   storage: resumeStorage,
   fileFilter: resumeFileFilter,
   limits: {
-    fileSize: parseInt(process.env.MAX_FILE_SIZE) || 5 * 1024 * 1024, // 5MB default
+    fileSize: Number.parseInt(process.env.MAX_FILE_SIZE) || 5 * 1024 * 1024, // 5MB default
   },
 });
 
@@ -84,7 +87,7 @@ const uploadProjectImage = multer({
   storage: projectImageStorage,
   fileFilter: imageFileFilter,
   limits: {
-    fileSize: parseInt(process.env.MAX_IMAGE_SIZE) || 10 * 1024 * 1024, // 10MB default
+    fileSize: Number.parseInt(process.env.MAX_IMAGE_SIZE) || 10 * 1024 * 1024, // 10MB default
   },
 });
 
@@ -103,7 +106,7 @@ const uploadHobbyImage = multer({
   storage: hobbyImageStorage,
   fileFilter: imageFileFilter,
   limits: {
-    fileSize: parseInt(process.env.MAX_IMAGE_SIZE) || 10 * 1024 * 1024, // 10MB default
+    fileSize: Number.parseInt(process.env.MAX_IMAGE_SIZE) || 10 * 1024 * 1024, // 10MB default
   },
 });
 

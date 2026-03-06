@@ -88,7 +88,7 @@ const AdminProjects = () => {
 
       const projectData = {
         ...formData,
-        technologies: formData.technologies.split(',').map(t => t.trim()).filter(t => t),
+        technologies: formData.technologies.split(',').map(t => t.trim()).filter(Boolean),
         imageUrl: formData.imageUrl || null,
         projectUrl: normalizeUrl(formData.projectUrl),
         githubUrl: normalizeUrl(formData.githubUrl),
@@ -129,11 +129,11 @@ const AdminProjects = () => {
       endDate: project.endDate ? new Date(project.endDate).toISOString().split('T')[0] : '',
     });
     setShowForm(true);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    globalThis.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this project?')) return;
+    if (!globalThis.confirm('Are you sure you want to delete this project?')) return;
     
     try {
       await projectsAPI.delete(id);
@@ -141,7 +141,7 @@ const AdminProjects = () => {
       fetchProjects();
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
-      setMessage('Error deleting project');
+      setMessage('Error deleting project: ' + (error.response?.data?.error || error.message));
     }
   };
 
@@ -187,8 +187,9 @@ const AdminProjects = () => {
               <form onSubmit={handleSubmit}>
                 <div className="form-row">
                   <div className="form-group">
-                    <label>Title (English) *</label>
+                    <label htmlFor="proj-titleEn">Title (English) *</label>
                     <input
+                      id="proj-titleEn"
                       type="text"
                       value={formData.titleEn}
                       onChange={(e) => setFormData({ ...formData, titleEn: e.target.value })}
@@ -197,8 +198,9 @@ const AdminProjects = () => {
                   </div>
 
                   <div className="form-group">
-                    <label>Title (French) *</label>
+                    <label htmlFor="proj-titleFr">Title (French) *</label>
                     <input
+                      id="proj-titleFr"
                       type="text"
                       value={formData.titleFr}
                       onChange={(e) => setFormData({ ...formData, titleFr: e.target.value })}
@@ -208,8 +210,9 @@ const AdminProjects = () => {
                 </div>
 
                 <div className="form-group">
-                  <label>Description (English) *</label>
+                  <label htmlFor="proj-descriptionEn">Description (English) *</label>
                   <textarea
+                    id="proj-descriptionEn"
                     rows="4"
                     value={formData.descriptionEn}
                     onChange={(e) => setFormData({ ...formData, descriptionEn: e.target.value })}
@@ -218,8 +221,9 @@ const AdminProjects = () => {
                 </div>
 
                 <div className="form-group">
-                  <label>Description (French) *</label>
+                  <label htmlFor="proj-descriptionFr">Description (French) *</label>
                   <textarea
+                    id="proj-descriptionFr"
                     rows="4"
                     value={formData.descriptionFr}
                     onChange={(e) => setFormData({ ...formData, descriptionFr: e.target.value })}
@@ -229,8 +233,9 @@ const AdminProjects = () => {
 
                 <div className="form-row">
                   <div className="form-group">
-                    <label>Start Date</label>
+                    <label htmlFor="proj-startDate">Start Date</label>
                     <input
+                      id="proj-startDate"
                       type="date"
                       value={formData.startDate}
                       onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
@@ -238,8 +243,9 @@ const AdminProjects = () => {
                   </div>
 
                   <div className="form-group">
-                    <label>End Date (leave empty if ongoing)</label>
+                    <label htmlFor="proj-endDate">End Date (leave empty if ongoing)</label>
                     <input
+                      id="proj-endDate"
                       type="date"
                       value={formData.endDate}
                       onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
@@ -248,8 +254,9 @@ const AdminProjects = () => {
                 </div>
 
                 <div className="form-group">
-                  <label>Technologies (comma-separated) *</label>
+                  <label htmlFor="proj-technologies">Technologies (comma-separated) *</label>
                   <input
+                    id="proj-technologies"
                     type="text"
                     value={formData.technologies}
                     onChange={(e) => setFormData({ ...formData, technologies: e.target.value })}
@@ -260,8 +267,9 @@ const AdminProjects = () => {
 
                 <div className="form-row">
                   <div className="form-group">
-                    <label>Project Screenshot/Image</label>
+                    <label htmlFor="proj-image">Project Screenshot/Image</label>
                     <input
+                      id="proj-image"
                       type="file"
                       accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
                       onChange={handleImageUpload}
@@ -284,8 +292,9 @@ const AdminProjects = () => {
                   </div>
 
                   <div className="form-group">
-                    <label>Image URL (Alternative)</label>
+                    <label htmlFor="proj-imageUrl">Image URL (Alternative)</label>
                     <input
+                      id="proj-imageUrl"
                       type="text"
                       value={formData.imageUrl}
                       onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
@@ -298,19 +307,21 @@ const AdminProjects = () => {
 
                 <div className="form-row">
                   <div className="form-group">
-                    <label>Order</label>
+                    <label htmlFor="proj-order">Order</label>
                     <input
+                      id="proj-order"
                       type="number"
                       value={formData.order}
-                      onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) })}
+                      onChange={(e) => setFormData({ ...formData, order: Number.parseInt(e.target.value) })}
                     />
                   </div>
                 </div>
 
                 <div className="form-row">
                   <div className="form-group">
-                    <label>GitHub URL</label>
+                    <label htmlFor="proj-githubUrl">GitHub URL</label>
                     <input
+                      id="proj-githubUrl"
                       type="text"
                       value={formData.githubUrl}
                       onChange={(e) => setFormData({ ...formData, githubUrl: e.target.value })}
@@ -320,8 +331,9 @@ const AdminProjects = () => {
                   </div>
 
                   <div className="form-group">
-                    <label>Deployed Project URL</label>
+                    <label htmlFor="proj-projectUrl">Deployed Project URL</label>
                     <input
+                      id="proj-projectUrl"
                       type="text"
                       value={formData.projectUrl}
                       onChange={(e) => setFormData({ ...formData, projectUrl: e.target.value })}

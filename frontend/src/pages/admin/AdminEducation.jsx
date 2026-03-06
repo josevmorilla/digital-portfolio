@@ -82,11 +82,11 @@ const AdminEducation = () => {
       order: edu.order,
     });
     setShowForm(true);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    globalThis.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this education?')) return;
+    if (!globalThis.confirm('Are you sure you want to delete this education?')) return;
     
     try {
       await educationAPI.delete(id);
@@ -94,7 +94,7 @@ const AdminEducation = () => {
       fetchEducations();
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
-      setMessage('Error deleting education');
+      setMessage('Error deleting education: ' + (error.response?.data?.error || error.message));
     }
   };
 
@@ -142,8 +142,9 @@ const AdminEducation = () => {
               <form onSubmit={handleSubmit}>
                 <div className="form-row">
                   <div className="form-group">
-                    <label>Institution (English) *</label>
+                    <label htmlFor="edu-instEn">Institution (English) *</label>
                     <input
+                      id="edu-instEn"
                       type="text"
                       value={formData.institutionEn}
                       onChange={(e) => setFormData({ ...formData, institutionEn: e.target.value })}
@@ -152,8 +153,9 @@ const AdminEducation = () => {
                   </div>
 
                   <div className="form-group">
-                    <label>Institution (French) *</label>
+                    <label htmlFor="edu-instFr">Institution (French) *</label>
                     <input
+                      id="edu-instFr"
                       type="text"
                       value={formData.institutionFr}
                       onChange={(e) => setFormData({ ...formData, institutionFr: e.target.value })}
@@ -164,8 +166,9 @@ const AdminEducation = () => {
 
                 <div className="form-row">
                   <div className="form-group">
-                    <label>Degree (English) *</label>
+                    <label htmlFor="edu-degEn">Degree (English) *</label>
                     <input
+                      id="edu-degEn"
                       type="text"
                       value={formData.degreeEn}
                       onChange={(e) => setFormData({ ...formData, degreeEn: e.target.value })}
@@ -174,8 +177,9 @@ const AdminEducation = () => {
                   </div>
 
                   <div className="form-group">
-                    <label>Degree (French) *</label>
+                    <label htmlFor="edu-degFr">Degree (French) *</label>
                     <input
+                      id="edu-degFr"
                       type="text"
                       value={formData.degreeFr}
                       onChange={(e) => setFormData({ ...formData, degreeFr: e.target.value })}
@@ -186,8 +190,9 @@ const AdminEducation = () => {
 
                 <div className="form-row">
                   <div className="form-group">
-                    <label>Field (English) *</label>
+                    <label htmlFor="edu-fieldEn">Field (English) *</label>
                     <input
+                      id="edu-fieldEn"
                       type="text"
                       value={formData.fieldEn}
                       onChange={(e) => setFormData({ ...formData, fieldEn: e.target.value })}
@@ -196,8 +201,9 @@ const AdminEducation = () => {
                   </div>
 
                   <div className="form-group">
-                    <label>Field (French) *</label>
+                    <label htmlFor="edu-fieldFr">Field (French) *</label>
                     <input
+                      id="edu-fieldFr"
                       type="text"
                       value={formData.fieldFr}
                       onChange={(e) => setFormData({ ...formData, fieldFr: e.target.value })}
@@ -207,8 +213,9 @@ const AdminEducation = () => {
                 </div>
 
                 <div className="form-group">
-                  <label>Description (English)</label>
+                  <label htmlFor="edu-descEn">Description (English)</label>
                   <textarea
+                    id="edu-descEn"
                     rows="3"
                     value={formData.descriptionEn}
                     onChange={(e) => setFormData({ ...formData, descriptionEn: e.target.value })}
@@ -216,8 +223,9 @@ const AdminEducation = () => {
                 </div>
 
                 <div className="form-group">
-                  <label>Description (French)</label>
+                  <label htmlFor="edu-descFr">Description (French)</label>
                   <textarea
+                    id="edu-descFr"
                     rows="3"
                     value={formData.descriptionFr}
                     onChange={(e) => setFormData({ ...formData, descriptionFr: e.target.value })}
@@ -226,8 +234,9 @@ const AdminEducation = () => {
 
                 <div className="form-row">
                   <div className="form-group">
-                    <label>Location</label>
+                    <label htmlFor="edu-location">Location</label>
                     <input
+                      id="edu-location"
                       type="text"
                       value={formData.location}
                       onChange={(e) => setFormData({ ...formData, location: e.target.value })}
@@ -236,8 +245,9 @@ const AdminEducation = () => {
                   </div>
 
                   <div className="form-group">
-                    <label>GPA</label>
+                    <label htmlFor="edu-gpa">GPA</label>
                     <input
+                      id="edu-gpa"
                       type="text"
                       value={formData.gpa}
                       onChange={(e) => setFormData({ ...formData, gpa: e.target.value })}
@@ -248,8 +258,9 @@ const AdminEducation = () => {
 
                 <div className="form-row">
                   <div className="form-group">
-                    <label>Start Date *</label>
+                    <label htmlFor="edu-startDate">Start Date *</label>
                     <input
+                      id="edu-startDate"
                       type="date"
                       value={formData.startDate}
                       onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
@@ -258,8 +269,9 @@ const AdminEducation = () => {
                   </div>
 
                   <div className="form-group">
-                    <label>End Date</label>
+                    <label htmlFor="edu-endDate">End Date</label>
                     <input
+                      id="edu-endDate"
                       type="date"
                       value={formData.endDate}
                       onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
@@ -281,11 +293,12 @@ const AdminEducation = () => {
                   </div>
 
                   <div className="form-group">
-                    <label>Order</label>
+                    <label htmlFor="edu-order">Order</label>
                     <input
+                      id="edu-order"
                       type="number"
                       value={formData.order}
-                      onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) })}
+                      onChange={(e) => setFormData({ ...formData, order: Number.parseInt(e.target.value) })}
                     />
                   </div>
                 </div>

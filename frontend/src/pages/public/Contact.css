@@ -67,9 +67,9 @@
 }
 
 .tabs button.active {
-  background: #007bff;
+  background: #0062cc;
   color: white;
-  border-color: #007bff;
+  border-color: #0062cc;
 }
 
 .contact-form {

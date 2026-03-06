@@ -63,11 +63,11 @@ const AdminContactInfo = () => {
       order: contact.order,
     });
     setShowForm(true);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    globalThis.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this contact info?')) return;
+    if (!globalThis.confirm('Are you sure you want to delete this contact info?')) return;
     
     try {
       await contactInfoAPI.delete(id);
@@ -75,7 +75,7 @@ const AdminContactInfo = () => {
       fetchContacts();
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
-      setMessage('Error deleting contact info');
+      setMessage('Error deleting contact info: ' + (error.response?.data?.error || error.message));
     }
   };
 
@@ -114,8 +114,9 @@ const AdminContactInfo = () => {
               <h2>{editing ? 'Edit Contact Info' : 'Add New Contact Info'}</h2>
               <form onSubmit={handleSubmit}>
                 <div className="form-group">
-                  <label>Type *</label>
+                  <label htmlFor="ci-type">Type *</label>
                   <select
+                    id="ci-type"
                     value={formData.type}
                     onChange={(e) => setFormData({ ...formData, type: e.target.value })}
                     required
@@ -129,8 +130,9 @@ const AdminContactInfo = () => {
                 </div>
 
                 <div className="form-group">
-                  <label>Label *</label>
+                  <label htmlFor="ci-label">Label *</label>
                   <input
+                    id="ci-label"
                     type="text"
                     value={formData.label}
                     onChange={(e) => setFormData({ ...formData, label: e.target.value })}
@@ -140,8 +142,9 @@ const AdminContactInfo = () => {
                 </div>
 
                 <div className="form-group">
-                  <label>Value *</label>
+                  <label htmlFor="ci-value">Value *</label>
                   <input
+                    id="ci-value"
                     type="text"
                     value={formData.value}
                     onChange={(e) => setFormData({ ...formData, value: e.target.value })}
@@ -151,8 +154,9 @@ const AdminContactInfo = () => {
                 </div>
 
                 <div className="form-group">
-                  <label>Icon (optional)</label>
+                  <label htmlFor="ci-icon">Icon (optional)</label>
                   <input
+                    id="ci-icon"
                     type="text"
                     value={formData.icon}
                     onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
@@ -173,11 +177,12 @@ const AdminContactInfo = () => {
                   </div>
 
                   <div className="form-group">
-                    <label>Order</label>
+                    <label htmlFor="ci-order">Order</label>
                     <input
+                      id="ci-order"
                       type="number"
                       value={formData.order}
-                      onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) })}
+                      onChange={(e) => setFormData({ ...formData, order: Number.parseInt(e.target.value) })}
                     />
                   </div>
                 </div>

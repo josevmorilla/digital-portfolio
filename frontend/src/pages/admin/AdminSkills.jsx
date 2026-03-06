@@ -66,7 +66,7 @@ const AdminSkills = () => {
   const updateCatEdit = (category, field, value) => {
     setCatEdits(prev =>
       prev.map(cs =>
-        cs.category === category ? { ...cs, [field]: parseInt(value) || 0 } : cs
+        cs.category === category ? { ...cs, [field]: Number.parseInt(value) || 0 } : cs
       )
     );
   };
@@ -100,18 +100,18 @@ const AdminSkills = () => {
       order: skill.order,
     });
     setShowForm(true);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    globalThis.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this skill?')) return;
+    if (!globalThis.confirm('Are you sure you want to delete this skill?')) return;
     try {
       await skillsAPI.delete(id);
       setMessage('Skill deleted successfully!');
       fetchSkills();
       fetchCategorySettings();
     } catch (error) {
-      setMessage('Error deleting skill');
+      setMessage('Error deleting skill: ' + (error.response?.data?.error || error.message));
     }
   };
 
@@ -178,7 +178,7 @@ const AdminSkills = () => {
                             min="1"
                             step="0.5"
                             value={cs.speed / 1000}
-                            onChange={(e) => updateCatEdit(cs.category, 'speed', parseFloat(e.target.value) * 1000)}
+                            onChange={(e) => updateCatEdit(cs.category, 'speed', Number.parseFloat(e.target.value) * 1000)}
                             className="cat-input"
                           />
                         </td>
@@ -201,8 +201,9 @@ const AdminSkills = () => {
               <h2>{editing ? 'Edit Skill' : 'Add New Skill'}</h2>
               <form onSubmit={handleSubmit}>
                 <div className="form-group">
-                  <label>Name (English) *</label>
+                  <label htmlFor="skill-nameEn">Name (English) *</label>
                   <input
+                    id="skill-nameEn"
                     type="text"
                     value={formData.nameEn}
                     onChange={(e) => setFormData({ ...formData, nameEn: e.target.value })}
@@ -210,8 +211,9 @@ const AdminSkills = () => {
                   />
                 </div>
                 <div className="form-group">
-                  <label>Name (French) *</label>
+                  <label htmlFor="skill-nameFr">Name (French) *</label>
                   <input
+                    id="skill-nameFr"
                     type="text"
                     value={formData.nameFr}
                     onChange={(e) => setFormData({ ...formData, nameFr: e.target.value })}
@@ -219,8 +221,9 @@ const AdminSkills = () => {
                   />
                 </div>
                 <div className="form-group">
-                  <label>Category *</label>
+                  <label htmlFor="skill-category">Category *</label>
                   <select
+                    id="skill-category"
                     value={formData.category}
                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                     required
@@ -233,8 +236,9 @@ const AdminSkills = () => {
                   </select>
                 </div>
                 <div className="form-group">
-                  <label>Icon (optional)</label>
+                  <label htmlFor="skill-icon">Icon (optional)</label>
                   <input
+                    id="skill-icon"
                     type="text"
                     value={formData.icon}
                     onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
@@ -242,11 +246,12 @@ const AdminSkills = () => {
                   />
                 </div>
                 <div className="form-group">
-                  <label>Order (within category)</label>
+                  <label htmlFor="skill-order">Order (within category)</label>
                   <input
+                    id="skill-order"
                     type="number"
                     value={formData.order}
-                    onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) })}
+                    onChange={(e) => setFormData({ ...formData, order: Number.parseInt(e.target.value) })}
                   />
                 </div>
                 <div className="form-actions">

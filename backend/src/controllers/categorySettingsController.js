@@ -55,13 +55,13 @@ exports.updateAll = async (req, res) => {
       await prisma.categorySettings.upsert({
         where: { category: s.category },
         update: {
-          displayOrder: parseInt(s.displayOrder),
-          speed: parseInt(s.speed),
+          displayOrder: Number.parseInt(s.displayOrder),
+          speed: Number.parseInt(s.speed),
         },
         create: {
           category: s.category,
-          displayOrder: parseInt(s.displayOrder),
-          speed: parseInt(s.speed),
+          displayOrder: Number.parseInt(s.displayOrder),
+          speed: Number.parseInt(s.speed),
         },
       });
     }

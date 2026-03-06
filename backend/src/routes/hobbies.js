@@ -1,5 +1,5 @@
 const express = require('express');
-const fs = require('fs');
+const fs = require('node:fs');
 const { body } = require('express-validator');
 const hobbyController = require('../controllers/hobbyController');
 const authMiddleware = require('../middleware/auth');

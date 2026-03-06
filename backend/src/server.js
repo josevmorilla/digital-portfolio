@@ -1,5 +1,5 @@
-const path = require('path');
-const fs = require('fs');
+const path = require('node:path');
+const fs = require('node:fs');
 require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 const express = require('express');
 const cors = require('cors');
@@ -58,7 +58,7 @@ configuredOrigins.forEach(origin => {
       u.hostname = 'www.' + u.hostname;
     }
     allowedOrigins.add(u.origin);
-  } catch (_) { /* ignore malformed URLs */ }
+  } catch { /* ignore malformed URLs */ }
 });
 
 app.use(cors({
@@ -70,7 +70,7 @@ app.use(cors({
     try {
       const u = new URL(origin);
       if (u.hostname.endsWith('.vercel.app')) return callback(null, true);
-    } catch (_) { /* ignore */ }
+    } catch { /* ignore */ }
     callback(new Error(`CORS: origin ${origin} not allowed`));
   },
   credentials: true,
@@ -114,12 +114,15 @@ app.use((err, req, res, next) => {
 
 // Fallback handler for /uploads – diagnose missing files
 app.use('/uploads', (req, res) => {
-  const requestedFile = path.join(uploadDir, req.path);
+  // Sanitize: resolve then verify the path stays inside uploadDir
+  const requestedFile = path.resolve(uploadDir, '.' + path.normalize(req.path));
+  if (!requestedFile.startsWith(path.resolve(uploadDir))) {
+    return res.status(400).json({ error: 'Invalid path' });
+  }
   const dirPath = path.dirname(requestedFile);
   const dirExists = fs.existsSync(dirPath);
-  const files = dirExists ? fs.readdirSync(dirPath) : [];
-  console.error(`Upload 404: ${requestedFile} | dir exists: ${dirExists} | files in dir: [${files.join(', ')}]`);
-  res.status(404).json({ error: 'File not found', path: requestedFile, dirExists, filesInDir: files });
+  console.error('Upload 404 – dir exists:', dirExists);
+  res.status(404).json({ error: 'File not found' });
 });
 
 // 404 handler

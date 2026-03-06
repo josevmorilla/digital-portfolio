@@ -25,7 +25,7 @@ const AdminTestimonials = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this testimonial?')) return;
+    if (!globalThis.confirm('Are you sure you want to delete this testimonial?')) return;
     
     try {
       await testimonialsAPI.delete(id);
@@ -44,7 +44,7 @@ const AdminTestimonials = () => {
       fetchTestimonials();
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
-      setMessage('Error approving testimonial');
+      setMessage('Error approving testimonial: ' + (error.response?.data?.error || error.message));
     }
   };
 
@@ -58,12 +58,12 @@ const AdminTestimonials = () => {
       fetchTestimonials();
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
-      setMessage('Error unapproving testimonial');
+      setMessage('Error unapproving testimonial: ' + (error.response?.data?.error || error.message));
     }
   };
 
   const handleReject = async (id) => {
-    if (!window.confirm('Are you sure you want to reject this testimonial? It will be permanently removed.')) return;
+    if (!globalThis.confirm('Are you sure you want to reject this testimonial? It will be permanently removed.')) return;
     
     try {
       await testimonialsAPI.reject(id);
@@ -71,7 +71,7 @@ const AdminTestimonials = () => {
       fetchTestimonials();
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
-      setMessage('Error rejecting testimonial');
+      setMessage('Error rejecting testimonial: ' + (error.response?.data?.error || error.message));
     }
   };
 
@@ -186,13 +186,13 @@ const AdminTestimonials = () => {
                 className={`status-filter-btn status-filter-pending${statusFilter === 'pending' ? ' active' : ''}`}
                 onClick={() => setStatusFilter('pending')}
               >
-                Pending <span className="filter-count">{pendingTestimonials.length}</span>
+                Pending{' '}<span className="filter-count">{pendingTestimonials.length}</span>
               </button>
               <button
                 className={`status-filter-btn status-filter-approved${statusFilter === 'approved' ? ' active' : ''}`}
                 onClick={() => setStatusFilter('approved')}
               >
-                Approved <span className="filter-count">{approvedTestimonials.length}</span>
+                Approved{' '}<span className="filter-count">{approvedTestimonials.length}</span>
               </button>
             </div>
 
