@@ -38,4 +38,7 @@ async function fixMigrations() {
   }
 }
 
-await fixMigrations();
+fixMigrations().catch((err) => {
+  console.error('[fix-migrations] Fatal error:', err);
+  process.exit(1);
+});
