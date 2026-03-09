@@ -775,7 +775,8 @@ const Home = () => {
 
       {/* Testimonial Modal */}
       {showTestimonialModal && (
-        <div className="modal-overlay" role="button" tabIndex={0} aria-label="Close modal" onClick={() => setShowTestimonialModal(false)} onKeyDown={(e) => { if (e.key === 'Escape') setShowTestimonialModal(false); }}>
+        <div className="modal-overlay">
+          <button className="modal-overlay-close" aria-label="Close modal" onClick={() => setShowTestimonialModal(false)} onKeyDown={(e) => { if (e.key === 'Escape') setShowTestimonialModal(false); }} />
           <dialog className="modal-content" open onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
             <button 
               className="modal-close"
