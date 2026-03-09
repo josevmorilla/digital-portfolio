@@ -43,4 +43,4 @@ async function fixMigrations() {
   }
 }
 
-await fixMigrations();
+fixMigrations();
