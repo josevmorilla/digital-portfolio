@@ -55,6 +55,13 @@ describe('Project Controller', () => {
       await projectController.getById(req, res);
       expect(res.status).toHaveBeenCalledWith(404);
     });
+
+    test('returns 500 on error', async () => {
+      req.params.id = 'p1';
+      prisma.project.findUnique.mockRejectedValue(new Error('DB'));
+      await projectController.getById(req, res);
+      expect(res.status).toHaveBeenCalledWith(500);
+    });
   });
 
   describe('create', () => {
@@ -64,6 +71,30 @@ describe('Project Controller', () => {
       await projectController.create(req, res);
       expect(res.status).toHaveBeenCalledWith(201);
       expect(res.json).toHaveBeenCalledWith({ id: 'p1', titleEn: 'New' });
+    });
+
+    test('creates with string featured and dates', async () => {
+      req.body = {
+        titleEn: 'P', titleFr: 'P', featured: 'true',
+        startDate: '2020-01-01', endDate: '2024-01-01',
+      };
+      prisma.project.create.mockResolvedValue({ id: 'p2' });
+      await projectController.create(req, res);
+      expect(res.status).toHaveBeenCalledWith(201);
+    });
+
+    test('creates with false featured and no dates or order', async () => {
+      req.body = { titleEn: 'P', titleFr: 'P', featured: false };
+      prisma.project.create.mockResolvedValue({ id: 'p3' });
+      await projectController.create(req, res);
+      expect(res.status).toHaveBeenCalledWith(201);
+    });
+
+    test('returns 500 on error', async () => {
+      req.body = { titleEn: 'X' };
+      prisma.project.create.mockRejectedValue(new Error('DB'));
+      await projectController.create(req, res);
+      expect(res.status).toHaveBeenCalledWith(500);
     });
   });
 
@@ -83,6 +114,25 @@ describe('Project Controller', () => {
       await projectController.update(req, res);
       expect(res.status).toHaveBeenCalledWith(404);
     });
+
+    test('updates with all branches', async () => {
+      req.params.id = 'p1';
+      req.body = {
+        titleEn: 'U', featured: undefined, order: undefined,
+        technologies: ['JS'], startDate: '2020-01-01', endDate: '2024-01-01',
+      };
+      prisma.project.update.mockResolvedValue({ id: 'p1' });
+      await projectController.update(req, res);
+      expect(res.json).toHaveBeenCalledWith({ id: 'p1' });
+    });
+
+    test('returns 500 on generic error', async () => {
+      req.params.id = 'p1';
+      req.body = { titleEn: 'X' };
+      prisma.project.update.mockRejectedValue(new Error('DB'));
+      await projectController.update(req, res);
+      expect(res.status).toHaveBeenCalledWith(500);
+    });
   });
 
   describe('delete', () => {
@@ -98,6 +148,13 @@ describe('Project Controller', () => {
       prisma.project.delete.mockRejectedValue({ code: 'P2025' });
       await projectController.delete(req, res);
       expect(res.status).toHaveBeenCalledWith(404);
+    });
+
+    test('returns 500 on generic error', async () => {
+      req.params.id = 'p1';
+      prisma.project.delete.mockRejectedValue(new Error('DB'));
+      await projectController.delete(req, res);
+      expect(res.status).toHaveBeenCalledWith(500);
     });
   });
 });

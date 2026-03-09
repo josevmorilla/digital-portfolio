@@ -92,4 +92,50 @@ describe('AdminContactInfo', () => {
     fireEvent.click(screen.getByText('Cancel'));
     expect(screen.queryByText('Add New Contact Info')).not.toBeInTheDocument();
   });
+
+  test('does not delete when confirm returns false', async () => {
+    globalThis.confirm = vi.fn(() => false);
+    renderComp();
+    await waitFor(() => expect(screen.getAllByText('Delete').length).toBeGreaterThan(0));
+    fireEvent.click(screen.getAllByText('Delete')[0]);
+    expect(contactInfoAPI.delete).not.toHaveBeenCalled();
+  });
+
+  test('handles delete error with message fallback', async () => {
+    contactInfoAPI.delete.mockRejectedValue(new Error('Network fail'));
+    globalThis.confirm = vi.fn(() => true);
+    renderComp();
+    await waitFor(() => expect(screen.getAllByText('Delete').length).toBeGreaterThan(0));
+    fireEvent.click(screen.getAllByText('Delete')[0]);
+    await waitFor(() => expect(screen.getByText(/Error deleting contact info/)).toBeInTheDocument());
+  });
+
+  test('handles create error with message fallback', async () => {
+    contactInfoAPI.create.mockRejectedValue(new Error('Network fail'));
+    renderComp();
+    await waitFor(() => expect(screen.getByText('+ Add New Contact Info')).toBeInTheDocument());
+    fireEvent.click(screen.getByText('+ Add New Contact Info'));
+    fireEvent.change(screen.getByLabelText('Label *'), { target: { value: 'X' } });
+    fireEvent.change(screen.getByLabelText('Value *'), { target: { value: 'X' } });
+    fireEvent.click(screen.getByText('Create Contact Info'));
+    await waitFor(() => expect(screen.getByText(/Error saving contact info: Network fail/)).toBeInTheDocument());
+  });
+
+  test('handles fetch error', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    contactInfoAPI.getAll.mockRejectedValue(new Error('fail'));
+    renderComp();
+    await waitFor(() => expect(screen.getByText('Manage Contact Info')).toBeInTheDocument());
+  });
+
+  test('updates form fields', async () => {
+    renderComp();
+    await waitFor(() => expect(screen.getByText('+ Add New Contact Info')).toBeInTheDocument());
+    fireEvent.click(screen.getByText('+ Add New Contact Info'));
+    fireEvent.change(screen.getByLabelText('Icon (optional)'), { target: { value: 'icon-test' } });
+    fireEvent.change(screen.getByLabelText('Order'), { target: { value: '5' } });
+    const checkbox = screen.getByRole('checkbox');
+    fireEvent.click(checkbox);
+    fireEvent.change(screen.getByLabelText('Type *'), { target: { value: 'phone' } });
+  });
 });

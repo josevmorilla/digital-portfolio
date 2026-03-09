@@ -169,4 +169,84 @@ describe('AdminSkills', () => {
     await waitFor(() => expect(screen.getByText('Back to Dashboard')).toBeInTheDocument());
     expect(screen.getByText('Back to Dashboard').closest('a')).toHaveAttribute('href', '/dashboard');
   });
+
+  test('changes category settings displayOrder', async () => {
+    renderSkills();
+    await waitFor(() => expect(screen.getByText('Category Carousel Settings')).toBeInTheDocument());
+    const orderInputs = document.querySelectorAll('.cat-input');
+    fireEvent.change(orderInputs[0], { target: { value: '5' } });
+    expect(orderInputs[0].value).toBe('5');
+  });
+
+  test('changes category settings speed', async () => {
+    renderSkills();
+    await waitFor(() => expect(screen.getByText('Category Carousel Settings')).toBeInTheDocument());
+    const inputs = document.querySelectorAll('.cat-input');
+    // Speed is the second cat-input (the first is displayOrder)
+    fireEvent.change(inputs[1], { target: { value: '5' } });
+  });
+
+  test('handles fetch error', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    skillsAPI.getAll.mockRejectedValue(new Error('fail'));
+    renderSkills();
+    await waitFor(() => expect(screen.getByText('Manage Skills')).toBeInTheDocument());
+  });
+
+  test('handles category settings fetch error', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    categorySettingsAPI.getAll.mockRejectedValue(new Error('fail'));
+    renderSkills();
+    await waitFor(() => expect(screen.getByText('Manage Skills')).toBeInTheDocument());
+  });
+
+  test('handles create error with message fallback', async () => {
+    skillsAPI.create.mockRejectedValue(new Error('Network error'));
+    renderSkills();
+    await waitFor(() => expect(screen.getByText('+ Add New Skill')).toBeInTheDocument());
+    fireEvent.click(screen.getByText('+ Add New Skill'));
+    fireEvent.change(screen.getByLabelText('Name (English) *'), { target: { value: 'X' } });
+    fireEvent.change(screen.getByLabelText('Name (French) *'), { target: { value: 'X' } });
+    fireEvent.change(screen.getByLabelText('Category *'), { target: { value: 'Languages' } });
+    fireEvent.click(screen.getByText('Create Skill'));
+    await waitFor(() => expect(screen.getByText(/Error saving skill: Network error/)).toBeInTheDocument());
+  });
+
+  test('handles delete error with message fallback', async () => {
+    skillsAPI.delete.mockRejectedValue(new Error('Network error'));
+    globalThis.confirm = vi.fn(() => true);
+    renderSkills();
+    await waitFor(() => expect(screen.getAllByText('Delete').length).toBeGreaterThan(0));
+    fireEvent.click(screen.getAllByText('Delete')[0]);
+    await waitFor(() => expect(screen.getByText(/Error deleting skill: Network error/)).toBeInTheDocument());
+  });
+
+  test('handles category settings save error with message fallback', async () => {
+    categorySettingsAPI.updateAll.mockRejectedValue(new Error('Network error'));
+    renderSkills();
+    await waitFor(() => expect(screen.getByText('Save Category Settings')).toBeInTheDocument());
+    fireEvent.click(screen.getByText('Save Category Settings'));
+    await waitFor(() => expect(screen.getByText(/Error saving: Network error/)).toBeInTheDocument());
+  });
+
+  test('updates icon and order fields', async () => {
+    renderSkills();
+    await waitFor(() => expect(screen.getByText('+ Add New Skill')).toBeInTheDocument());
+    fireEvent.click(screen.getByText('+ Add New Skill'));
+    fireEvent.change(screen.getByLabelText('Icon (optional)'), { target: { value: 'icon-test' } });
+    fireEvent.change(screen.getByLabelText('Order (within category)'), { target: { value: '5' } });
+  });
+
+  test('sorts category settings by displayOrder', async () => {
+    categorySettingsAPI.getAll.mockResolvedValue({ data: [
+      { category: 'Tools', displayOrder: 2, speed: 3000 },
+      { category: 'Frameworks', displayOrder: 1, speed: 3000 },
+    ] });
+    renderSkills();
+    await waitFor(() => expect(screen.getByText('Frameworks')).toBeInTheDocument());
+    const rows = screen.getAllByRole('row');
+    // Header + 2 data rows; first data row is Frameworks (order 1), second is Tools (order 2)
+    expect(rows[1]).toHaveTextContent('Frameworks');
+    expect(rows[2]).toHaveTextContent('Tools');
+  });
 });

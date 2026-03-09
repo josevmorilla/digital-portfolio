@@ -93,6 +93,22 @@ describe('AuthContext', () => {
     });
   });
 
+  test('handles fetchUser error by logging out', async () => {
+    localStorage.setItem('token', 'bad-token');
+    axios.get.mockRejectedValue(new Error('401 Unauthorized'));
+
+    render(
+      <AuthProvider>
+        <TestConsumer />
+      </AuthProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByTestId('auth').textContent).toBe('no');
+      expect(localStorage.getItem('token')).toBeNull();
+    });
+  });
+
   test('logout clears token and user', async () => {
     localStorage.setItem('token', 'existing-token');
     axios.get.mockResolvedValue({ data: { user: { id: '1', name: 'Jose', email: 'jose@test.com' } } });

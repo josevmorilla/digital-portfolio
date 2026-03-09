@@ -111,4 +111,120 @@ describe('AdminTestimonials', () => {
     renderComp();
     await waitFor(() => expect(screen.getByText('Back to Dashboard')).toBeInTheDocument());
   });
+
+  test('does not delete when confirm returns false', async () => {
+    globalThis.confirm = vi.fn(() => false);
+    renderComp();
+    await waitFor(() => expect(screen.getAllByText('Delete').length).toBeGreaterThan(0));
+    fireEvent.click(screen.getAllByText('Delete')[0]);
+    expect(testimonialsAPI.delete).not.toHaveBeenCalled();
+  });
+
+  test('does not reject when confirm returns false', async () => {
+    globalThis.confirm = vi.fn(() => false);
+    renderComp();
+    await waitFor(() => expect(screen.getByText('✗ Reject')).toBeInTheDocument());
+    fireEvent.click(screen.getByText('✗ Reject'));
+    expect(testimonialsAPI.reject).not.toHaveBeenCalled();
+  });
+
+  test('handles reject error', async () => {
+    testimonialsAPI.reject.mockRejectedValue({ response: { data: { error: 'reject fail' } } });
+    globalThis.confirm = vi.fn(() => true);
+    renderComp();
+    await waitFor(() => expect(screen.getByText('✗ Reject')).toBeInTheDocument());
+    fireEvent.click(screen.getByText('✗ Reject'));
+    await waitFor(() => expect(screen.getByText(/Error rejecting/)).toBeInTheDocument());
+  });
+
+  test('handles unapprove error', async () => {
+    testimonialsAPI.update.mockRejectedValue({ response: { data: { error: 'unapprove fail' } } });
+    renderComp();
+    await waitFor(() => expect(screen.getByText('Unapprove')).toBeInTheDocument());
+    fireEvent.click(screen.getByText('Unapprove'));
+    await waitFor(() => expect(screen.getByText(/Error unapproving/)).toBeInTheDocument());
+  });
+
+  test('handles delete error', async () => {
+    testimonialsAPI.delete.mockRejectedValue(new Error('delete fail'));
+    globalThis.confirm = vi.fn(() => true);
+    renderComp();
+    await waitFor(() => expect(screen.getAllByText('Delete').length).toBeGreaterThan(0));
+    fireEvent.click(screen.getAllByText('Delete')[0]);
+    await waitFor(() => expect(screen.getByText(/Error deleting testimonial/)).toBeInTheDocument());
+  });
+
+  test('filters to approved only', async () => {
+    renderComp();
+    await waitFor(() => expect(screen.getByText(/All Testimonials/)).toBeInTheDocument());
+    const approvedBtn = document.querySelector('.status-filter-approved');
+    fireEvent.click(approvedBtn);
+    expect(screen.getByText('Excellent developer')).toBeInTheDocument();
+    // Click back to All
+    const allBtn = document.querySelectorAll('.status-filter-btn')[0];
+    fireEvent.click(allBtn);
+  });
+
+  test('shows no pending message when filtering pending with none', async () => {
+    testimonialsAPI.getAll.mockResolvedValue({ data: [
+      { id: '2', name: 'Bob', company: null, position: null, content: 'Good', approved: true, order: 1, createdAt: '2025-01-14T10:00:00Z' },
+    ] });
+    renderComp();
+    await waitFor(() => expect(screen.getByText(/All Testimonials/)).toBeInTheDocument());
+    const pendingBtn = document.querySelector('.status-filter-pending');
+    fireEvent.click(pendingBtn);
+    await waitFor(() => expect(screen.getByText(/No pending testimonials/)).toBeInTheDocument());
+  });
+
+  test('shows no approved message when filtering approved with none', async () => {
+    testimonialsAPI.getAll.mockResolvedValue({ data: [
+      { id: '1', name: 'Alice', company: 'Acme', position: 'CTO', content: 'Great!', approved: false, order: 1, createdAt: '2025-01-15T10:00:00Z' },
+    ] });
+    renderComp();
+    await waitFor(() => expect(screen.getByText(/All Testimonials/)).toBeInTheDocument());
+    const approvedBtn = document.querySelector('.status-filter-approved');
+    fireEvent.click(approvedBtn);
+    await waitFor(() => expect(screen.getByText(/No approved testimonials/)).toBeInTheDocument());
+  });
+
+  test('handles fetch error gracefully', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    testimonialsAPI.getAll.mockRejectedValue(new Error('fail'));
+    renderComp();
+    await waitFor(() => expect(screen.getByText('Manage Testimonials')).toBeInTheDocument());
+  });
+
+  test('renders testimonial without company and position', async () => {
+    testimonialsAPI.getAll.mockResolvedValue({ data: [
+      { id: '3', name: 'Charlie', company: null, position: null, content: 'Nice work', approved: false, order: 1, createdAt: '2025-01-15T10:00:00Z' },
+    ] });
+    renderComp();
+    await waitFor(() => expect(screen.getByText('Nice work')).toBeInTheDocument());
+  });
+
+  test('unapproves an approved testimonial', async () => {
+    testimonialsAPI.update.mockResolvedValue({});
+    renderComp();
+    await waitFor(() => expect(screen.getAllByText('Alice').length).toBeGreaterThan(0));
+    // Bob is approved, Unapprove button is visible in the all-view for approved testimonials
+    fireEvent.click(screen.getByText('Unapprove'));
+    await waitFor(() => expect(testimonialsAPI.update).toHaveBeenCalled());
+  });
+
+  test('handles unapprove error', async () => {
+    testimonialsAPI.update.mockRejectedValue({ response: { data: { error: 'Server error' } } });
+    renderComp();
+    await waitFor(() => expect(screen.getAllByText('Alice').length).toBeGreaterThan(0));
+    fireEvent.click(screen.getByText('Unapprove'));
+    await waitFor(() => expect(screen.getByText(/Error unapproving/)).toBeInTheDocument());
+  });
+
+  test('handles reject error', async () => {
+    testimonialsAPI.reject.mockRejectedValue(new Error('Network'));
+    globalThis.confirm = vi.fn(() => true);
+    renderComp();
+    await waitFor(() => expect(screen.getAllByText('Alice').length).toBeGreaterThan(0));
+    fireEvent.click(screen.getByText('✗ Reject'));
+    await waitFor(() => expect(screen.getByText(/Error rejecting/)).toBeInTheDocument());
+  });
 });

@@ -107,4 +107,18 @@ describe('Contact', () => {
     renderContact();
     expect(screen.getByText(/Back to Home/)).toBeInTheDocument();
   });
+
+  test('triggers honeypot field onChange', () => {
+    renderContact();
+    const honeypotInput = document.getElementById('website-hp-cpage');
+    fireEvent.change(honeypotInput, { target: { value: 'spam' } });
+    expect(honeypotInput.value).toBe('spam');
+  });
+
+  test('fills subject field', () => {
+    renderContact();
+    const subjectInput = screen.getByLabelText(/Subject/);
+    fireEvent.change(subjectInput, { target: { value: 'Inquiry' } });
+    expect(subjectInput).toHaveValue('Inquiry');
+  });
 });

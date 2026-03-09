@@ -59,6 +59,13 @@ describe('Contact Info Controller', () => {
       await contactInfoController.getById(req, res);
       expect(res.status).toHaveBeenCalledWith(404);
     });
+
+    test('returns 500 on error', async () => {
+      req.params.id = 'c1';
+      prisma.contactInfo.findUnique.mockRejectedValue(new Error('DB'));
+      await contactInfoController.getById(req, res);
+      expect(res.status).toHaveBeenCalledWith(500);
+    });
   });
 
   describe('create', () => {
@@ -67,6 +74,34 @@ describe('Contact Info Controller', () => {
       prisma.contactInfo.create.mockResolvedValue({ id: 'c1' });
       await contactInfoController.create(req, res);
       expect(res.status).toHaveBeenCalledWith(201);
+    });
+
+    test('creates with explicit visible true and order', async () => {
+      req.body = { type: 'phone', label: 'Phone', value: '555', visible: true, order: 3 };
+      prisma.contactInfo.create.mockResolvedValue({ id: 'c2' });
+      await contactInfoController.create(req, res);
+      expect(res.status).toHaveBeenCalledWith(201);
+    });
+
+    test('creates with visible string true', async () => {
+      req.body = { type: 'github', label: 'GH', value: 'url', visible: 'true' };
+      prisma.contactInfo.create.mockResolvedValue({ id: 'c3' });
+      await contactInfoController.create(req, res);
+      expect(res.status).toHaveBeenCalledWith(201);
+    });
+
+    test('creates with visible false', async () => {
+      req.body = { type: 'github', label: 'GH', value: 'url', visible: false };
+      prisma.contactInfo.create.mockResolvedValue({ id: 'c4' });
+      await contactInfoController.create(req, res);
+      expect(res.status).toHaveBeenCalledWith(201);
+    });
+
+    test('returns 500 on error', async () => {
+      req.body = { type: 'email', label: 'Email', value: 'test@test.com' };
+      prisma.contactInfo.create.mockRejectedValue(new Error('DB'));
+      await contactInfoController.create(req, res);
+      expect(res.status).toHaveBeenCalledWith(500);
     });
   });
 
@@ -86,6 +121,22 @@ describe('Contact Info Controller', () => {
       await contactInfoController.update(req, res);
       expect(res.status).toHaveBeenCalledWith(404);
     });
+
+    test('updates with visible false and order undefined', async () => {
+      req.params.id = 'c1';
+      req.body = { label: 'Updated', visible: false };
+      prisma.contactInfo.update.mockResolvedValue({ id: 'c1' });
+      await contactInfoController.update(req, res);
+      expect(res.json).toHaveBeenCalledWith({ id: 'c1' });
+    });
+
+    test('returns 500 on generic error', async () => {
+      req.params.id = 'c1';
+      req.body = { label: 'X' };
+      prisma.contactInfo.update.mockRejectedValue(new Error('DB'));
+      await contactInfoController.update(req, res);
+      expect(res.status).toHaveBeenCalledWith(500);
+    });
   });
 
   describe('delete', () => {
@@ -101,6 +152,13 @@ describe('Contact Info Controller', () => {
       prisma.contactInfo.delete.mockRejectedValue({ code: 'P2025' });
       await contactInfoController.delete(req, res);
       expect(res.status).toHaveBeenCalledWith(404);
+    });
+
+    test('returns 500 on generic error', async () => {
+      req.params.id = 'c1';
+      prisma.contactInfo.delete.mockRejectedValue(new Error('DB'));
+      await contactInfoController.delete(req, res);
+      expect(res.status).toHaveBeenCalledWith(500);
     });
   });
 });

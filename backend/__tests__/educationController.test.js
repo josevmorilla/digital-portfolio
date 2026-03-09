@@ -48,6 +48,13 @@ describe('Education Controller', () => {
       await educationController.getById(req, res);
       expect(res.status).toHaveBeenCalledWith(404);
     });
+
+    test('returns 500 on error', async () => {
+      req.params.id = 'e1';
+      prisma.education.findUnique.mockRejectedValue(new Error('DB'));
+      await educationController.getById(req, res);
+      expect(res.status).toHaveBeenCalledWith(500);
+    });
   });
 
   describe('create', () => {
@@ -60,6 +67,34 @@ describe('Education Controller', () => {
       await educationController.create(req, res);
       expect(res.status).toHaveBeenCalledWith(201);
     });
+
+    test('creates with string current, endDate, and order', async () => {
+      req.body = {
+        institutionEn: 'MIT', institutionFr: 'MIT', degreeEn: 'BS', degreeFr: 'BS',
+        fieldEn: 'CS', fieldFr: 'CS', startDate: '2020-01-01', endDate: '2024-01-01',
+        current: 'true', order: 5,
+      };
+      prisma.education.create.mockResolvedValue({ id: 'e2' });
+      await educationController.create(req, res);
+      expect(res.status).toHaveBeenCalledWith(201);
+    });
+
+    test('creates with false current and no order', async () => {
+      req.body = {
+        institutionEn: 'MIT', institutionFr: 'MIT', degreeEn: 'BS', degreeFr: 'BS',
+        fieldEn: 'CS', fieldFr: 'CS', startDate: '2020-01-01', current: false,
+      };
+      prisma.education.create.mockResolvedValue({ id: 'e3' });
+      await educationController.create(req, res);
+      expect(res.status).toHaveBeenCalledWith(201);
+    });
+
+    test('returns 500 on error', async () => {
+      req.body = { institutionEn: 'X', startDate: '2020-01-01' };
+      prisma.education.create.mockRejectedValue(new Error('DB'));
+      await educationController.create(req, res);
+      expect(res.status).toHaveBeenCalledWith(500);
+    });
   });
 
   describe('update', () => {
@@ -71,12 +106,39 @@ describe('Education Controller', () => {
       expect(res.json).toHaveBeenCalledWith({ id: 'e1', institutionEn: 'Updated' });
     });
 
+    test('updates with all date and boolean branches', async () => {
+      req.params.id = 'e1';
+      req.body = {
+        institutionEn: 'Updated', startDate: '2020-01-01', endDate: '2024-01-01',
+        current: 'true', order: undefined,
+      };
+      prisma.education.update.mockResolvedValue({ id: 'e1' });
+      await educationController.update(req, res);
+      expect(res.json).toHaveBeenCalledWith({ id: 'e1' });
+    });
+
+    test('updates with current undefined', async () => {
+      req.params.id = 'e1';
+      req.body = { institutionEn: 'Updated' };
+      prisma.education.update.mockResolvedValue({ id: 'e1' });
+      await educationController.update(req, res);
+      expect(res.json).toHaveBeenCalledWith({ id: 'e1' });
+    });
+
     test('returns 404 on P2025', async () => {
       req.params.id = 'none';
       req.body = { institutionEn: 'X' };
       prisma.education.update.mockRejectedValue({ code: 'P2025' });
       await educationController.update(req, res);
       expect(res.status).toHaveBeenCalledWith(404);
+    });
+
+    test('returns 500 on generic error', async () => {
+      req.params.id = 'e1';
+      req.body = { institutionEn: 'X' };
+      prisma.education.update.mockRejectedValue(new Error('DB'));
+      await educationController.update(req, res);
+      expect(res.status).toHaveBeenCalledWith(500);
     });
   });
 
@@ -93,6 +155,13 @@ describe('Education Controller', () => {
       prisma.education.delete.mockRejectedValue({ code: 'P2025' });
       await educationController.delete(req, res);
       expect(res.status).toHaveBeenCalledWith(404);
+    });
+
+    test('returns 500 on generic error', async () => {
+      req.params.id = 'e1';
+      prisma.education.delete.mockRejectedValue(new Error('DB'));
+      await educationController.delete(req, res);
+      expect(res.status).toHaveBeenCalledWith(500);
     });
   });
 });

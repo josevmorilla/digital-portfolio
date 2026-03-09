@@ -122,6 +122,27 @@ describe('AdminMessages', () => {
     expect(contactMessagesAPI.delete).not.toHaveBeenCalled();
   });
 
+  test('handles markAsUnread error', async () => {
+    contactMessagesAPI.markAsUnread.mockRejectedValue(new Error('Network'));
+    renderMessages();
+    await waitFor(() => expect(screen.getByText('Bob')).toBeInTheDocument());
+    const bobBtn = screen.getByText('Bob').closest('button');
+    fireEvent.click(bobBtn);
+    fireEvent.click(screen.getByText('Mark as Unread'));
+    await waitFor(() => expect(contactMessagesAPI.markAsUnread).toHaveBeenCalledWith('2'));
+  });
+
+  test('handles delete error', async () => {
+    contactMessagesAPI.delete.mockRejectedValue(new Error('Network'));
+    globalThis.confirm = vi.fn(() => true);
+    renderMessages();
+    await waitFor(() => expect(screen.getByText('Alice')).toBeInTheDocument());
+    const aliceBtn = screen.getByText('Alice').closest('button');
+    fireEvent.click(aliceBtn);
+    fireEvent.click(screen.getByText('Delete Message'));
+    await waitFor(() => expect(contactMessagesAPI.delete).toHaveBeenCalledWith('1'));
+  });
+
   test('shows empty state', async () => {
     contactMessagesAPI.getAll.mockResolvedValue({ data: [] });
     renderMessages();

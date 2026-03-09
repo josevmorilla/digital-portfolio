@@ -49,6 +49,13 @@ describe('Skill Controller', () => {
       await skillController.getById(req, res);
       expect(res.status).toHaveBeenCalledWith(404);
     });
+
+    test('returns 500 on error', async () => {
+      req.params.id = 's1';
+      prisma.skill.findUnique.mockRejectedValue(new Error('DB'));
+      await skillController.getById(req, res);
+      expect(res.status).toHaveBeenCalledWith(500);
+    });
   });
 
   describe('create', () => {
@@ -57,6 +64,20 @@ describe('Skill Controller', () => {
       prisma.skill.create.mockResolvedValue({ id: 's1', nameEn: 'Node' });
       await skillController.create(req, res);
       expect(res.status).toHaveBeenCalledWith(201);
+    });
+
+    test('creates with explicit order', async () => {
+      req.body = { nameEn: 'React', nameFr: 'React', category: 'Frontend', icon: 'react', order: 5 };
+      prisma.skill.create.mockResolvedValue({ id: 's2' });
+      await skillController.create(req, res);
+      expect(res.status).toHaveBeenCalledWith(201);
+    });
+
+    test('returns 500 on error', async () => {
+      req.body = { nameEn: 'X' };
+      prisma.skill.create.mockRejectedValue(new Error('DB'));
+      await skillController.create(req, res);
+      expect(res.status).toHaveBeenCalledWith(500);
     });
   });
 
@@ -76,6 +97,22 @@ describe('Skill Controller', () => {
       await skillController.update(req, res);
       expect(res.status).toHaveBeenCalledWith(404);
     });
+
+    test('updates with order undefined', async () => {
+      req.params.id = 's1';
+      req.body = { nameEn: 'Updated' };
+      prisma.skill.update.mockResolvedValue({ id: 's1' });
+      await skillController.update(req, res);
+      expect(res.json).toHaveBeenCalledWith({ id: 's1' });
+    });
+
+    test('returns 500 on generic error', async () => {
+      req.params.id = 's1';
+      req.body = { nameEn: 'X' };
+      prisma.skill.update.mockRejectedValue(new Error('DB'));
+      await skillController.update(req, res);
+      expect(res.status).toHaveBeenCalledWith(500);
+    });
   });
 
   describe('delete', () => {
@@ -91,6 +128,13 @@ describe('Skill Controller', () => {
       prisma.skill.delete.mockRejectedValue({ code: 'P2025' });
       await skillController.delete(req, res);
       expect(res.status).toHaveBeenCalledWith(404);
+    });
+
+    test('returns 500 on generic error', async () => {
+      req.params.id = 's1';
+      prisma.skill.delete.mockRejectedValue(new Error('DB'));
+      await skillController.delete(req, res);
+      expect(res.status).toHaveBeenCalledWith(500);
     });
   });
 });

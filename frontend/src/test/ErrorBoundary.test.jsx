@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, test, expect, vi } from 'vitest';
 import ErrorBoundary from '../components/ErrorBoundary';
 
@@ -41,5 +41,37 @@ describe('ErrorBoundary', () => {
       </ErrorBoundary>
     );
     expect(container.innerHTML).toBe('');
+  });
+
+  test('Go Home button navigates to /', () => {
+    const originalLocation = globalThis.location;
+    delete globalThis.location;
+    globalThis.location = { href: '', reload: vi.fn() };
+
+    render(
+      <ErrorBoundary>
+        <ThrowingComponent />
+      </ErrorBoundary>
+    );
+    fireEvent.click(screen.getByText('Go Home'));
+    expect(globalThis.location.href).toBe('/');
+
+    globalThis.location = originalLocation;
+  });
+
+  test('Refresh Page button reloads the page', () => {
+    const originalLocation = globalThis.location;
+    delete globalThis.location;
+    globalThis.location = { href: '', reload: vi.fn() };
+
+    render(
+      <ErrorBoundary>
+        <ThrowingComponent />
+      </ErrorBoundary>
+    );
+    fireEvent.click(screen.getByText('Refresh Page'));
+    expect(globalThis.location.reload).toHaveBeenCalled();
+
+    globalThis.location = originalLocation;
   });
 });

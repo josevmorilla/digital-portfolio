@@ -159,4 +159,33 @@ describe('Testimonials', () => {
     renderTestimonials();
     expect(screen.getByText('Visit the contact page')).toBeInTheDocument();
   });
+
+  test('triggers honeypot field onChange', () => {
+    renderTestimonials();
+    const honeypotInput = document.getElementById('website-hp-tpage');
+    fireEvent.change(honeypotInput, { target: { value: 'spam' } });
+    expect(honeypotInput.value).toBe('spam');
+  });
+
+  test('closes toast message', async () => {
+    testimonialsAPI.getAll.mockResolvedValue({ data: [] });
+    testimonialsAPI.create.mockResolvedValue({});
+    let now = 1000;
+    vi.spyOn(Date, 'now').mockImplementation(() => now);
+
+    renderTestimonials();
+    fireEvent.change(screen.getByLabelText(/Your Experience/), { target: { value: 'Test' } });
+    now = 10000;
+    fireEvent.click(screen.getByText('Submit Testimonial'));
+    await waitFor(() => expect(screen.getByText(/Thank you/)).toBeInTheDocument());
+    fireEvent.click(screen.getByText('×'));
+    expect(screen.queryByText(/Thank you/)).not.toBeInTheDocument();
+  });
+
+  test('handles fetch testimonials error', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    testimonialsAPI.getAll.mockRejectedValue(new Error('Network'));
+    renderTestimonials();
+    await waitFor(() => expect(screen.getByText('Write Your Testimonial')).toBeInTheDocument());
+  });
 });

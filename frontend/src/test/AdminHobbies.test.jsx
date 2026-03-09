@@ -199,4 +199,118 @@ describe('AdminHobbies', () => {
     fireEvent.click(screen.getByText('Delete'));
     await waitFor(() => expect(screen.getByText(/Error deleting hobby/)).toBeInTheDocument());
   });
+
+  test('does not delete when confirm returns false', async () => {
+    globalThis.confirm = vi.fn(() => false);
+    renderComp();
+    await waitFor(() => expect(screen.getByText('Delete')).toBeInTheDocument());
+    fireEvent.click(screen.getByText('Delete'));
+    expect(hobbiesAPI.delete).not.toHaveBeenCalled();
+  });
+
+  test('handles create error with message fallback', async () => {
+    hobbiesAPI.create.mockRejectedValue(new Error('Network error'));
+    renderComp();
+    await waitFor(() => expect(screen.getByText('+ Add New Hobby')).toBeInTheDocument());
+    fireEvent.click(screen.getByText('+ Add New Hobby'));
+    fireEvent.change(screen.getByLabelText('Name (English) *'), { target: { value: 'X' } });
+    fireEvent.change(screen.getByLabelText('Name (French) *'), { target: { value: 'X' } });
+    fireEvent.click(screen.getByText('Create Hobby'));
+    await waitFor(() => expect(screen.getByText(/Error saving hobby: Network error/)).toBeInTheDocument());
+  });
+
+  test('handles delete error with message fallback', async () => {
+    hobbiesAPI.delete.mockRejectedValue(new Error('Network error'));
+    globalThis.confirm = vi.fn(() => true);
+    renderComp();
+    await waitFor(() => expect(screen.getByText('Delete')).toBeInTheDocument());
+    fireEvent.click(screen.getByText('Delete'));
+    await waitFor(() => expect(screen.getByText(/Error deleting hobby: Network error/)).toBeInTheDocument());
+  });
+
+  test('handles fetch error', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    hobbiesAPI.getAll.mockRejectedValue(new Error('fail'));
+    renderComp();
+    await waitFor(() => expect(screen.getByText('Manage Hobbies')).toBeInTheDocument());
+  });
+
+  test('handles image upload error', async () => {
+    hobbiesAPI.uploadImage.mockRejectedValue(new Error('Upload failed'));
+    renderComp();
+    await waitFor(() => expect(screen.getByText('+ Add New Hobby')).toBeInTheDocument());
+    fireEvent.click(screen.getByText('+ Add New Hobby'));
+    const fileInput = screen.getByLabelText('Hobby Image');
+    const file = new File(['test'], 'img.jpg', { type: 'image/jpeg' });
+    fireEvent.change(fileInput, { target: { files: [file] } });
+    await waitFor(() => expect(screen.getByText(/Error uploading image: Upload failed/)).toBeInTheDocument());
+  });
+
+  test('successful image upload sets URL', async () => {
+    hobbiesAPI.uploadImage.mockResolvedValue({ data: { imageUrl: '/uploads/hobby.jpg' } });
+    renderComp();
+    await waitFor(() => expect(screen.getByText('+ Add New Hobby')).toBeInTheDocument());
+    fireEvent.click(screen.getByText('+ Add New Hobby'));
+    const fileInput = screen.getByLabelText('Hobby Image');
+    const file = new File(['test'], 'img.jpg', { type: 'image/jpeg' });
+    fireEvent.change(fileInput, { target: { files: [file] } });
+    await waitFor(() => expect(screen.getByText(/Image uploaded/)).toBeInTheDocument());
+  });
+
+  test('edits hobby without links or technologies', async () => {
+    hobbiesAPI.getAll.mockResolvedValue({ data: [{
+      id: '3', nameEn: 'Reading', nameFr: 'Lecture', descriptionEn: 'Books', descriptionFr: 'Livres',
+      icon: '', imageUrl: '', technologies: [], links: [],
+      startDate: null, endDate: null, featured: false, order: 1,
+    }] });
+    globalThis.scrollTo = vi.fn();
+    renderComp();
+    await waitFor(() => expect(screen.getByText('Edit')).toBeInTheDocument());
+    fireEvent.click(screen.getByText('Edit'));
+    expect(screen.getByDisplayValue('Reading')).toBeInTheDocument();
+  });
+
+  test('updates image URL field directly', async () => {
+    renderComp();
+    await waitFor(() => expect(screen.getByText('+ Add New Hobby')).toBeInTheDocument());
+    fireEvent.click(screen.getByText('+ Add New Hobby'));
+    fireEvent.change(screen.getByLabelText(/Image URL/), { target: { value: 'https://img.com/photo.jpg' } });
+  });
+
+  test('updates description fields', async () => {
+    renderComp();
+    await waitFor(() => expect(screen.getByText('+ Add New Hobby')).toBeInTheDocument());
+    fireEvent.click(screen.getByText('+ Add New Hobby'));
+    fireEvent.change(screen.getByLabelText('Description (English)'), { target: { value: 'Fun' } });
+    fireEvent.change(screen.getByLabelText('Description (French)'), { target: { value: 'Amusant' } });
+  });
+
+  test('adds and removes links', async () => {
+    renderComp();
+    await waitFor(() => expect(screen.getByText('+ Add New Hobby')).toBeInTheDocument());
+    fireEvent.click(screen.getByText('+ Add New Hobby'));
+    // Add a link
+    fireEvent.click(screen.getByText('+ Add Link'));
+    const linkLabels = screen.getAllByPlaceholderText(/Link label/);
+    expect(linkLabels.length).toBeGreaterThanOrEqual(2);
+    // Change link label and url
+    fireEvent.change(linkLabels[0], { target: { value: 'My Blog' } });
+    const linkUrls = screen.getAllByPlaceholderText(/github\.com\/user\/repo/);
+    fireEvent.change(linkUrls[0], { target: { value: 'https://blog.com' } });
+    // Remove a link
+    const removeButtons = screen.getAllByText('Remove');
+    fireEvent.click(removeButtons[0]);
+  });
+
+  test('updates form fields (icon, order, featured, dates)', async () => {
+    renderComp();
+    await waitFor(() => expect(screen.getByText('+ Add New Hobby')).toBeInTheDocument());
+    fireEvent.click(screen.getByText('+ Add New Hobby'));
+    fireEvent.change(screen.getByLabelText('Icon (optional)'), { target: { value: 'icon-test' } });
+    fireEvent.change(screen.getByLabelText('Order'), { target: { value: '5' } });
+    fireEvent.change(screen.getByLabelText('Start Date'), { target: { value: '2024-01-01' } });
+    fireEvent.change(screen.getByLabelText(/End Date/), { target: { value: '2024-12-31' } });
+    const checkbox = screen.getByRole('checkbox');
+    fireEvent.click(checkbox);
+  });
 });

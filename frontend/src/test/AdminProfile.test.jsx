@@ -70,4 +70,28 @@ describe('AdminProfile', () => {
     await waitFor(() => expect(screen.getByText('Back to Dashboard')).toBeInTheDocument());
     expect(screen.getByText('Back to Dashboard').closest('a')).toHaveAttribute('href', '/dashboard');
   });
+
+  test('updates all form fields via onChange', async () => {
+    profileAPI.get.mockResolvedValue({ data: { nameEn: 'A', nameFr: 'B', titleEn: 'C', titleFr: 'D', bioEn: 'E', bioFr: 'F' } });
+    renderProfile();
+    await waitFor(() => expect(screen.getByLabelText('Name (English) *')).toHaveValue('A'));
+
+    fireEvent.change(screen.getByLabelText('Name (English) *'), { target: { value: 'NewA' } });
+    expect(screen.getByLabelText('Name (English) *')).toHaveValue('NewA');
+
+    fireEvent.change(screen.getByLabelText('Name (French) *'), { target: { value: 'NewB' } });
+    expect(screen.getByLabelText('Name (French) *')).toHaveValue('NewB');
+
+    fireEvent.change(screen.getByLabelText('Title (English) *'), { target: { value: 'NewC' } });
+    expect(screen.getByLabelText('Title (English) *')).toHaveValue('NewC');
+
+    fireEvent.change(screen.getByLabelText('Title (French) *'), { target: { value: 'NewD' } });
+    expect(screen.getByLabelText('Title (French) *')).toHaveValue('NewD');
+
+    fireEvent.change(screen.getByLabelText('Bio (English)'), { target: { value: 'NewE' } });
+    expect(screen.getByLabelText('Bio (English)')).toHaveValue('NewE');
+
+    fireEvent.change(screen.getByLabelText('Bio (French)'), { target: { value: 'NewF' } });
+    expect(screen.getByLabelText('Bio (French)')).toHaveValue('NewF');
+  });
 });

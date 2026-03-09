@@ -156,6 +156,21 @@ describe('Resume Controller', () => {
       await resumeController.upload(req, res);
       expect(res.status).toHaveBeenCalledWith(201);
     });
+
+    test('uploads with descriptions and default language/order', async () => {
+      req.file = { originalname: 'resume.pdf', filename: 'file-123.pdf' };
+      req.body = { titleEn: 'Resume', titleFr: 'CV', descriptionEn: 'Desc', descriptionFr: 'Desc FR' };
+      prisma.resume.create.mockResolvedValue({ id: 'r2' });
+      await resumeController.upload(req, res);
+      expect(res.status).toHaveBeenCalledWith(201);
+    });
+
+    test('returns 400 when only titleEn provided', async () => {
+      req.file = { originalname: 'resume.pdf', filename: 'file-123.pdf' };
+      req.body = { titleEn: 'Resume' };
+      await resumeController.upload(req, res);
+      expect(res.status).toHaveBeenCalledWith(400);
+    });
   });
 
   describe('update', () => {
@@ -167,12 +182,38 @@ describe('Resume Controller', () => {
       expect(res.json).toHaveBeenCalledWith({ id: 'r1', titleEn: 'Updated' });
     });
 
+    test('updates with descriptions and language', async () => {
+      req.params.id = 'r1';
+      req.body = { titleEn: 'U', titleFr: 'U', descriptionEn: 'D', descriptionFr: '', language: 'fr', order: undefined };
+      prisma.resume.update.mockResolvedValue({ id: 'r1' });
+      await resumeController.update(req, res);
+      expect(res.json).toHaveBeenCalledWith({ id: 'r1' });
+    });
+
+    test('updates with empty descriptionEn and truthy descriptionFr', async () => {
+      req.params.id = 'r1';
+      req.body = { descriptionEn: '', descriptionFr: 'Description FR' };
+      prisma.resume.update.mockResolvedValue({ id: 'r1' });
+      await resumeController.update(req, res);
+      expect(prisma.resume.update).toHaveBeenCalledWith(expect.objectContaining({
+        data: expect.objectContaining({ titleEn: undefined, descriptionEn: null, descriptionFr: 'Description FR' }),
+      }));
+    });
+
     test('returns 404 on P2025', async () => {
       req.params.id = 'none';
       req.body = { titleEn: 'X' };
       prisma.resume.update.mockRejectedValue({ code: 'P2025' });
       await resumeController.update(req, res);
       expect(res.status).toHaveBeenCalledWith(404);
+    });
+
+    test('returns 500 on generic error', async () => {
+      req.params.id = 'r1';
+      req.body = { titleEn: 'X' };
+      prisma.resume.update.mockRejectedValue(new Error('DB'));
+      await resumeController.update(req, res);
+      expect(res.status).toHaveBeenCalledWith(500);
     });
   });
 

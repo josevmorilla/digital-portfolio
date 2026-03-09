@@ -48,6 +48,13 @@ describe('Work Experience Controller', () => {
       await workExperienceController.getById(req, res);
       expect(res.status).toHaveBeenCalledWith(404);
     });
+
+    test('returns 500 on error', async () => {
+      req.params.id = 'w1';
+      prisma.workExperience.findUnique.mockRejectedValue(new Error('DB'));
+      await workExperienceController.getById(req, res);
+      expect(res.status).toHaveBeenCalledWith(500);
+    });
   });
 
   describe('create', () => {
@@ -60,6 +67,33 @@ describe('Work Experience Controller', () => {
       await workExperienceController.create(req, res);
       expect(res.status).toHaveBeenCalledWith(201);
     });
+
+    test('creates with endDate and order', async () => {
+      req.body = {
+        companyEn: 'Google', companyFr: 'Google', positionEn: 'Dev', positionFr: 'Dev',
+        startDate: '2020-01-01', endDate: '2023-01-01', current: true, order: 3,
+      };
+      prisma.workExperience.create.mockResolvedValue({ id: 'w2' });
+      await workExperienceController.create(req, res);
+      expect(res.status).toHaveBeenCalledWith(201);
+    });
+
+    test('creates with false current and no order', async () => {
+      req.body = {
+        companyEn: 'Co', companyFr: 'Co', positionEn: 'P', positionFr: 'P',
+        startDate: '2020-01-01', current: false,
+      };
+      prisma.workExperience.create.mockResolvedValue({ id: 'w3' });
+      await workExperienceController.create(req, res);
+      expect(res.status).toHaveBeenCalledWith(201);
+    });
+
+    test('returns 500 on error', async () => {
+      req.body = { startDate: '2020-01-01' };
+      prisma.workExperience.create.mockRejectedValue(new Error('DB'));
+      await workExperienceController.create(req, res);
+      expect(res.status).toHaveBeenCalledWith(500);
+    });
   });
 
   describe('update', () => {
@@ -71,12 +105,39 @@ describe('Work Experience Controller', () => {
       expect(res.json).toHaveBeenCalledWith({ id: 'w1', companyEn: 'Updated' });
     });
 
+    test('updates with all date and boolean branches', async () => {
+      req.params.id = 'w1';
+      req.body = {
+        companyEn: 'Updated', startDate: '2020-01-01', endDate: '2023-01-01',
+        current: 'true', order: undefined,
+      };
+      prisma.workExperience.update.mockResolvedValue({ id: 'w1' });
+      await workExperienceController.update(req, res);
+      expect(res.json).toHaveBeenCalledWith({ id: 'w1' });
+    });
+
+    test('updates with current undefined', async () => {
+      req.params.id = 'w1';
+      req.body = { companyEn: 'Updated' };
+      prisma.workExperience.update.mockResolvedValue({ id: 'w1' });
+      await workExperienceController.update(req, res);
+      expect(res.json).toHaveBeenCalledWith({ id: 'w1' });
+    });
+
     test('returns 404 on P2025', async () => {
       req.params.id = 'none';
       req.body = { companyEn: 'X' };
       prisma.workExperience.update.mockRejectedValue({ code: 'P2025' });
       await workExperienceController.update(req, res);
       expect(res.status).toHaveBeenCalledWith(404);
+    });
+
+    test('returns 500 on generic error', async () => {
+      req.params.id = 'w1';
+      req.body = { companyEn: 'X' };
+      prisma.workExperience.update.mockRejectedValue(new Error('DB'));
+      await workExperienceController.update(req, res);
+      expect(res.status).toHaveBeenCalledWith(500);
     });
   });
 
@@ -93,6 +154,13 @@ describe('Work Experience Controller', () => {
       prisma.workExperience.delete.mockRejectedValue({ code: 'P2025' });
       await workExperienceController.delete(req, res);
       expect(res.status).toHaveBeenCalledWith(404);
+    });
+
+    test('returns 500 on generic error', async () => {
+      req.params.id = 'w1';
+      prisma.workExperience.delete.mockRejectedValue(new Error('DB'));
+      await workExperienceController.delete(req, res);
+      expect(res.status).toHaveBeenCalledWith(500);
     });
   });
 });

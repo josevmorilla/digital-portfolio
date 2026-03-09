@@ -165,4 +165,114 @@ describe('AdminProjects', () => {
     fireEvent.click(screen.getByText('Delete'));
     await waitFor(() => expect(screen.getByText(/Error deleting project/)).toBeInTheDocument());
   });
+
+  test('does not delete when confirm returns false', async () => {
+    globalThis.confirm = vi.fn(() => false);
+    renderProjects();
+    await waitFor(() => expect(screen.getByText('Delete')).toBeInTheDocument());
+    fireEvent.click(screen.getByText('Delete'));
+    expect(projectsAPI.delete).not.toHaveBeenCalled();
+  });
+
+  test('handles image upload error', async () => {
+    projectsAPI.uploadImage.mockRejectedValue(new Error('Upload failed'));
+    renderProjects();
+    await waitFor(() => expect(screen.getByText('+ Add New Project')).toBeInTheDocument());
+    fireEvent.click(screen.getByText('+ Add New Project'));
+    const fileInput = screen.getByLabelText('Project Screenshot/Image');
+    const file = new File(['test'], 'img.jpg', { type: 'image/jpeg' });
+    fireEvent.change(fileInput, { target: { files: [file] } });
+    await waitFor(() => expect(screen.getByText(/Error uploading image: Upload failed/)).toBeInTheDocument());
+  });
+
+  test('successful image upload sets URL and shows remove button', async () => {
+    projectsAPI.uploadImage.mockResolvedValue({ data: { imageUrl: '/uploads/test.jpg' } });
+    renderProjects();
+    await waitFor(() => expect(screen.getByText('+ Add New Project')).toBeInTheDocument());
+    fireEvent.click(screen.getByText('+ Add New Project'));
+    const fileInput = screen.getByLabelText('Project Screenshot/Image');
+    const file = new File(['test'], 'img.jpg', { type: 'image/jpeg' });
+    fireEvent.change(fileInput, { target: { files: [file] } });
+    await waitFor(() => expect(screen.getByText(/Image uploaded/)).toBeInTheDocument());
+    // Remove image button should be available
+    const removeBtn = screen.getByText('Remove Image');
+    fireEvent.click(removeBtn);
+  });
+
+  test('handles create error with message fallback', async () => {
+    projectsAPI.create.mockRejectedValue(new Error('Network error'));
+    renderProjects();
+    await waitFor(() => expect(screen.getByText('+ Add New Project')).toBeInTheDocument());
+    fireEvent.click(screen.getByText('+ Add New Project'));
+    fireEvent.change(screen.getByLabelText('Title (English) *'), { target: { value: 'P' } });
+    fireEvent.change(screen.getByLabelText('Title (French) *'), { target: { value: 'P' } });
+    fireEvent.change(screen.getByLabelText('Description (English) *'), { target: { value: 'D' } });
+    fireEvent.change(screen.getByLabelText('Description (French) *'), { target: { value: 'D' } });
+    fireEvent.change(screen.getByLabelText('Technologies (comma-separated) *'), { target: { value: 'React' } });
+    fireEvent.click(screen.getByText('Create Project'));
+    await waitFor(() => expect(screen.getByText(/Error saving project: Network error/)).toBeInTheDocument());
+  });
+
+  test('handles delete error with message fallback', async () => {
+    projectsAPI.delete.mockRejectedValue(new Error('Network error'));
+    globalThis.confirm = vi.fn(() => true);
+    renderProjects();
+    await waitFor(() => expect(screen.getByText('Delete')).toBeInTheDocument());
+    fireEvent.click(screen.getByText('Delete'));
+    await waitFor(() => expect(screen.getByText(/Error deleting project: Network error/)).toBeInTheDocument());
+  });
+
+  test('normalizes URLs without protocol', async () => {
+    projectsAPI.create.mockResolvedValue({ data: {} });
+    renderProjects();
+    await waitFor(() => expect(screen.getByText('+ Add New Project')).toBeInTheDocument());
+    fireEvent.click(screen.getByText('+ Add New Project'));
+    fireEvent.change(screen.getByLabelText('Title (English) *'), { target: { value: 'P' } });
+    fireEvent.change(screen.getByLabelText('Title (French) *'), { target: { value: 'P' } });
+    fireEvent.change(screen.getByLabelText('Description (English) *'), { target: { value: 'D' } });
+    fireEvent.change(screen.getByLabelText('Description (French) *'), { target: { value: 'D' } });
+    fireEvent.change(screen.getByLabelText('Technologies (comma-separated) *'), { target: { value: 'React' } });
+    fireEvent.change(screen.getByLabelText('Deployed Project URL'), { target: { value: 'example.com' } });
+    fireEvent.change(screen.getByLabelText('GitHub URL'), { target: { value: 'github.com/test' } });
+    fireEvent.click(screen.getByText('Create Project'));
+    await waitFor(() => expect(projectsAPI.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        projectUrl: 'https://example.com',
+        githubUrl: 'https://github.com/test',
+      })
+    ));
+  });
+
+  test('handles fetch error', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    projectsAPI.getAll.mockRejectedValue(new Error('fail'));
+    renderProjects();
+    await waitFor(() => expect(screen.getByText('Manage Projects')).toBeInTheDocument());
+  });
+
+  test('creates project with dates and featured', async () => {
+    projectsAPI.create.mockResolvedValue({ data: {} });
+    renderProjects();
+    await waitFor(() => expect(screen.getByText('+ Add New Project')).toBeInTheDocument());
+    fireEvent.click(screen.getByText('+ Add New Project'));
+    fireEvent.change(screen.getByLabelText('Title (English) *'), { target: { value: 'P' } });
+    fireEvent.change(screen.getByLabelText('Title (French) *'), { target: { value: 'P' } });
+    fireEvent.change(screen.getByLabelText('Description (English) *'), { target: { value: 'D' } });
+    fireEvent.change(screen.getByLabelText('Description (French) *'), { target: { value: 'D' } });
+    fireEvent.change(screen.getByLabelText('Technologies (comma-separated) *'), { target: { value: 'React' } });
+    fireEvent.change(screen.getByLabelText('Start Date'), { target: { value: '2024-01-01' } });
+    fireEvent.change(screen.getByLabelText(/End Date/), { target: { value: '2024-12-31' } });
+    const checkbox = screen.getByRole('checkbox');
+    fireEvent.click(checkbox);
+    fireEvent.click(screen.getByText('Create Project'));
+    await waitFor(() => expect(projectsAPI.create).toHaveBeenCalled());
+  });
+
+  test('updates order and imageUrl fields', async () => {
+    renderProjects();
+    await waitFor(() => expect(screen.getByText('+ Add New Project')).toBeInTheDocument());
+    fireEvent.click(screen.getByText('+ Add New Project'));
+    fireEvent.change(screen.getByLabelText('Order'), { target: { value: '10' } });
+    fireEvent.change(screen.getByLabelText('Image URL (Alternative)'), { target: { value: 'https://example.com/img.png' } });
+  });
 });
