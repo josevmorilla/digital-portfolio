@@ -4,7 +4,7 @@
   "description": "A fully dynamic, responsive, bilingual portfolio website with admin dashboard",
   "main": "backend/src/server.js",
   "scripts": {
-    "start": "cd backend && node fix-migrations.js && npx prisma migrate deploy && (node prisma/seed.js || echo 'Seed skipped') && node src/server.js",
+    "start": "cd backend && node fix-migrations.mjs && npx prisma migrate deploy && (node prisma/seed.mjs || echo 'Seed skipped') && node src/server.js",
     "dev": "nodemon backend/src/server.js",
     "dev:frontend": "cd frontend && npm run dev",
     "dev:backend": "nodemon backend/src/server.js",
@@ -13,7 +13,7 @@
     "stop:db": "docker-compose down",
     "prisma:generate": "cd backend && npx prisma generate",
     "prisma:migrate": "cd backend && npx prisma migrate dev",
-    "prisma:seed": "node backend/prisma/seed.js",
+    "prisma:seed": "node backend/prisma/seed.mjs",
     "prisma:studio": "cd backend && npx prisma studio",
     "prisma:reset": "cd backend && npx prisma migrate reset",
     "setup": "npm run prisma:generate && npm run prisma:migrate && npm run prisma:seed"
@@ -27,7 +27,7 @@
     "react"
   ],
   "prisma": {
-    "seed": "node prisma/seed.js"
+    "seed": "node prisma/seed.mjs"
   },
   "author": "",
   "license": "ISC",
