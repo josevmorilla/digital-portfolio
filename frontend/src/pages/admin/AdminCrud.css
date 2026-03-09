@@ -532,14 +532,14 @@
 }
 
 .status-filter-btn.active .filter-count {
-  background: rgba(255, 255, 255, 0.3);
+  background: #374151;
   color: #fff;
 }
 
 .status-filter-pending.active {
   background: #f59e0b;
   border-color: #f59e0b;
-  color: #78350f;
+  color: #451a03;
 }
 
 .status-filter-approved.active {

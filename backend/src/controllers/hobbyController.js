@@ -65,11 +65,11 @@ exports.update = async (req, res) => {
   try {
     const { nameEn, nameFr, descriptionEn, descriptionFr, icon, imageUrl, links, technologies, startDate, endDate, featured, order } = req.body;
 
-    let parsedStartDate = undefined;
+    let parsedStartDate;
     if (startDate !== undefined) {
       parsedStartDate = startDate ? new Date(startDate) : null;
     }
-    let parsedEndDate = undefined;
+    let parsedEndDate;
     if (endDate !== undefined) {
       parsedEndDate = endDate ? new Date(endDate) : null;
     }

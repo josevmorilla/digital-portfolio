@@ -117,7 +117,10 @@ const Home = () => {
   };
 
   const t = (en, fr) => (language === 'en' ? en : fr);
-  const tf = (obj, enField, frField) => obj ? (language === 'en' ? obj[enField] : obj[frField]) : '';
+  const tf = (obj, enField, frField) => {
+    if (!obj) return '';
+    return language === 'en' ? obj[enField] : obj[frField];
+  };
 
   const formatDateRange = (startDate, endDate, presentLabel) => {
     if (!startDate) return '';
@@ -772,7 +775,7 @@ const Home = () => {
 
       {/* Testimonial Modal */}
       {showTestimonialModal && (
-        <div className="modal-overlay" onClick={() => setShowTestimonialModal(false)} onKeyDown={(e) => { if (e.key === 'Escape') setShowTestimonialModal(false); }}>
+        <div className="modal-overlay" role="button" tabIndex={0} aria-label="Close modal" onClick={() => setShowTestimonialModal(false)} onKeyDown={(e) => { if (e.key === 'Escape') setShowTestimonialModal(false); }}>
           <dialog className="modal-content" open onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
             <button 
               className="modal-close"
