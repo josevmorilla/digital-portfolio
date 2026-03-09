@@ -86,6 +86,53 @@ describe('Resume Controller', () => {
       await resumeController.download(req, res);
       expect(res.status).toHaveBeenCalledWith(404);
     });
+
+    test('handles old /uploads/ path when file exists at old location', async () => {
+      req.params.id = 'r1';
+      prisma.resume.findUnique.mockResolvedValue({
+        id: 'r1', fileUrl: '/uploads/old-resume.pdf', filename: 'resume.pdf',
+      });
+      fs.existsSync.mockImplementation((p) => p.includes('old-resume.pdf') && !p.includes('resumes'));
+      await resumeController.download(req, res);
+      expect(res.download).toHaveBeenCalledWith(expect.stringContaining('old-resume.pdf'), 'resume.pdf');
+    });
+
+    test('handles old /uploads/ path fallback to resumes subdir', async () => {
+      req.params.id = 'r1';
+      prisma.resume.findUnique.mockResolvedValue({
+        id: 'r1', fileUrl: '/uploads/old-resume.pdf', filename: 'resume.pdf',
+      });
+      // First existsSync (old path) returns false, second (new resumes subdir) returns true, third (final check) returns true
+      fs.existsSync
+        .mockReturnValueOnce(false) // old path doesn't exist
+        .mockReturnValueOnce(true); // final filePath check exists
+      await resumeController.download(req, res);
+      expect(res.download).toHaveBeenCalledWith(expect.stringContaining('resumes'), 'resume.pdf');
+    });
+
+    test('handles non-standard path', async () => {
+      req.params.id = 'r1';
+      prisma.resume.findUnique.mockResolvedValue({
+        id: 'r1', fileUrl: 'some/other/path.pdf', filename: 'resume.pdf',
+      });
+      fs.existsSync.mockReturnValue(true);
+      await resumeController.download(req, res);
+      expect(res.download).toHaveBeenCalledWith(expect.stringContaining('path.pdf'), 'resume.pdf');
+    });
+
+    test('returns 500 on database error', async () => {
+      req.params.id = 'r1';
+      prisma.resume.findUnique.mockRejectedValue(new Error('DB error'));
+      await resumeController.download(req, res);
+      expect(res.status).toHaveBeenCalledWith(500);
+    });
+
+    test('returns 500 on getCurrentByLanguage error', async () => {
+      req.params.language = 'en';
+      prisma.resume.findFirst.mockRejectedValue(new Error('DB'));
+      await resumeController.getCurrentByLanguage(req, res);
+      expect(res.status).toHaveBeenCalledWith(500);
+    });
   });
 
   describe('upload', () => {
@@ -150,6 +197,73 @@ describe('Resume Controller', () => {
       prisma.resume.findUnique.mockResolvedValue(null);
       await resumeController.delete(req, res);
       expect(res.status).toHaveBeenCalledWith(404);
+    });
+
+    test('deletes resume with old /uploads/ path (file exists at old location)', async () => {
+      req.params.id = 'r1';
+      prisma.resume.findUnique.mockResolvedValue({ id: 'r1', fileUrl: '/uploads/old.pdf' });
+      fs.existsSync.mockImplementation((p) => p.includes('old.pdf') && !p.includes('resumes'));
+      fs.unlinkSync.mockReturnValue(undefined);
+      prisma.resume.delete.mockResolvedValue({});
+      await resumeController.delete(req, res);
+      expect(fs.unlinkSync).toHaveBeenCalled();
+      expect(res.json).toHaveBeenCalledWith({ message: 'Resume deleted successfully' });
+    });
+
+    test('deletes resume with old /uploads/ path (fallback to resumes subdir)', async () => {
+      req.params.id = 'r1';
+      prisma.resume.findUnique.mockResolvedValue({ id: 'r1', fileUrl: '/uploads/old.pdf' });
+      fs.existsSync
+        .mockReturnValueOnce(false) // old path doesn't exist
+        .mockReturnValueOnce(true); // new resumes subdir path exists
+      fs.unlinkSync.mockReturnValue(undefined);
+      prisma.resume.delete.mockResolvedValue({});
+      await resumeController.delete(req, res);
+      expect(fs.unlinkSync).toHaveBeenCalled();
+    });
+
+    test('deletes resume with non-standard path', async () => {
+      req.params.id = 'r1';
+      prisma.resume.findUnique.mockResolvedValue({ id: 'r1', fileUrl: 'custom/path.pdf' });
+      fs.existsSync.mockReturnValue(false);
+      prisma.resume.delete.mockResolvedValue({});
+      await resumeController.delete(req, res);
+      expect(fs.unlinkSync).not.toHaveBeenCalled();
+      expect(res.json).toHaveBeenCalledWith({ message: 'Resume deleted successfully' });
+    });
+
+    test('returns 404 on P2025 error during delete', async () => {
+      req.params.id = 'r1';
+      prisma.resume.findUnique.mockResolvedValue({ id: 'r1', fileUrl: '/uploads/resumes/f.pdf' });
+      fs.existsSync.mockReturnValue(false);
+      prisma.resume.delete.mockRejectedValue({ code: 'P2025' });
+      await resumeController.delete(req, res);
+      expect(res.status).toHaveBeenCalledWith(404);
+    });
+
+    test('returns 500 on generic delete error', async () => {
+      req.params.id = 'r1';
+      prisma.resume.findUnique.mockResolvedValue({ id: 'r1', fileUrl: '/uploads/resumes/f.pdf' });
+      fs.existsSync.mockReturnValue(false);
+      prisma.resume.delete.mockRejectedValue(new Error('DB'));
+      await resumeController.delete(req, res);
+      expect(res.status).toHaveBeenCalledWith(500);
+    });
+
+    test('returns 500 on upload error', async () => {
+      req.file = { originalname: 'resume.pdf', filename: 'f.pdf' };
+      req.body = { titleEn: 'Resume', titleFr: 'CV' };
+      prisma.resume.create.mockRejectedValue(new Error('DB'));
+      await resumeController.upload(req, res);
+      expect(res.status).toHaveBeenCalledWith(500);
+    });
+
+    test('returns 500 on update generic error', async () => {
+      req.params.id = 'r1';
+      req.body = { titleEn: 'X' };
+      prisma.resume.update.mockRejectedValue(new Error('DB'));
+      await resumeController.update(req, res);
+      expect(res.status).toHaveBeenCalledWith(500);
     });
   });
 });
