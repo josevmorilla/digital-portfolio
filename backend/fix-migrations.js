@@ -9,7 +9,7 @@
  */
 const { PrismaClient } = require('@prisma/client');
 
-async function fixMigrations() {
+(async () => {
   const prisma = new PrismaClient();
   try {
     try {
@@ -41,6 +41,4 @@ async function fixMigrations() {
   } finally {
     await prisma.$disconnect();
   }
-}
-
-fixMigrations();
+})();
