@@ -778,7 +778,6 @@ const Home = () => {
         <div className="modal-overlay">
           <button className="modal-overlay-close" aria-label="Close modal" onClick={() => setShowTestimonialModal(false)} onKeyDown={(e) => { if (e.key === 'Escape') setShowTestimonialModal(false); }} />
           <dialog className="modal-content" open>
-            <div onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
             <button 
               className="modal-close"
               onClick={() => setShowTestimonialModal(false)}
@@ -871,7 +870,6 @@ const Home = () => {
                 </button>
               </div>
             </form>
-            </div>
           </dialog>
         </div>
       )}
