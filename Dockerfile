@@ -15,6 +15,10 @@ RUN npm install
 COPY backend ./backend/
 COPY uploads ./uploads/
 
+# Create upload subdirectories and grant ownership to node user
+RUN mkdir -p /app/uploads/resumes /app/uploads/projects /app/uploads/hobbies \
+    && chown -R node:node /app/uploads
+
 # Generate Prisma client
 RUN npm run prisma:generate
 
