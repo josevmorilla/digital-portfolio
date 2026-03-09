@@ -65,6 +65,15 @@ exports.update = async (req, res) => {
   try {
     const { nameEn, nameFr, descriptionEn, descriptionFr, icon, imageUrl, links, technologies, startDate, endDate, featured, order } = req.body;
 
+    let parsedStartDate = undefined;
+    if (startDate !== undefined) {
+      parsedStartDate = startDate ? new Date(startDate) : null;
+    }
+    let parsedEndDate = undefined;
+    if (endDate !== undefined) {
+      parsedEndDate = endDate ? new Date(endDate) : null;
+    }
+
     const hobby = await prisma.hobby.update({
       where: { id: req.params.id },
       data: {
@@ -76,8 +85,8 @@ exports.update = async (req, res) => {
         imageUrl,
         links: links === undefined ? undefined : links,
         technologies: technologies === undefined ? undefined : technologies,
-        startDate: startDate === undefined ? undefined : (startDate ? new Date(startDate) : null),
-        endDate: endDate === undefined ? undefined : (endDate ? new Date(endDate) : null),
+        startDate: parsedStartDate,
+        endDate: parsedEndDate,
         featured: featured === undefined ? undefined : (featured === true || featured === 'true'),
         order: order === undefined ? undefined : Number.parseInt(order),
       },

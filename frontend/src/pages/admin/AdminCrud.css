@@ -539,6 +539,7 @@
 .status-filter-pending.active {
   background: #f59e0b;
   border-color: #f59e0b;
+  color: #78350f;
 }
 
 .status-filter-approved.active {
@@ -776,7 +777,7 @@
 }
 
 .btn-approve {
-  background: #059669;
+  background: #047857;
   color: white;
   border: none;
   padding: 0.6rem 1.25rem;

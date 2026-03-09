@@ -95,16 +95,7 @@ const Home = () => {
       setCategorySettings(catSettingsRes.data || []);
 
       // Fetch both English and French resumes
-      try {
-        const [enRes, frRes] = await Promise.all([
-          resumesAPI.getCurrentByLanguage('en').catch(() => null),
-          resumesAPI.getCurrentByLanguage('fr').catch(() => null),
-        ]);
-        setResumeEn(enRes?.data || null);
-        setResumeFr(frRes?.data || null);
-      } catch {
-        console.log('No resume available');
-      }
+      await fetchResumes();
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
@@ -112,7 +103,21 @@ const Home = () => {
     }
   };
 
+  const fetchResumes = async () => {
+    try {
+      const [enRes, frRes] = await Promise.all([
+        resumesAPI.getCurrentByLanguage('en').catch(() => null),
+        resumesAPI.getCurrentByLanguage('fr').catch(() => null),
+      ]);
+      setResumeEn(enRes?.data || null);
+      setResumeFr(frRes?.data || null);
+    } catch {
+      console.log('No resume available');
+    }
+  };
+
   const t = (en, fr) => (language === 'en' ? en : fr);
+  const tf = (obj, enField, frField) => obj ? (language === 'en' ? obj[enField] : obj[frField]) : '';
 
   const formatDateRange = (startDate, endDate, presentLabel) => {
     if (!startDate) return '';
@@ -351,7 +356,7 @@ const Home = () => {
       <header className="header" role="banner">
         <div className="container">
           <nav className="nav">
-            <a href="#" className="logo" onClick={(e) => { e.preventDefault(); globalThis.scrollTo({ top: 0, behavior: 'smooth' }); setMobileMenuOpen(false); }}>{profile ? (language === 'en' ? profile.nameEn : profile.nameFr) : ''}</a>
+            <button type="button" className="logo" onClick={() => { globalThis.scrollTo({ top: 0, behavior: 'smooth' }); setMobileMenuOpen(false); }}>{tf(profile, 'nameEn', 'nameFr')}</button>
             <button 
               className={`hamburger ${mobileMenuOpen ? 'open' : ''}`} 
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -381,9 +386,9 @@ const Home = () => {
       {/* Hero Section */}
       <section className="hero">
         <div className="container">
-          <h1 className="hero-title">{profile ? (language === 'en' ? profile.nameEn : profile.nameFr) : ''}</h1>
+          <h1 className="hero-title">{tf(profile, 'nameEn', 'nameFr')}</h1>
           <p className="hero-subtitle">
-            {profile ? (language === 'en' ? profile.titleEn : profile.titleFr) : ''}
+            {tf(profile, 'titleEn', 'titleFr')}
           </p>
           {profile && (language === 'en' ? profile.bioEn : profile.bioFr) && (
             <p className="hero-bio">
@@ -410,7 +415,7 @@ const Home = () => {
               href={resumeEn ? resumesAPI.download(resumeEn.id) : '#'}
               download={!!resumeEn}
               className="btn-download"
-              style={!resumeEn ? { opacity: 0.6, cursor: 'not-allowed' } : {}}
+              style={resumeEn ? {} : { opacity: 0.6, cursor: 'not-allowed' }}
             >
               {t('Download CV (English)', 'Télécharger CV (Anglais)')}
             </a>
@@ -418,7 +423,7 @@ const Home = () => {
               href={resumeFr ? resumesAPI.download(resumeFr.id) : '#'}
               download={!!resumeFr}
               className="btn-download"
-              style={!resumeFr ? { opacity: 0.6, cursor: 'not-allowed' } : {}}
+              style={resumeFr ? {} : { opacity: 0.6, cursor: 'not-allowed' }}
             >
               {t('Download CV (French)', 'Télécharger CV (Français)')}
             </a>
@@ -767,8 +772,8 @@ const Home = () => {
 
       {/* Testimonial Modal */}
       {showTestimonialModal && (
-        <div className="modal-overlay" role="presentation" onClick={() => setShowTestimonialModal(false)} onKeyDown={(e) => { if (e.key === 'Escape') setShowTestimonialModal(false); }}>
-          <div className="modal-content" role="dialog" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
+        <div className="modal-overlay" onClick={() => setShowTestimonialModal(false)} onKeyDown={(e) => { if (e.key === 'Escape') setShowTestimonialModal(false); }}>
+          <dialog className="modal-content" open onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
             <button 
               className="modal-close"
               onClick={() => setShowTestimonialModal(false)}
@@ -861,7 +866,7 @@ const Home = () => {
                 </button>
               </div>
             </form>
-          </div>
+          </dialog>
         </div>
       )}
 
@@ -972,7 +977,7 @@ const Home = () => {
       {/* Footer */}
       <footer className="footer">
         <div className="container">
-          <p>&copy; {new Date().getFullYear()} {profile ? (language === 'en' ? profile.nameEn : profile.nameFr) : ''}</p>
+          <p>&copy; {new Date().getFullYear()} {tf(profile, 'nameEn', 'nameFr')}</p>
           <p style={{ marginTop: '0.5rem', fontSize: '0.85rem' }}>
             <Link to="/privacy-policy" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none' }}>
               {t('Privacy Policy', 'Politique de Confidentialité')}

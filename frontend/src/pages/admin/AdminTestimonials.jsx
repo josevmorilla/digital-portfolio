@@ -200,7 +200,7 @@ const AdminTestimonials = () => {
             {(statusFilter === 'all' || statusFilter === 'pending') && pendingTestimonials.length > 0 && (
               <div style={{ marginBottom: '2rem' }}>
                 <h3 className="testimonial-group-title">
-                  Pending Review
+                  Pending Review{' '}
                   <span className="testimonial-group-count">{pendingTestimonials.length}</span>
                 </h3>
                 <div className="testimonial-cards-list">
@@ -213,7 +213,7 @@ const AdminTestimonials = () => {
             {(statusFilter === 'all' || statusFilter === 'approved') && approvedTestimonials.length > 0 && (
               <div>
                 <h3 className="testimonial-group-title">
-                  Approved
+                  Approved{' '}
                   <span className="testimonial-group-count">{approvedTestimonials.length}</span>
                 </h3>
                 <div className="testimonial-cards-list">

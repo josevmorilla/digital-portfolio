@@ -87,13 +87,11 @@ const AdminMessages = () => {
               <h2>Inbox ({messages.filter(m => !m.read).length} unread)</h2>
               <div className="items-list">
                 {messages.map((message) => (
-                  <div 
+                  <button 
+                    type="button"
                     key={message.id} 
                     className={`message-item ${message.read ? '' : 'unread'} ${selectedMessage?.id === message.id ? 'active' : ''}`}
-                    role="button"
-                    tabIndex={0}
                     onClick={() => setSelectedMessage(message)}
-                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setSelectedMessage(message); }}
                   >
                     <div className="message-header">
                       <h4>{message.name}</h4>
@@ -102,7 +100,7 @@ const AdminMessages = () => {
                     <p className="message-meta">{message.email}</p>
                     <p className="message-preview">{message.message.substring(0, 80)}...</p>
                     <p className="message-date">{formatDate(message.createdAt)}</p>
-                  </div>
+                  </button>
                 ))}
                 {messages.length === 0 && (
                   <p style={{textAlign: 'center', color: '#666', padding: '2rem'}}>

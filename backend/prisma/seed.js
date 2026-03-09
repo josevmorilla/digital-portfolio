@@ -370,12 +370,10 @@ async function seed() {
     console.log('Seeding completed successfully!');
   } catch (error) {
     console.error('Seeding error:', error);
+    process.exit(1);
   } finally {
     await prisma.$disconnect();
   }
 }
 
-seed().catch((err) => {
-  console.error('Seed fatal error:', err);
-  process.exit(1);
-});
+seed();
