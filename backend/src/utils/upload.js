@@ -1,6 +1,7 @@
 const multer = require('multer');
 const path = require('node:path');
 const fs = require('node:fs');
+const crypto = require('node:crypto');
 
 // Create uploads directory if it doesn't exist
 // Always resolve relative to the project root (__dirname = backend/src/utils)
@@ -35,7 +36,7 @@ const resumeStorage = multer.diskStorage({
     cb(null, resumesDir);
   },
   filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    const uniqueSuffix = Date.now() + '-' + crypto.randomUUID();
     cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
   },
 });
@@ -46,7 +47,7 @@ const projectImageStorage = multer.diskStorage({
     cb(null, projectsDir);
   },
   filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    const uniqueSuffix = Date.now() + '-' + crypto.randomUUID();
     cb(null, 'project-' + uniqueSuffix + path.extname(file.originalname));
   },
 });
@@ -97,7 +98,7 @@ const hobbyImageStorage = multer.diskStorage({
     cb(null, hobbiesDir);
   },
   filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    const uniqueSuffix = Date.now() + '-' + crypto.randomUUID();
     cb(null, 'hobby-' + uniqueSuffix + path.extname(file.originalname));
   },
 });
