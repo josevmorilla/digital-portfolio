@@ -1,5 +1,4 @@
 const path = require('node:path');
-const fs = require('node:fs');
 require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 const express = require('express');
 const cors = require('cors');
@@ -112,16 +111,8 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Fallback handler for /uploads – diagnose missing files
+// Fallback handler for /uploads – file not served by static middleware
 app.use('/uploads', (req, res) => {
-  // Sanitize: resolve then verify the path stays inside uploadDir
-  const requestedFile = path.resolve(uploadDir, '.' + path.normalize(req.path));
-  if (!requestedFile.startsWith(path.resolve(uploadDir))) {
-    return res.status(400).json({ error: 'Invalid path' });
-  }
-  const dirPath = path.dirname(requestedFile);
-  const dirExists = fs.existsSync(dirPath);
-  console.error('Upload 404 – dir exists:', dirExists);
   res.status(404).json({ error: 'File not found' });
 });
 
