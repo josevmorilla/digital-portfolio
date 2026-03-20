@@ -23,9 +23,9 @@ services:
       DATABASE_URL: "postgresql://${POSTGRES_USER:-portfolio}:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@postgres:5432/${POSTGRES_DB:-portfolio}?schema=public"
       PORT: 5000
       NODE_ENV: production
-      JWT_SECRET: ${JWT_SECRET:-change-this-secret-key}
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env}
       ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@portfolio.com}
-      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin123}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Set ADMIN_PASSWORD in .env}
       FRONTEND_URL: http://localhost:3000
     ports:
       - "5000:5000"

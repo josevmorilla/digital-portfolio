@@ -14,16 +14,19 @@ try {
   console.log('Seeding database...');
 
   // Create admin user
+  if (!process.env.ADMIN_PASSWORD) throw new Error('ADMIN_PASSWORD env var is required');
+  if (!process.env.ADMIN_EMAIL) throw new Error('ADMIN_EMAIL env var is required');
+
   const hashedPassword = await bcrypt.hash(
-    process.env.ADMIN_PASSWORD || 'admin123',
+    process.env.ADMIN_PASSWORD,
     10
   );
 
   const admin = await prisma.user.upsert({
-    where: { email: process.env.ADMIN_EMAIL || 'admin@portfolio.com' },
+    where: { email: process.env.ADMIN_EMAIL },
     update: {},
     create: {
-      email: process.env.ADMIN_EMAIL || 'admin@portfolio.com',
+      email: process.env.ADMIN_EMAIL,
       password: hashedPassword,
       name: 'Admin User',
     },
