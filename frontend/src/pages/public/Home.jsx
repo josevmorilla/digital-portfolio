@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
 import { FiMail, FiMapPin, FiGithub, FiLinkedin } from 'react-icons/fi';
-import 'devicon/devicon.min.css';
 import {
   skillsAPI,
   projectsAPI,
@@ -327,7 +326,7 @@ const Home = () => {
   const getSkillIcon = (skillName) => {
     const iconName = skillIconMap[skillName];
     if (iconName) {
-      return <i className={`devicon-${iconName}-plain`}></i>;
+      return <span className="skill-icon-fallback" aria-hidden="true">{skillName.trim().charAt(0).toUpperCase()}</span>;
     }
     return null;
   };
