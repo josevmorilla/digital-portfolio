@@ -817,7 +817,7 @@ const Home = () => {
             <button 
               className="modal-close"
               type="button"
-              aria-label={t('Close modal', 'Fermer la fenêtre')}
+              aria-label={t('Close dialog', 'Fermer la fenêtre')}
               onClick={() => setShowTestimonialModal(false)}
             >
               ×
