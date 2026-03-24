@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(git log:*)",
-      "Bash(grep:*)",
-      "Bash(find /c/Users/super/digital-portfolio -name vercel.json -o -name .env* -o -name *.env)"
-    ]
-  }
-}

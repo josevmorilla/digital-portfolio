@@ -56,3 +56,16 @@ coverage/
 .cache/
 tmp/
 temp/
+
+# AI tooling (local-only)
+.agents/
+.claude/
+.codex/
+.cursor/
+.gemini/
+.kiro/
+.opencode/
+.pi/
+.impeccable.md
+skills-lock.json
+.github/copilot-instructions.md
