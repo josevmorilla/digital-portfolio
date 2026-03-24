@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
 import { FiMail, FiMapPin, FiGithub, FiLinkedin } from 'react-icons/fi';
+import Seo from '../../components/Seo';
 import {
   skillsAPI,
   projectsAPI,
@@ -116,6 +117,14 @@ const Home = () => {
   };
 
   const t = (en, fr) => (language === 'en' ? en : fr);
+  const seoTitle = t(
+    'Jose Villegas Morilla | Full Stack Developer Portfolio',
+    'Jose Villegas Morilla | Portfolio Développeur Full Stack'
+  );
+  const seoDescription = t(
+    'Full stack developer portfolio featuring projects, skills, experience, and contact information.',
+    'Portfolio de développeur full stack présentant projets, compétences, expérience et informations de contact.'
+  );
   const tf = (obj, enField, frField) => {
     if (!obj) return '';
     return language === 'en' ? obj[enField] : obj[frField];
@@ -241,6 +250,7 @@ const Home = () => {
   if (loading) {
     return (
       <div className="loading">
+        <Seo title={seoTitle} description={seoDescription} path="/" />
         <div className="spinner"></div>
       </div>
     );
@@ -362,6 +372,7 @@ const Home = () => {
 
   return (
     <div className="home">
+      <Seo title={seoTitle} description={seoDescription} path="/" />
       {/* Header */}
       <header className="header" role="banner">
         <div className="container">

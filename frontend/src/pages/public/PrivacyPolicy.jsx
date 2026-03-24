@@ -1,10 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Seo from '../../components/Seo';
 import './PrivacyPolicy.css';
 
 const PrivacyPolicy = () => {
   return (
     <div className="privacy-policy-page">
+      <Seo
+        title="Privacy Policy | Jose Villegas Morilla"
+        description="Read the privacy policy for Jose Villegas Morilla's portfolio website, including data collection, usage, and your rights."
+        path="/privacy-policy"
+      />
       <header className="privacy-header">
         <div className="container">
           <Link to="/" className="back-link">&larr; Back to Home</Link>

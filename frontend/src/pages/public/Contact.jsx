@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
 import { contactMessagesAPI } from '../../services/api';
+import Seo from '../../components/Seo';
 import './Contact.css';
 
 const Contact = () => {
@@ -29,6 +30,14 @@ const Contact = () => {
 
   return (
     <div className="contact-page">
+      <Seo
+        title={t('Contact | Jose Villegas Morilla', 'Contact | Jose Villegas Morilla')}
+        description={t(
+          'Get in touch with Jose Villegas Morilla for collaboration, freelance projects, or development opportunities.',
+          'Contactez Jose Villegas Morilla pour une collaboration, des projets freelance ou des opportunités de développement.'
+        )}
+        path="/contact"
+      />
       <header className="header">
         <div className="container">
           <nav className="nav">

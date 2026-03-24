@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
 import { testimonialsAPI, getUploadUrl } from '../../services/api';
+import Seo from '../../components/Seo';
 import './Testimonials.css';
 
 const Testimonials = () => {
@@ -74,6 +75,14 @@ const Testimonials = () => {
 
   return (
     <div className="testimonials-page">
+      <Seo
+        title={t('Testimonials | Jose Villegas Morilla', 'Témoignages | Jose Villegas Morilla')}
+        description={t(
+          'Read client testimonials and share your experience working with Jose Villegas Morilla.',
+          'Lisez les témoignages clients et partagez votre expérience de collaboration avec Jose Villegas Morilla.'
+        )}
+        path="/testimonials"
+      />
       {/* Toast popup for success/error messages */}
       {message && (
         <div className={`toast-popup ${message.includes('Error') || message.includes('Erreur') || message.includes('Too many') ? 'error' : 'success'}`}>

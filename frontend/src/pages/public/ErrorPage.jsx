@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link, useLocation } from 'react-router-dom';
+import Seo from '../../components/Seo';
 import './ErrorPage.css';
 
 const ERROR_DATA = {
@@ -47,6 +48,12 @@ export default function ErrorPage({ code = 404, title, message }) {
 
   return (
     <div className="error-page">
+      <Seo
+        title={`${stateCode} ${displayTitle} | Jose Villegas Morilla`}
+        description={displayMessage}
+        path={location.pathname || '/error'}
+        noindex
+      />
       <div className="error-page-content">
         <div className="error-page-code">{stateCode}</div>
         <div className="error-page-divider" />

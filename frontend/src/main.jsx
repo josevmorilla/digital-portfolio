@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import { HelmetProvider } from 'react-helmet-async'
 import { SpeedInsights } from '@vercel/speed-insights/react'
 import { Analytics } from '@vercel/analytics/react'
 import ErrorBoundary from './components/ErrorBoundary'
@@ -13,15 +14,17 @@ import './index.css'
 const enableVercelInsights = import.meta.env.PROD && import.meta.env.VITE_ENABLE_VERCEL_INSIGHTS === 'true'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <ErrorBoundary>
-      <App />
-    </ErrorBoundary>
-    {enableVercelInsights ? (
-      <ErrorBoundary fallback="silent">
-        <SpeedInsights />
-        <Analytics />
+  <HelmetProvider>
+    <React.StrictMode>
+      <ErrorBoundary>
+        <App />
       </ErrorBoundary>
-    ) : null}
-  </React.StrictMode>,
+      {enableVercelInsights ? (
+        <ErrorBoundary fallback="silent">
+          <SpeedInsights />
+          <Analytics />
+        </ErrorBoundary>
+      ) : null}
+    </React.StrictMode>
+  </HelmetProvider>,
 )
