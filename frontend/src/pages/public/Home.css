@@ -64,6 +64,19 @@
   width: 100%;
 }
 
+a:focus-visible,
+button:focus-visible,
+.skills-tab:focus-visible,
+.carousel-btn:focus-visible,
+.btn-project:focus-visible,
+.btn-download:focus-visible,
+.contact-link:focus-visible,
+.modal-close:focus-visible,
+.btn-leave-testimonial:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
 .lang-btn {
   background: var(--primary);
   color: var(--white);
@@ -168,6 +181,10 @@
   transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
   transition: all 0.3s ease;
+}
+
+.btn-download[aria-disabled='true'] {
+  pointer-events: none;
 }
 
 .section {
@@ -497,8 +514,8 @@
   border: 1px solid var(--border);
   border-radius: 999px;
   font-size: 0.85rem;
-  color: #1a1a2e;
-  background: #e8e8f0;
+  color: var(--dark);
+  background: color-mix(in srgb, var(--primary) 8%, var(--light));
   font-weight: 500;
 }
 
@@ -534,7 +551,7 @@
 }
 
 .testimonial-stars .star-filled {
-  color: #dc2626;
+  color: var(--primary);
 }
 
 .testimonial-stars .star-empty {
@@ -543,7 +560,7 @@
 
 .rating-number {
   font-weight: 700;
-  color: #dc2626;
+  color: var(--primary);
   font-size: 1.1rem;
 }
 
@@ -561,7 +578,7 @@
 
 .testimonial-detail strong {
   display: block;
-  color: #dc2626;
+  color: var(--primary);
   font-size: 0.9rem;
   margin-bottom: 0.4rem;
   text-transform: uppercase;
@@ -580,7 +597,7 @@
   padding: 0.75rem;
   background: var(--light);
   border-radius: 8px;
-  border-left: 3px solid #dc2626;
+  border-left: 3px solid var(--primary);
 }
 
 .testimonial-recommend p {
@@ -750,7 +767,7 @@ a.contact-link:hover {
   }
 
   .nav-links a:hover {
-    background: rgba(99, 102, 241, 0.08);
+    background: color-mix(in srgb, var(--primary) 8%, transparent);
   }
 
   .hero { text-align: left; padding: 72px 0; }
@@ -758,7 +775,7 @@ a.contact-link:hover {
 }
 
 .project-card:hover .tech-tag {
-  background: rgba(99, 102, 241, 0.15);
+  background: color-mix(in srgb, var(--primary) 15%, var(--light));
   transform: translateY(-2px);
 }
 
@@ -828,7 +845,7 @@ a.contact-link:hover {
   border-radius: 50%;
   background: white;
   border: 4px solid var(--primary);
-  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 20%, transparent);
   z-index: 2;
 }
 
@@ -907,7 +924,7 @@ a.contact-link:hover {
 .spinner {
   width: 60px;
   height: 60px;
-  border: 4px solid rgba(99, 102, 241, 0.1);
+  border: 4px solid color-mix(in srgb, var(--primary) 12%, transparent);
   border-top-color: var(--primary);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
@@ -989,7 +1006,7 @@ a.contact-link:hover {
 .form-group textarea:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 18%, transparent);
 }
 
 .form-group textarea {
@@ -1138,7 +1155,7 @@ a.contact-link:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(99, 102, 241, 0.05) 100%);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--primary) 12%, transparent) 0%, color-mix(in srgb, var(--primary) 6%, transparent) 100%);
   color: var(--primary);
   opacity: 0.5;
 }
@@ -1181,8 +1198,8 @@ a.contact-link:hover {
 
 .project-showcase-content .tech-tag {
   padding: 8px 16px;
-  background: rgba(99, 102, 241, 0.1);
-  border: 1px solid rgba(99, 102, 241, 0.2);
+  background: color-mix(in srgb, var(--primary) 10%, var(--light));
+  border: 1px solid color-mix(in srgb, var(--primary) 20%, var(--border));
   border-radius: 999px;
   font-size: 0.9rem;
   font-weight: 600;
@@ -1356,8 +1373,8 @@ a.contact-link:hover {
 .other-projects-section .tech-tag {
   padding: 4px 10px;
   font-size: 0.75rem;
-  background: rgba(99, 102, 241, 0.1);
-  border: 1px solid rgba(99, 102, 241, 0.2);
+  background: color-mix(in srgb, var(--primary) 10%, var(--light));
+  border: 1px solid color-mix(in srgb, var(--primary) 20%, var(--border));
   border-radius: 999px;
   color: var(--primary);
   font-weight: 600;
@@ -1412,8 +1429,8 @@ a.contact-link:hover {
 }
 
 .btn-leave-testimonial {
-  background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
-  color: white;
+  background: var(--gradient-1);
+  color: var(--white);
   border: none;
   padding: 0.875rem 1.75rem;
   border-radius: 10px;
@@ -1431,7 +1448,7 @@ a.contact-link:hover {
 
 .empty-state {
   text-align: center;
-  color: #666;
+  color: var(--gray);
   font-style: italic;
   padding: 3rem 1rem;
 }
@@ -1460,12 +1477,12 @@ a.contact-link:hover {
   height: 100%;
   background: transparent;
   border: none;
-  cursor: default;
+  cursor: pointer;
   z-index: 0;
 }
 
 .modal-content {
-  background: white;
+  background: var(--white);
   border-radius: 16px;
   padding: 2.5rem;
   max-width: 600px;
@@ -1487,7 +1504,7 @@ a.contact-link:hover {
   background: transparent;
   border: none;
   font-size: 2rem;
-  color: #666;
+  color: var(--gray);
   cursor: pointer;
   width: 36px;
   height: 36px;
@@ -1501,20 +1518,20 @@ a.contact-link:hover {
 }
 
 .modal-close:hover {
-  background: #f3f4f6;
-  color: #333;
+  background: var(--light);
+  color: var(--dark);
 }
 
 .modal-title {
   font-size: 1.75rem;
   font-weight: 700;
-  color: #dc2626;
+  color: var(--primary);
   margin-bottom: 0.5rem;
   flex-shrink: 0;
 }
 
 .modal-subtitle {
-  color: #666;
+  color: var(--gray);
   margin-bottom: 1.5rem;
   line-height: 1.5;
   flex-shrink: 0;
@@ -1562,14 +1579,14 @@ a.contact-link:hover {
 
 .modal-form label {
   font-weight: 600;
-  color: #374151;
+  color: var(--dark);
   font-size: 0.95rem;
 }
 
 .modal-form input,
 .modal-form textarea {
   padding: 0.75rem;
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--border);
   border-radius: 8px;
   font-size: 1rem;
   font-family: inherit;
@@ -1579,8 +1596,8 @@ a.contact-link:hover {
 .modal-form input:focus,
 .modal-form textarea:focus {
   outline: none;
-  border-color: #dc2626;
-  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 16%, transparent);
 }
 
 .modal-form textarea {
@@ -1597,8 +1614,8 @@ a.contact-link:hover {
 }
 
 .btn-cancel {
-  background: #f3f4f6;
-  color: #374151;
+  background: var(--light);
+  color: var(--dark);
   border: none;
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
@@ -1608,12 +1625,12 @@ a.contact-link:hover {
 }
 
 .btn-cancel:hover {
-  background: #e5e7eb;
+  background: color-mix(in srgb, var(--border) 65%, var(--light));
 }
 
 .modal-actions .btn-submit {
-  background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
-  color: white;
+  background: var(--gradient-1);
+  color: var(--white);
   border: none;
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
@@ -1626,6 +1643,17 @@ a.contact-link:hover {
 .modal-actions .btn-submit:hover {
   transform: translateY(-1px);
   box-shadow: 0 6px 16px rgba(220, 38, 38, 0.4);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 @keyframes fadeIn {
@@ -1702,7 +1730,7 @@ a.contact-link:hover {
     gap: 0.5rem;
     margin-top: 0.75rem;
     padding-top: 0.75rem;
-    border-top: 1px solid #e5e7eb;
+    border-top: 1px solid var(--border);
     flex-shrink: 0;
   }
 
@@ -1722,17 +1750,17 @@ a.contact-link:hover {
 
 /* Form Sections */
 .form-section {
-  background: #f9fafb;
+  background: var(--light);
   padding: 1.5rem;
   border-radius: 10px;
   margin-bottom: 1.5rem;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border);
 }
 
 .form-section-title {
   font-size: 1.1rem;
   font-weight: 700;
-  color: #dc2626;
+  color: var(--primary);
   margin: 0 0 1.25rem 0;
   padding-bottom: 0.75rem;
   border-bottom: 2px solid #fee2e2;
@@ -1747,7 +1775,7 @@ a.contact-link:hover {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 600;
-  color: #374151;
+  color: var(--dark);
 }
 
 .star-rating {
@@ -1772,7 +1800,7 @@ a.contact-link:hover {
 }
 
 .star.active {
-  color: #dc2626;
+  color: var(--primary);
 }
 
 /* Checkbox Group */
@@ -1786,7 +1814,7 @@ a.contact-link:hover {
   gap: 0.75rem;
   cursor: pointer;
   font-weight: 500;
-  color: #374151;
+  color: var(--dark);
 }
 
 .checkbox-label input[type="checkbox"] {
@@ -1794,7 +1822,7 @@ a.contact-link:hover {
   width: 18px;
   height: 18px;
   cursor: pointer;
-  accent-color: #dc2626;
+  accent-color: var(--primary);
 }
 
 .checkbox-label span {
